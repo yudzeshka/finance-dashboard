@@ -14,10 +14,12 @@ import {
   Form,
   Input,
   InputNumber,
+  Layout,
   Modal,
   Radio,
   Select,
   Table,
+  Typography,
 } from "antd";
 import dayjs from "dayjs";
 import type { TableProps } from "antd";
@@ -101,6 +103,8 @@ type FormValues = {
 };
 
 export function Dashboard() {
+  const { Header, Sider, Content, Footer } = Layout;
+
   const { data, loading, error } =
     useQuery<GetTransactionsData>(GET_TRANSACTIONS);
   const { data: categoriesData } = useQuery<GetCategoriesData>(GET_CATEGORIES);
@@ -174,6 +178,7 @@ export function Dashboard() {
   const [isEdit, setIsEdit] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [descriptionFilter, setDescriptionFilter] = useState("");
+  const [isSiderCollapsed, setIsSiderCollapsed] = useState(false);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
@@ -319,39 +324,101 @@ export function Dashboard() {
   );
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <h1>Transactions</h1>
-      <div style={{ display: "flex", gap: 16, flexDirection: "column" }}>
-        <Button type="default" onClick={() => setIsModalOpen(true)}>
-          Add transaction
-        </Button>
+    <Layout className="dashboard-shell">
+      <Sider
+        className="dashboard-sider"
+        collapsed={isSiderCollapsed}
+        collapsible
+        onCollapse={(collapsed) => setIsSiderCollapsed(collapsed)}
+        width={240}
+      >
+        <div className="dashboard-sider__logo">
+          <span className="dashboard-sider__logoMark">FD</span>
+          {!isSiderCollapsed ? (
+            <span className="dashboard-sider__logoText">Finance Dashboard</span>
+          ) : null}
+        </div>
 
-        <Table
-          dataSource={dataSource}
-          columns={columns}
-          summary={() => (
-            <Table.Summary.Cell index={0} colSpan={columns.length}>
-              <span>
-                Total: $
-                {dataSource
-                  .reduce(
-                    (acc, record) =>
-                      record.type === "INCOME"
-                        ? acc + record.amount
-                        : acc - record.amount,
-                    0,
-                  )
-                  .toFixed(2)}
-              </span>
-            </Table.Summary.Cell>
-          )}
-          rowClassName={(record) =>
-            record.type === "INCOME"
-              ? "transaction-row--income"
-              : "transaction-row--expense"
-          }
-        />
-      </div>
+        <div className="dashboard-sider__nav">
+          <button className="dashboard-navItem dashboard-navItem--active">
+            <span className="dashboard-navItem__icon" aria-hidden>
+              📊
+            </span>
+            {!isSiderCollapsed ? <span>Dashboard</span> : null}
+          </button>
+          <button className="dashboard-navItem" disabled>
+            <span className="dashboard-navItem__icon" aria-hidden>
+              📈
+            </span>
+            {!isSiderCollapsed ? <span>Reports</span> : null}
+          </button>
+          <button className="dashboard-navItem" disabled>
+            <span className="dashboard-navItem__icon" aria-hidden>
+              ⚙️
+            </span>
+            {!isSiderCollapsed ? <span>Settings</span> : null}
+          </button>
+        </div>
+      </Sider>
+
+      <Layout>
+        <Header className="dashboard-header">
+          <div className="dashboard-header__left">
+            <Typography.Title level={3} style={{ margin: 0 }}>
+              Transactions
+            </Typography.Title>
+            <Typography.Text type="secondary">
+              Track income and expenses
+            </Typography.Text>
+          </div>
+
+          <div className="dashboard-header__right">
+            <Button type="primary" onClick={() => setIsModalOpen(true)}>
+              Add transaction
+            </Button>
+          </div>
+        </Header>
+
+        <Content className="dashboard-content">
+          <div className="dashboard-contentInner">
+            <div className="dashboard-card">
+              <Table
+                dataSource={dataSource}
+                columns={columns}
+                rowKey="id"
+                pagination={{ pageSize: 10, showSizeChanger: true }}
+                summary={() => (
+                  <Table.Summary.Cell index={0} colSpan={columns.length}>
+                    <span>
+                      Total: $
+                      {dataSource
+                        .reduce(
+                          (acc, record) =>
+                            record.type === "INCOME"
+                              ? acc + record.amount
+                              : acc - record.amount,
+                          0,
+                        )
+                        .toFixed(2)}
+                    </span>
+                  </Table.Summary.Cell>
+                )}
+                rowClassName={(record) =>
+                  record.type === "INCOME"
+                    ? "transaction-row--income"
+                    : "transaction-row--expense"
+                }
+              />
+            </div>
+          </div>
+        </Content>
+
+        <Footer className="dashboard-footer">
+          <Typography.Text type="secondary">
+            © {new Date().getFullYear()} Finance Dashboard
+          </Typography.Text>
+        </Footer>
+      </Layout>
 
       <Modal
         title={isEdit ? "Edit Transaction" : "Add Transaction"}
@@ -371,7 +438,12 @@ export function Dashboard() {
             name="amount"
             rules={[{ required: true, message: "Amount is required" }]}
           >
-            <InputNumber type="number" placeholder="0.00" prefix="$" />
+            <InputNumber
+              style={{ width: "100%" }}
+              type="number"
+              placeholder="0.00"
+              prefix="$"
+            />
           </Form.Item>
           <Form.Item label="Description" name="description">
             <Input type="text" placeholder="Description" />
@@ -388,7 +460,7 @@ export function Dashboard() {
             name="date"
             rules={[{ required: true, message: "Date is required" }]}
           >
-            <DatePicker />
+            <DatePicker style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
             label="Type"
@@ -404,6 +476,6 @@ export function Dashboard() {
           </Form.Item>
         </Form>
       </Modal>
-    </div>
+    </Layout>
   );
 }
