@@ -85,10 +85,10 @@ type EditTransactionVars = {
 type TransactionRow = {
   key: string;
   id: string;
-  amount: string;
+  amount: number;
   type: TransactionType;
   category: Category;
-  date: string;
+  date: string; // ISO
   description?: string | null;
 };
 
@@ -173,6 +173,7 @@ export function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [descriptionFilter, setDescriptionFilter] = useState("");
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error</p>;
@@ -223,21 +224,40 @@ export function Dashboard() {
       title: "Description",
       dataIndex: "description",
       key: "description",
+      filterDropdown: () => (
+        <div style={{ padding: 8, width: 240 }}>
+          <Input
+            placeholder="Search description"
+            value={descriptionFilter}
+            onChange={(e) => setDescriptionFilter(e.target.value)}
+            allowClear
+          />
+        </div>
+      ),
+      filteredValue: descriptionFilter ? [descriptionFilter] : null,
+      onFilter: (value, record) =>
+        (record.description ?? "")
+          .toLowerCase()
+          .includes(String(value).toLowerCase()),
     },
     {
       title: "Transaction Type",
       dataIndex: "type",
       key: "type",
+      sorter: (a, b) => a.type.localeCompare(b.type),
     },
     {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
+      sorter: (a, b) => a.amount - b.amount,
+      render: (amount: number) => amount.toFixed(2),
     },
     {
       title: "Category",
       dataIndex: "category",
       key: "category",
+      sorter: (a, b) => a.category.name.localeCompare(b.category.name),
       render: (category: Category) => (
         <div>
           <span style={{ marginRight: 8 }}>{category.icon}</span>
@@ -249,6 +269,8 @@ export function Dashboard() {
       title: "Date",
       dataIndex: "date",
       key: "date",
+      sorter: (a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf(),
+      render: (date: string) => dayjs(date).format("DD.MM.YYYY"),
     },
     {
       title: "Actions",
@@ -290,8 +312,8 @@ export function Dashboard() {
     (transaction) => ({
       key: transaction.id,
       ...transaction,
-      date: dayjs(transaction.date).format("DD.MM.YYYY"),
-      amount: transaction.amount.toFixed(2),
+      date: transaction.date ?? new Date().toISOString(),
+      amount: transaction.amount,
       category: transaction.category,
     }),
   );
@@ -315,8 +337,8 @@ export function Dashboard() {
                   .reduce(
                     (acc, record) =>
                       record.type === "INCOME"
-                        ? acc + Number(record.amount)
-                        : acc - Number(record.amount),
+                        ? acc + record.amount
+                        : acc - record.amount,
                     0,
                   )
                   .toFixed(2)}
