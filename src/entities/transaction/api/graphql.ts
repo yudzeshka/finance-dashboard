@@ -1,5 +1,22 @@
 import { gql } from "@apollo/client";
 
+export const GET_TRANSACTIONS = gql`
+  query GetTransactions {
+    transactions {
+      id
+      amount
+      type
+      category {
+        id
+        name
+        icon
+      }
+      date
+      description
+    }
+  }
+`;
+
 export const ADD_TRANSACTION = gql`
   mutation AddTransaction(
     $amount: Float!
@@ -28,6 +45,7 @@ export const ADD_TRANSACTION = gql`
     }
   }
 `;
+
 export const EDIT_TRANSACTION = gql`
   mutation EditTransaction(
     $id: ID!
@@ -73,3 +91,4 @@ export const DELETE_TRANSACTION = gql`
     }
   }
 `;
+

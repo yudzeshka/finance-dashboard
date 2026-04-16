@@ -132,12 +132,7 @@ export const schema = createSchema({
         transactions.unshift(t);
         return t;
       },
-      deleteTransaction: (
-        _parent,
-        args: {
-          id: string;
-        },
-      ) => {
+      deleteTransaction: (_parent, args: { id: string }) => {
         const transaction = transactions.find((t) => t.id === args.id);
         if (!transaction) {
           throw new Error("Transaction not found");
@@ -171,3 +166,4 @@ export const schema = createSchema({
     },
   },
 });
+
