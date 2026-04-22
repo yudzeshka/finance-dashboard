@@ -4,6 +4,7 @@ import type { Transaction } from "../../../entities/transaction";
 import { AppShell } from "../../app-shell/ui/AppShell";
 import { TransactionsTable } from "../../transactions-table/ui/TransactionsTable";
 import type { TransactionFormValues } from "../../../features/transaction/manage/model/useTransactionsDashboard";
+import { TransactionsFiltersWidget } from "../../../features/transaction/filters";
 
 type CategoryOption = {
   label: string;
@@ -56,6 +57,7 @@ export function TransactionsWidget({
           </Button>
         }
       >
+        <TransactionsFiltersWidget />
         <div className="dashboard-card">
           <TransactionsTable
             transactions={transactions}
