@@ -1,4 +1,4 @@
-export type TransactionType = "income" | "expense";
+import type { TransactionType } from "../../../../entities/transaction";
 
 export type TransactionFilters = {
   search?: string;

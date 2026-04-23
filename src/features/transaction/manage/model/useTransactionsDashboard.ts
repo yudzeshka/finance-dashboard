@@ -2,15 +2,24 @@ import { useQuery } from "@apollo/client/react";
 import { Form } from "antd";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { Category } from "../../../../entities/category";
 import { GET_CATEGORIES } from "../../../../entities/category";
-import type { Transaction, TransactionType } from "../../../../entities/transaction";
+import type {
+  Transaction,
+  TransactionType,
+} from "../../../../entities/transaction";
 import { GET_TRANSACTIONS } from "../../../../entities/transaction";
 import { useAddTransaction } from "../../create/model/useAddTransaction";
 import { useDeleteTransaction } from "../../delete/model/useDeleteTransaction";
 import { useEditTransaction } from "../../edit/model/useEditTransaction";
+import { useFilters } from "../../filters/model/selectors";
+import { filterTransactions } from "./filterTransactions";
+import {
+  useSetAllTransactions,
+  useSetTransactions,
+} from "../../../../entities/transaction/model/selectors";
 
 type GetTransactionsData = {
   transactions: Transaction[];
@@ -28,18 +37,18 @@ export type TransactionFormValues = {
   type: TransactionType;
 };
 
-type CategoryOption = {
-  label: string;
-  value: string;
-  icon: string;
-};
-
 export function useTransactionsDashboard() {
-  const { data, loading, error } = useQuery<GetTransactionsData>(GET_TRANSACTIONS);
+  const {
+    data: transactionsData,
+    loading,
+    error,
+  } = useQuery<GetTransactionsData>(GET_TRANSACTIONS);
   const { data: categoriesData } = useQuery<GetCategoriesData>(GET_CATEGORIES);
 
-  const [addTransaction, { loading: addTransactionLoading }] = useAddTransaction();
-  const [editTransaction, { loading: editTransactionLoading }] = useEditTransaction();
+  const [addTransaction, { loading: addTransactionLoading }] =
+    useAddTransaction();
+  const [editTransaction, { loading: editTransactionLoading }] =
+    useEditTransaction();
   const [deleteTransaction, { loading: deleteTransactionLoading }] =
     useDeleteTransaction();
 
@@ -47,13 +56,31 @@ export function useTransactionsDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const filters = useFilters();
+  const setTransactions = useSetTransactions();
+  const setAllTransactions = useSetAllTransactions();
 
-  const categoryOptions: CategoryOption[] =
-    categoriesData?.categories.map((c) => ({
-      label: c.name,
-      value: c.id,
-      icon: c.icon,
-    })) ?? [];
+  const categoryOptions = useMemo(() => {
+    return (
+      categoriesData?.categories.map((c) => ({
+        label: c.name,
+        value: c.id,
+        icon: c.icon,
+      })) ?? []
+    );
+  }, [categoriesData]);
+
+  const filteredTransactions = useMemo(() => {
+    return filterTransactions(transactionsData?.transactions ?? [], filters);
+  }, [transactionsData, filters]);
+
+  useEffect(() => {
+    setTransactions(filteredTransactions);
+  }, [filteredTransactions, setTransactions]);
+
+  useEffect(() => {
+    setAllTransactions(transactionsData?.transactions ?? []);
+  }, [transactionsData, setAllTransactions]);
 
   const openCreate = () => {
     setIsEdit(false);
@@ -118,7 +145,7 @@ export function useTransactionsDashboard() {
 
   return {
     // data
-    transactions: data?.transactions ?? [],
+    transactions: filteredTransactions,
     categoryOptions,
 
     // query state
@@ -144,4 +171,3 @@ export function useTransactionsDashboard() {
     deleteLoading: deleteTransactionLoading,
   };
 }
-

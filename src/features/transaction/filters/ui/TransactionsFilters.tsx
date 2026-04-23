@@ -15,20 +15,23 @@ import {
 import type { TransactionFilters } from "../model/types";
 import type { Category } from "../../../../entities/category";
 import dayjs from "dayjs";
+import type { Dayjs } from "dayjs";
 
 export type TransactionsFiltersProps = {
   onOpen?: () => void;
   onClose?: () => void;
   isOpen?: boolean;
+  amountBounds?: [number, number];
   amountRange?: number[];
   onAmountRangeChange?: (value: number[]) => void;
+  onAmountRangeCommit?: (value: number[]) => void;
   filters?: TransactionFilters;
   filtersValues?: TransactionFilters;
   onFiltersChange?: <K extends keyof TransactionFilters>(
     value: TransactionFilters[K],
     key: K,
   ) => void;
-  onDateChange?: (value: [string, string]) => void;
+  onDateChange?: (value: [Dayjs | null, Dayjs | null] | null) => void;
   resetFilters?: () => void;
   categories?: Category[];
   onApplyFilters?: () => void;
@@ -39,8 +42,10 @@ export function TransactionsFilters({
   onOpen,
   onClose,
   isOpen,
+  amountBounds,
   amountRange,
   onAmountRangeChange,
+  onAmountRangeCommit,
   filters,
   filtersValues,
   onFiltersChange,
@@ -50,6 +55,13 @@ export function TransactionsFilters({
   onApplyFilters,
   onClearFilters,
 }: TransactionsFiltersProps) {
+  const sliderMin = amountBounds?.[0] ?? 0;
+  const sliderMax = amountBounds?.[1] ?? 100;
+  const sliderMarks =
+    sliderMin === sliderMax
+      ? { [sliderMin]: String(sliderMin) }
+      : { [sliderMin]: String(sliderMin), [sliderMax]: String(sliderMax) };
+
   return (
     <>
       <div
@@ -108,18 +120,21 @@ export function TransactionsFilters({
             placeholder="Select type"
             allowClear
             options={[
-              { value: "income", label: "Income" },
-              { value: "expense", label: "Expense" },
+              { value: "INCOME", label: "Income" },
+              { value: "EXPENSE", label: "Expense" },
             ]}
             value={filtersValues?.type}
             onChange={(value) => onFiltersChange?.(value, "type")}
           />
           <Typography.Text>Amount</Typography.Text>
           <Slider
-            marks={{ 0: "0", 100: "100" }}
+            min={sliderMin}
+            max={sliderMax}
+            marks={sliderMarks}
             range={{ draggableTrack: true }}
             value={amountRange}
             onChange={onAmountRangeChange}
+            onChangeComplete={onAmountRangeCommit}
           />
           <Typography.Text>Date</Typography.Text>
           <DatePicker.RangePicker
@@ -133,7 +148,7 @@ export function TransactionsFilters({
                   ]
                 : null
             }
-            onChange={(_, dateStrings) => onDateChange?.(dateStrings)}
+            onChange={(dates) => onDateChange?.(dates)}
           />
         </div>
       </Modal>

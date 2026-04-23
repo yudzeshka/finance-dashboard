@@ -54,6 +54,12 @@ const transactions: Transaction[] = [
   },
 ];
 
+function normalizeDateToIso(input?: string | null): string {
+  if (!input) return new Date().toISOString();
+  const d = new Date(input);
+  return Number.isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
+}
+
 export const schema = createSchema({
   typeDefs: /* GraphQL */ `
     enum TransactionType {
@@ -126,7 +132,7 @@ export const schema = createSchema({
           amount: args.amount,
           type: args.type,
           category,
-          date: args.date ?? new Date().toISOString(),
+          date: normalizeDateToIso(args.date),
           description: args.description ?? undefined,
         };
         transactions.unshift(t);
@@ -159,7 +165,7 @@ export const schema = createSchema({
         transaction.type = args.type;
         transaction.category =
           categories.find((c) => c.id === args.category) ?? categories[0];
-        transaction.date = args.date ?? new Date().toISOString();
+        transaction.date = normalizeDateToIso(args.date);
         transaction.description = args.description ?? undefined;
         return transaction;
       },
