@@ -5,9 +5,20 @@ import { GET_CATEGORIES } from "../../../../entities/category";
 import type { Category } from "../../../../entities/category";
 import { useQuery } from "@apollo/client/react";
 
+const initialFilters: TransactionFilters = {
+  amountFrom: undefined,
+  amountTo: undefined,
+  category: undefined,
+  type: undefined,
+  dateFrom: undefined,
+  dateTo: undefined,
+};
+
 export const useContainer = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [amountRange, setAmountRange] = useState<number[]>([0, 100]);
+  const [filtersValues, setFiltersValues] =
+    useState<TransactionFilters>(initialFilters);
   const { data: categoriesData } = useQuery<{
     categories: Category[];
   }>(GET_CATEGORIES);
@@ -31,21 +42,34 @@ export const useContainer = () => {
 
   const onAmountRangeChange = (value: number[]) => {
     setAmountRange(value);
-    setFilters({ ...filters, amountFrom: value[0], amountTo: value[1] });
+    setFiltersValues({
+      ...filtersValues,
+      amountFrom: value[0],
+      amountTo: value[1],
+    });
   };
   const onFiltersChange = <K extends keyof TransactionFilters>(
     value: TransactionFilters[K],
     key: K,
   ) => {
-    setFilters({ ...filters, [key]: value } as TransactionFilters);
+    setFiltersValues({ ...filtersValues, [key]: value } as TransactionFilters);
   };
   const onDateChange = (value: [string, string]) => {
-    setFilters({
-      ...filters,
+    setFiltersValues({
+      ...filtersValues,
       dateFrom: value[0] || undefined,
       dateTo: value[1] || undefined,
     });
   };
+  const onApplyFilters = () => {
+    setFilters(filtersValues);
+    onClose();
+  };
+  const onClearFilters = () => {
+    setFiltersValues(initialFilters);
+    setAmountRange([0, 100]);
+  };
+
   console.log(categoriesData);
   return {
     onOpen,
@@ -55,8 +79,11 @@ export const useContainer = () => {
     onAmountRangeChange,
     onFiltersChange,
     onDateChange,
+    filtersValues,
     filters,
     resetFilters: onResetFilters,
     categories: categoriesData?.categories ?? [],
+    onApplyFilters,
+    onClearFilters,
   };
 };

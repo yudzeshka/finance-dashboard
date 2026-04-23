@@ -23,6 +23,7 @@ export type TransactionsFiltersProps = {
   amountRange?: number[];
   onAmountRangeChange?: (value: number[]) => void;
   filters?: TransactionFilters;
+  filtersValues?: TransactionFilters;
   onFiltersChange?: <K extends keyof TransactionFilters>(
     value: TransactionFilters[K],
     key: K,
@@ -30,6 +31,8 @@ export type TransactionsFiltersProps = {
   onDateChange?: (value: [string, string]) => void;
   resetFilters?: () => void;
   categories?: Category[];
+  onApplyFilters?: () => void;
+  onClearFilters?: () => void;
 };
 
 export function TransactionsFilters({
@@ -39,10 +42,13 @@ export function TransactionsFilters({
   amountRange,
   onAmountRangeChange,
   filters,
+  filtersValues,
   onFiltersChange,
   onDateChange,
   resetFilters,
   categories,
+  onApplyFilters,
+  onClearFilters,
 }: TransactionsFiltersProps) {
   return (
     <>
@@ -76,6 +82,14 @@ export function TransactionsFilters({
             Select filters
           </Typography.Text>
         }
+        footer={
+          <div style={{ display: "flex", justifyContent: "flex-end", gap: 10 }}>
+            <Button onClick={onClearFilters}>Clear</Button>
+            <Button type="primary" onClick={onApplyFilters}>
+              Apply
+            </Button>
+          </div>
+        }
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <Typography.Text>Category</Typography.Text>
@@ -86,7 +100,7 @@ export function TransactionsFilters({
               value: id,
               label: name,
             }))}
-            value={filters?.category}
+            value={filtersValues?.category}
             onChange={(value) => onFiltersChange?.(value, "category")}
           />
           <Typography.Text>Type</Typography.Text>
@@ -97,7 +111,7 @@ export function TransactionsFilters({
               { value: "income", label: "Income" },
               { value: "expense", label: "Expense" },
             ]}
-            value={filters?.type}
+            value={filtersValues?.type}
             onChange={(value) => onFiltersChange?.(value, "type")}
           />
           <Typography.Text>Amount</Typography.Text>
@@ -112,10 +126,10 @@ export function TransactionsFilters({
             placeholder={["Start Date", "Till Now"]}
             allowEmpty={[false, true]}
             value={
-              filters?.dateFrom
+              filtersValues?.dateFrom
                 ? [
-                    dayjs(filters.dateFrom),
-                    filters.dateTo ? dayjs(filters.dateTo) : null,
+                    dayjs(filtersValues.dateFrom),
+                    filtersValues.dateTo ? dayjs(filtersValues.dateTo) : null,
                   ]
                 : null
             }

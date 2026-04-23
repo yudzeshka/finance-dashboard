@@ -1,7 +1,7 @@
 export type TransactionType = "income" | "expense";
 
 export type TransactionFilters = {
-  search: string;
+  search?: string;
   type?: TransactionType;
   dateFrom?: string;
   dateTo?: string;
