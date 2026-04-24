@@ -20,7 +20,8 @@ import {
   useSetAllTransactions,
   useSetTransactions,
 } from "../../../../entities/transaction/model/selectors";
-import { useDebounce } from "../../../../shared/hooks/useDebounce";
+import { useDebounce } from "../../../../shared/hooks/UseDebounce";
+import { useTranslation } from "react-i18next";
 
 type GetTransactionsData = {
   transactions: Transaction[];
@@ -39,6 +40,7 @@ export type TransactionFormValues = {
 };
 
 export function useTransactionsDashboard() {
+  const { t } = useTranslation();
   const {
     data: transactionsData,
     loading,
@@ -60,7 +62,10 @@ export function useTransactionsDashboard() {
   const filters = useFilters();
   const setTransactions = useSetTransactions();
   const setAllTransactions = useSetAllTransactions();
-  const { debouncedValue: debouncedSearch } = useDebounce(filters.search ?? "", 250);
+  const { debouncedValue: debouncedSearch } = useDebounce(
+    filters.search ?? "",
+    250,
+  );
 
   const categoryOptions = useMemo(() => {
     return (
@@ -159,7 +164,7 @@ export function useTransactionsDashboard() {
 
     // modal state
     isModalOpen,
-    modalTitle: isEdit ? "Edit Transaction" : "Add Transaction",
+    modalTitle: isEdit ? t("editTransaction") : t("addTransaction"),
     confirmLoading: isEdit ? editTransactionLoading : addTransactionLoading,
 
     // form

@@ -16,6 +16,7 @@ import type { TransactionFilters } from "../model/types";
 import type { Category } from "../../../../entities/category";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
+import { useTranslation } from "react-i18next";
 
 export type TransactionsFiltersProps = {
   onOpen?: () => void;
@@ -63,6 +64,7 @@ export function TransactionsFilters({
     sliderMin === sliderMax
       ? { [sliderMin]: String(sliderMin) }
       : { [sliderMin]: String(sliderMin), [sliderMax]: String(sliderMax) };
+  const { t } = useTranslation();
 
   return (
     <>
@@ -75,40 +77,44 @@ export function TransactionsFilters({
         }}
       >
         <Input
-          placeholder="Search"
+          placeholder={t("search")}
           style={{ width: 200 }}
           prefix={<SearchOutlined />}
           value={filters?.search}
           onChange={(e) => onSearchChange?.(e.target.value)}
         />
-        <Button icon={<FilterOutlined />} onClick={onOpen}>
-          Filters
+        <Button
+          icon={<FilterOutlined />}
+          onClick={onOpen}
+          style={{ minWidth: "115px" }}
+        >
+          {t("filters")}
         </Button>
         <Button icon={<CloseOutlined />} onClick={resetFilters} />
       </div>
       <Modal
         open={isOpen}
         onCancel={onClose}
-        okText="Apply"
-        cancelText="Clear"
+        okText={t("apply")}
+        cancelText={t("clear")}
         title={
           <Typography.Text strong style={{ fontSize: 22 }}>
-            Select filters
+            {t("selectFilters")}
           </Typography.Text>
         }
         footer={
           <div style={{ display: "flex", justifyContent: "flex-end", gap: 10 }}>
-            <Button onClick={onClearFilters}>Clear</Button>
+            <Button onClick={onClearFilters}>{t("clear")}</Button>
             <Button type="primary" onClick={onApplyFilters}>
-              Apply
+              {t("apply")}
             </Button>
           </div>
         }
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <Typography.Text>Category</Typography.Text>
+          <Typography.Text>{t("category")}</Typography.Text>
           <Select
-            placeholder="Select category"
+            placeholder={t("selectCategory")}
             allowClear
             options={categories.map(({ id, name }) => ({
               value: id,
@@ -117,18 +123,18 @@ export function TransactionsFilters({
             value={filtersValues?.category}
             onChange={(value) => onFiltersChange?.(value, "category")}
           />
-          <Typography.Text>Type</Typography.Text>
+          <Typography.Text>{t("type")}</Typography.Text>
           <Select
-            placeholder="Select type"
+            placeholder={t("selectType")}
             allowClear
             options={[
-              { value: "INCOME", label: "Income" },
-              { value: "EXPENSE", label: "Expense" },
+              { value: "INCOME", label: t("income") },
+              { value: "EXPENSE", label: t("expense") },
             ]}
             value={filtersValues?.type}
             onChange={(value) => onFiltersChange?.(value, "type")}
           />
-          <Typography.Text>Amount</Typography.Text>
+          <Typography.Text>{t("amount")}</Typography.Text>
           <Slider
             min={sliderMin}
             max={sliderMax}
@@ -138,9 +144,9 @@ export function TransactionsFilters({
             onChange={onAmountRangeChange}
             onChangeComplete={onAmountRangeCommit}
           />
-          <Typography.Text>Date</Typography.Text>
+          <Typography.Text>{t("date")}</Typography.Text>
           <DatePicker.RangePicker
-            placeholder={["Start Date", "Till Now"]}
+            placeholder={[t("startDate"), t("tillNow")]}
             allowEmpty={[false, true]}
             value={
               filtersValues?.dateFrom

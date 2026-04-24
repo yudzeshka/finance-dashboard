@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import type { Transaction } from "../../../entities/transaction";
 import type { Category } from "../../../entities/category";
+import { useTranslation } from "react-i18next";
 
 type TransactionRow = {
   key: string;
@@ -28,18 +29,19 @@ export function TransactionsTable({
   onDelete,
   deleteLoading,
 }: TransactionsTableProps) {
+  const { t } = useTranslation();
   const [descriptionFilter, setDescriptionFilter] = useState("");
 
   const columns = useMemo(() => {
     return [
       {
-        title: "Description",
+        title: t("description"),
         dataIndex: "description",
         key: "description",
         filterDropdown: () => (
           <div style={{ padding: 8, width: 240 }}>
             <Input
-              placeholder="Search description"
+              placeholder={t("searchDescription")}
               value={descriptionFilter}
               onChange={(e) => setDescriptionFilter(e.target.value)}
               allowClear
@@ -53,21 +55,21 @@ export function TransactionsTable({
             .includes(String(value).toLowerCase()),
       },
       {
-        title: "Transaction Type",
+        title: t("transactionType"),
         dataIndex: "type",
         key: "type",
         sorter: (a: TransactionRow, b: TransactionRow) =>
           a.type.localeCompare(b.type),
       },
       {
-        title: "Amount",
+        title: t("amount"),
         dataIndex: "amount",
         key: "amount",
         sorter: (a: TransactionRow, b: TransactionRow) => a.amount - b.amount,
         render: (amount: number) => amount.toFixed(2),
       },
       {
-        title: "Category",
+        title: t("category"),
         dataIndex: "category",
         key: "category",
         sorter: (a: TransactionRow, b: TransactionRow) =>
@@ -80,7 +82,7 @@ export function TransactionsTable({
         ),
       },
       {
-        title: "Date",
+        title: t("date"),
         dataIndex: "date",
         key: "date",
         sorter: (a: TransactionRow, b: TransactionRow) =>
@@ -88,7 +90,7 @@ export function TransactionsTable({
         render: (date: string) => dayjs(date).format("DD.MM.YYYY"),
       },
       {
-        title: "Actions",
+        title: t("actions"),
         dataIndex: "actions",
         key: "actions",
         render: (_: unknown, record: TransactionRow) => (
@@ -101,7 +103,10 @@ export function TransactionsTable({
             >
               🗑️
             </Button>
-            <Button type="link" onClick={() => onEdit(record as unknown as Transaction)}>
+            <Button
+              type="link"
+              onClick={() => onEdit(record as unknown as Transaction)}
+            >
               ✏️
             </Button>
           </div>
@@ -140,7 +145,9 @@ export function TransactionsTable({
       pagination={{ pageSize: 10, showSizeChanger: true }}
       summary={() => (
         <Table.Summary.Cell index={0} colSpan={columns.length}>
-          <span>Total: ${total}</span>
+          <span>
+            {t("total")}: ${total}
+          </span>
         </Table.Summary.Cell>
       )}
       rowClassName={(record) =>
@@ -151,4 +158,3 @@ export function TransactionsTable({
     />
   );
 }
-
