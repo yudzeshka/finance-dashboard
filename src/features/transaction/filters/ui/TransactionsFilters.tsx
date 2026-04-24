@@ -31,6 +31,7 @@ export type TransactionsFiltersProps = {
     value: TransactionFilters[K],
     key: K,
   ) => void;
+  onSearchChange?: (value: string) => void;
   onDateChange?: (value: [Dayjs | null, Dayjs | null] | null) => void;
   resetFilters?: () => void;
   categories?: Category[];
@@ -49,6 +50,7 @@ export function TransactionsFilters({
   filters,
   filtersValues,
   onFiltersChange,
+  onSearchChange,
   onDateChange,
   resetFilters,
   categories,
@@ -77,7 +79,7 @@ export function TransactionsFilters({
           style={{ width: 200 }}
           prefix={<SearchOutlined />}
           value={filters?.search}
-          onChange={(e) => onFiltersChange?.(e.target.value, "search")}
+          onChange={(e) => onSearchChange?.(e.target.value)}
         />
         <Button icon={<FilterOutlined />} onClick={onOpen}>
           Filters

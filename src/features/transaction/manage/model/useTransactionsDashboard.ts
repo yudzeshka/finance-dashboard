@@ -20,6 +20,7 @@ import {
   useSetAllTransactions,
   useSetTransactions,
 } from "../../../../entities/transaction/model/selectors";
+import { useDebounce } from "../../../../shared/hooks/useDebounce";
 
 type GetTransactionsData = {
   transactions: Transaction[];
@@ -59,6 +60,7 @@ export function useTransactionsDashboard() {
   const filters = useFilters();
   const setTransactions = useSetTransactions();
   const setAllTransactions = useSetAllTransactions();
+  const { debouncedValue: debouncedSearch } = useDebounce(filters.search ?? "", 250);
 
   const categoryOptions = useMemo(() => {
     return (
@@ -71,8 +73,11 @@ export function useTransactionsDashboard() {
   }, [categoriesData]);
 
   const filteredTransactions = useMemo(() => {
-    return filterTransactions(transactionsData?.transactions ?? [], filters);
-  }, [transactionsData, filters]);
+    return filterTransactions(transactionsData?.transactions ?? [], {
+      ...filters,
+      search: debouncedSearch,
+    });
+  }, [transactionsData, filters, debouncedSearch]);
 
   useEffect(() => {
     setTransactions(filteredTransactions);

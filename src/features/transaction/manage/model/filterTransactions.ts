@@ -24,7 +24,9 @@ export function filterTransactions(
   }
 
   if (filters.dateTo) {
-    predicates.push((tx) => !!tx.date && !dayjs(tx.date).isAfter(filters.dateTo));
+    predicates.push(
+      (tx) => !!tx.date && !dayjs(tx.date).isAfter(filters.dateTo),
+    );
   }
 
   if (filters.amountFrom !== undefined) {
@@ -37,13 +39,10 @@ export function filterTransactions(
 
   if (filters.search) {
     const q = filters.search.toLowerCase();
-    predicates.push((tx) =>
-      (tx.description ?? "").toLowerCase().includes(q),
-    );
+    predicates.push((tx) => (tx.description ?? "").toLowerCase().includes(q));
   }
 
   if (predicates.length === 0) return transactions;
 
   return transactions.filter((tx) => predicates.every((p) => p(tx)));
 }
-

@@ -93,6 +93,9 @@ export const useContainer = () => {
       dateTo: value?.[1]?.toISOString() ?? undefined,
     });
   };
+  const onSearchChange = (value: string) => {
+    setFilters({ ...filters, search: value });
+  };
   const onApplyFilters = () => {
     setFilters(filtersValues);
     onClose();
@@ -120,6 +123,7 @@ export const useContainer = () => {
     onAmountRangeChange,
     onAmountRangeCommit,
     onFiltersChange,
+    onSearchChange,
     onDateChange,
     filtersValues,
     filters,
