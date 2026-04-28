@@ -1,4 +1,5 @@
 import { useTransactionsDashboard } from "../../../features/transaction/manage/model/useTransactionsDashboard";
+import { TransactionsFiltersWidget } from "../../../features/transaction/filters";
 import { TransactionsWidget } from "../../../widgets/transactions/ui/TransactionsWidget";
 
 export function DashboardPage() {
@@ -21,6 +22,7 @@ export function DashboardPage() {
       onModalCancel={transactionsDashboard.closeModal}
       form={transactionsDashboard.form}
       categoryOptions={transactionsDashboard.categoryOptions}
+      filtersSlot={<TransactionsFiltersWidget />}
     />
   );
 }

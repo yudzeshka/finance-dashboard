@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { initialTransactionFilters } from "./constants";
 import type { TransactionFilters } from "./types";
 
 type State = {
@@ -10,18 +11,8 @@ type Actions = {
   resetFilters: () => void;
 };
 
-const initialFilters: TransactionFilters = {
-  search: "",
-  type: undefined,
-  dateFrom: undefined,
-  dateTo: undefined,
-  category: undefined,
-  amountFrom: undefined,
-  amountTo: undefined,
-};
-
 export const useTransactionFiltersStore = create<State & Actions>((set) => ({
-  filters: initialFilters,
+  filters: initialTransactionFilters,
 
   setFilters: (payload) =>
     set((state) => ({
@@ -30,5 +21,5 @@ export const useTransactionFiltersStore = create<State & Actions>((set) => ({
         ...payload,
       },
     })),
-  resetFilters: () => set({ filters: initialFilters }),
+  resetFilters: () => set({ filters: initialTransactionFilters }),
 }));

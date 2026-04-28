@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 type TransactionRow = {
   key: string;
   id: string;
+  transaction: Transaction;
   amount: number;
   type: Transaction["type"];
   category: Category;
@@ -105,7 +106,7 @@ export function TransactionsTable({
             </Button>
             <Button
               type="link"
-              onClick={() => onEdit(record as unknown as Transaction)}
+              onClick={() => onEdit(record.transaction)}
             >
               ✏️
             </Button>
@@ -113,12 +114,13 @@ export function TransactionsTable({
         ),
       },
     ] satisfies TableProps<TransactionRow>["columns"];
-  }, [deleteLoading, descriptionFilter, onDelete, onEdit]);
+  }, [deleteLoading, descriptionFilter, onDelete, onEdit, t]);
 
   const dataSource: TransactionRow[] = useMemo(
     () =>
       (transactions ?? []).map((t) => ({
         key: t.id,
+        transaction: t,
         ...t,
         date: t.date ?? new Date().toISOString(),
         amount: t.amount,

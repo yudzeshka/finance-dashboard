@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import type { TransactionFilters } from "../model/types";
 import { useFilters, useSetFilters, useResetFilters } from "../model/selectors";
 import { GET_CATEGORIES } from "../../../../entities/category";
@@ -6,15 +6,7 @@ import type { Category } from "../../../../entities/category";
 import { useQuery } from "@apollo/client/react";
 import type { Dayjs } from "dayjs";
 import { useAllTransactions } from "../../../../entities/transaction/model/selectors";
-
-const initialFilters: TransactionFilters = {
-  amountFrom: undefined,
-  amountTo: undefined,
-  category: undefined,
-  type: undefined,
-  dateFrom: undefined,
-  dateTo: undefined,
-};
+import { initialTransactionFilters } from "../model/constants";
 
 export const useContainer = () => {
   const filters = useFilters();
@@ -30,37 +22,23 @@ export const useContainer = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [amountRange, setAmountRange] = useState<number[]>(amountBounds);
   const [filtersValues, setFiltersValues] =
-    useState<TransactionFilters>(initialFilters);
-  const isAmountInitializedRef = useRef(false);
+    useState<TransactionFilters>(initialTransactionFilters);
   const { data: categoriesData } = useQuery<{
     categories: Category[];
   }>(GET_CATEGORIES);
 
-  useEffect(() => {
-    // Initialize amount range once when bounds become known.
-    if (isAmountInitializedRef.current) return;
-    isAmountInitializedRef.current = true;
-
-    setAmountRange(amountBounds);
-    setFiltersValues((prev) => ({
-      ...prev,
-      amountFrom: amountBounds[0],
-      amountTo: amountBounds[1],
-    }));
-  }, [amountBounds]);
-
   const onResetFilters = () => {
     resetFilters();
     setAmountRange(amountBounds);
-    setFiltersValues((prev) => ({
-      ...prev,
-      amountFrom: amountBounds[0],
-      amountTo: amountBounds[1],
-    }));
+    setFiltersValues(initialTransactionFilters);
   };
-  console.log("filters", filters);
-  console.log("amountRange", amountRange);
+
   const onOpen = () => {
+    setFiltersValues(filters);
+    setAmountRange([
+      filters.amountFrom ?? amountBounds[0],
+      filters.amountTo ?? amountBounds[1],
+    ]);
     setIsOpen(true);
   };
   const onClose = () => {
@@ -84,14 +62,14 @@ export const useContainer = () => {
     value: TransactionFilters[K],
     key: K,
   ) => {
-    setFiltersValues({ ...filtersValues, [key]: value } as TransactionFilters);
+    setFiltersValues((prev) => ({ ...prev, [key]: value }));
   };
   const onDateChange = (value: [Dayjs | null, Dayjs | null] | null) => {
-    setFiltersValues({
-      ...filtersValues,
+    setFiltersValues((prev) => ({
+      ...prev,
       dateFrom: value?.[0]?.toISOString() ?? undefined,
       dateTo: value?.[1]?.toISOString() ?? undefined,
-    });
+    }));
   };
   const onSearchChange = (value: string) => {
     setFilters({ ...filters, search: value });
@@ -101,19 +79,14 @@ export const useContainer = () => {
     onClose();
   };
   const onClearFilters = () => {
-    setFiltersValues(initialFilters);
+    resetFilters();
+    setFiltersValues(initialTransactionFilters);
     setAmountRange(amountBounds);
-    setFiltersValues((prev) => ({
-      ...prev,
-      amountFrom: amountBounds[0],
-      amountTo: amountBounds[1],
-    }));
   };
 
   // do not auto-sync amountRange on each filters change:
   // user must control it, and we reset only via Clear/Reset
 
-  console.log(categoriesData);
   return {
     onOpen,
     onClose,

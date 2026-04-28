@@ -9,18 +9,15 @@ import {
   Select,
 } from "antd";
 import type { FormInstance } from "antd";
-import type { Transaction } from "../../../entities/transaction";
+import type { ReactNode } from "react";
+import type {
+  Transaction,
+  TransactionCategoryOption,
+  TransactionFormValues,
+} from "@/entities/transaction";
 import { AppShell } from "../../app-shell/ui/AppShell";
 import { TransactionsTable } from "../../transactions-table/ui/TransactionsTable";
-import type { TransactionFormValues } from "../../../features/transaction/manage/model/useTransactionsDashboard";
-import { TransactionsFiltersWidget } from "../../../features/transaction/filters";
 import { useTranslation } from "react-i18next";
-
-type CategoryOption = {
-  label: string;
-  value: string;
-  icon: string;
-};
 
 export type TransactionsWidgetProps = {
   transactions: Transaction[];
@@ -39,7 +36,8 @@ export type TransactionsWidgetProps = {
 
   // form
   form: FormInstance<TransactionFormValues>;
-  categoryOptions: CategoryOption[];
+  categoryOptions: TransactionCategoryOption[];
+  filtersSlot?: ReactNode;
 };
 
 export function TransactionsWidget({
@@ -55,6 +53,7 @@ export function TransactionsWidget({
   onModalCancel,
   form,
   categoryOptions,
+  filtersSlot,
 }: TransactionsWidgetProps) {
   const { t } = useTranslation();
   return (
@@ -68,7 +67,7 @@ export function TransactionsWidget({
           </Button>
         }
       >
-        <TransactionsFiltersWidget />
+        {filtersSlot}
         <div className="dashboard-card">
           <TransactionsTable
             transactions={transactions}

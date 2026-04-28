@@ -54,7 +54,7 @@ export function TransactionsFilters({
   onSearchChange,
   onDateChange,
   resetFilters,
-  categories,
+  categories = [],
   onApplyFilters,
   onClearFilters,
 }: TransactionsFiltersProps) {
