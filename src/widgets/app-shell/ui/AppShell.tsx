@@ -2,6 +2,7 @@ import { Layout, Typography } from "antd";
 import { useState } from "react";
 import { LangSwitcher } from "../../langSwitcher";
 import { useTranslation } from "react-i18next";
+import { NavLink } from "react-router-dom";
 
 type AppShellProps = {
   title: string;
@@ -39,24 +40,39 @@ export function AppShell({
         </div>
 
         <div className="dashboard-sider__nav">
-          <button className="dashboard-navItem dashboard-navItem--active">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `dashboard-navItem${isActive ? " dashboard-navItem--active" : ""}`
+            }
+          >
             <span className="dashboard-navItem__icon" aria-hidden>
               📊
             </span>
             {!isSiderCollapsed ? <span>{t("dashboard")}</span> : null}
-          </button>
-          <button className="dashboard-navItem" disabled>
+          </NavLink>
+          <NavLink
+            to="/reports"
+            className={({ isActive }) =>
+              `dashboard-navItem${isActive ? " dashboard-navItem--active" : ""}`
+            }
+          >
             <span className="dashboard-navItem__icon" aria-hidden>
               📈
             </span>
             {!isSiderCollapsed ? <span>{t("reports")}</span> : null}
-          </button>
-          <button className="dashboard-navItem" disabled>
+          </NavLink>
+          <NavLink
+            to="/settings"
+            className={({ isActive }) =>
+              `dashboard-navItem${isActive ? " dashboard-navItem--active" : ""}`
+            }
+          >
             <span className="dashboard-navItem__icon" aria-hidden>
               ⚙️
             </span>
             {!isSiderCollapsed ? <span>{t("settings")}</span> : null}
-          </button>
+          </NavLink>
         </div>
       </Sider>
 
