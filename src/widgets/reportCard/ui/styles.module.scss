@@ -1,0 +1,96 @@
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.card {
+  width: 100%;
+  border-radius: 14px;
+}
+
+.cardWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+}
+
+.iconWrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+.icon {
+  font-size: 26px;
+  color: currentColor;
+}
+
+.green {
+  color: #16a34a;
+  background-color: #dcfce7;
+}
+
+.red {
+  color: #ef4444;
+  background-color: #fee2e2;
+}
+
+.purple {
+  color: #8b5cf6;
+  background-color: #ede9fe;
+}
+
+.blue {
+  color: #2563eb;
+  background-color: #dbeafe;
+}
+
+.cardTextWrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.cardText {
+  font-size: 12px;
+  font-weight: 600;
+}
+.cardTextValue {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-h);
+  line-height: 1.2;
+}
+.cardTextPercentage {
+  font-size: 12px;
+  font-weight: 600;
+}
+.positive {
+  color: #008000;
+}
+.negative {
+  color: #ff0000;
+}
+
+.cardTextStartDate {
+  font-size: 12px;
+  font-weight: 400;
+  color: #6b6375;
+}
+
+@media (max-width: 1200px) {
+  .cardsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .cardsGrid {
+    grid-template-columns: 1fr;
+  }
+}
