@@ -6,8 +6,7 @@ import { useTransactionQueries } from "@/features/transaction/manage/model/useTr
 import { useSetAllTransactions } from "@/entities/transaction/model/selectors";
 import { useDebounce } from "@/shared/hooks/UseDebounce";
 import { useEffect, useMemo } from "react";
-import { calculateExpenceChart } from "../model/lib";
-import type { PieDataItemOption } from "echarts/types/src/chart/pie/PieSeries.js";
+import { calculateIncomeVsExpenceChart } from "../model/lib";
 
 export const useContainer: ContainerComponentType<UIPropertyType> = () => {
   const {
@@ -31,7 +30,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
   );
 
   const chartData = useMemo(
-    () => calculateExpenceChart(transactions, reportFilters),
+    () => calculateIncomeVsExpenceChart(transactions, reportFilters),
     [transactions, reportFilters],
   );
 
@@ -39,50 +38,28 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
     setAllTransactions(transactions);
   }, [transactions, setAllTransactions]);
 
-  const center: [string, string] = ["30%", "50%"];
-
   const option: EChartsOption = {
-    title: {
-      text: `total: ${chartData.total} $`,
-      left: center[0],
-      top: center[1],
-      textAlign: "center",
-      textVerticalAlign: "middle",
-      textStyle: {
-        fontSize: 14,
-        fontWeight: "normal",
-        color: "#000",
-      },
+    xAxis: {
+      data: chartData.names,
     },
+    yAxis: {},
     series: [
       {
-        type: "pie",
-        data: chartData.data as PieDataItemOption[],
-        radius: ["50%", "85%"],
-        center,
-        label: {
-          show: false,
-          position: "inner",
-        },
+        type: "bar",
+        data: chartData.expenseValues,
+      },
+      {
+        type: "bar",
+        data: chartData.incomeValues,
       },
     ],
-    legend: {
-      icon: "circle",
-      show: true,
-      orient: "vertical",
-      right: 0,
-      top: "top",
-      formatter: (name: string) => {
-        const item = chartData.data.find((item) => item.name === name);
-        const value = item?.value ?? 0;
-        const percentage =
-          chartData.total > 0 ? (value / chartData.total) * 100 : 0;
-        return item
-          ? `${item.name}: ${value} $ - ${percentage.toFixed(2)}% `
-          : name;
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        type: "shadow",
       },
     },
-    tooltip: { trigger: "item" },
+    color: ["#FF4D4F", "#52C41A"],
   };
   return { option };
 };

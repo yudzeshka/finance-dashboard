@@ -20,41 +20,25 @@ function formatDate(date: dayjs.Dayjs) {
   return date.format("MMM D");
 }
 
-function getTransactionDateRange(transactions: Transaction[]) {
-  const dates = transactions
-    .map((transaction) => transaction.date)
-    .filter((date): date is string => Boolean(date))
-    .map((date) => dayjs(date))
-    .filter((date) => date.isValid());
+function getSelectedPeriod(filters: TransactionFilters) {
+  const now = dayjs();
 
-  if (dates.length === 0) {
-    const endDate = dayjs();
-    return {
-      startDate: endDate.subtract(fallbackPeriodDays - 1, "day"),
-      endDate,
-    };
+  // If user partially specified a range, assume a 30-day window anchored to the provided bound.
+  if (filters.dateFrom && filters.dateTo) {
+    return { startDate: dayjs(filters.dateFrom), endDate: dayjs(filters.dateTo) };
   }
 
-  return dates.reduce(
-    (range, date) => ({
-      startDate: date.isBefore(range.startDate) ? date : range.startDate,
-      endDate: date.isAfter(range.endDate) ? date : range.endDate,
-    }),
-    { startDate: dates[0], endDate: dates[0] },
-  );
-}
-
-function getCurrentPeriod(transactions: Transaction[], filters: TransactionFilters) {
-  if (filters.dateFrom || filters.dateTo) {
-    const fallbackRange = getTransactionDateRange(transactions);
-
-    return {
-      startDate: filters.dateFrom ? dayjs(filters.dateFrom) : fallbackRange.startDate,
-      endDate: filters.dateTo ? dayjs(filters.dateTo) : dayjs(),
-    };
+  if (filters.dateFrom) {
+    const startDate = dayjs(filters.dateFrom);
+    return { startDate, endDate: startDate.add(fallbackPeriodDays - 1, "day") };
   }
 
-  return getTransactionDateRange(transactions);
+  if (filters.dateTo) {
+    const endDate = dayjs(filters.dateTo);
+    return { startDate: endDate.subtract(fallbackPeriodDays - 1, "day"), endDate };
+  }
+
+  return { startDate: now.subtract(1, "month"), endDate: now };
 }
 
 function getPeriodDays(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) {
@@ -83,19 +67,28 @@ export function calculateReportCards(
   transactions: Transaction[],
   filters: TransactionFilters,
 ): ReportCardViewModel[] {
-  const currentPeriod = getCurrentPeriod(transactions, filters);
-  const periodDays = getPeriodDays(currentPeriod.startDate, currentPeriod.endDate);
-  const previousPeriod = getPreviousMonthPeriod(
-    currentPeriod.startDate,
-    currentPeriod.endDate,
+  const selectedPeriod = getSelectedPeriod(filters);
+
+  // Cards should always display the month BEFORE the selected/current period.
+  const cardPeriod =
+    filters.dateFrom || filters.dateTo
+      ? getPreviousMonthPeriod(selectedPeriod.startDate, selectedPeriod.endDate)
+      : selectedPeriod;
+
+  const periodDays = getPeriodDays(cardPeriod.startDate, cardPeriod.endDate);
+  const comparisonPeriod = getPreviousMonthPeriod(cardPeriod.startDate, cardPeriod.endDate);
+
+  const currentTransactions = filterTransactions(
+    transactions,
+    getPreviousPeriodFilters(filters, cardPeriod),
   );
-  const currentTransactions = filterTransactions(transactions, filters);
   const previousTransactions = filterTransactions(
     transactions,
-    getPreviousPeriodFilters(filters, previousPeriod),
+    getPreviousPeriodFilters(filters, comparisonPeriod),
   );
-  const comparisonDescription = `vs ${formatDate(previousPeriod.startDate)} - ${formatDate(
-    previousPeriod.endDate,
+
+  const comparisonDescription = `vs ${formatDate(comparisonPeriod.startDate)} - ${formatDate(
+    comparisonPeriod.endDate,
   )}`;
 
   return reportCardsConfig.map((config) => {

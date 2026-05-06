@@ -3,6 +3,7 @@ import { AppShell } from "../../../widgets/app-shell/ui/AppShell";
 import { TransactionsFiltersWidget } from "@/features/transaction/filters";
 import { ReportCardWidget } from "@/widgets/reportCard";
 import { ExpenseChart } from "@/widgets/expenseChart";
+import { IncomeVsExpenceChart } from "@/widgets/incomeVsExpenceChart";
 
 export function ReportsPage() {
   const { t } = useTranslation();
@@ -19,7 +20,7 @@ export function ReportsPage() {
           height: "300px",
         }}
       >
-        <ExpenseChart.Widget />
+        <IncomeVsExpenceChart.Widget />
         <ExpenseChart.Widget />
       </div>
     </AppShell>
