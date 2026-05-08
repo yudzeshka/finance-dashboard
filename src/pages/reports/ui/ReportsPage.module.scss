@@ -1,0 +1,80 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  /* Fill the visible Content area (Content padding is 20px top/bottom => 40px) */
+  height: calc(
+    100svh - var(--dashboard-header-height) - var(--dashboard-footer-height) - 40px
+  );
+  min-height: 0;
+}
+
+.chartsArea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.chartsRow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex: 1 1 0;
+  min-height: 220px;
+}
+
+.chartsRow > * {
+  flex: 1 1 420px;
+  min-width: 320px;
+  height: 100%;
+  min-height: 0;
+}
+
+.monthlyGridRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 10px;
+  flex: 1 1 0;
+  min-height: 220px;
+}
+
+.monthlyGridRow > * {
+  height: 100%;
+  min-height: 0;
+}
+
+.quarterBlock {
+  height: 100%;
+}
+
+/* On narrow screens, let rows size naturally (scroll if needed) */
+@media (max-width: 900px) {
+  .page {
+    height: auto;
+  }
+
+  .chartsArea {
+    flex: 0 0 auto;
+  }
+
+  .chartsRow {
+    flex: 0 0 auto;
+    min-height: 0;
+  }
+
+  .chartsRow > * {
+    flex-basis: 100%;
+    min-width: 0;
+  }
+
+  .monthlyGridRow {
+    grid-template-columns: 1fr;
+    flex: 0 0 auto;
+    min-height: 0;
+  }
+}
+

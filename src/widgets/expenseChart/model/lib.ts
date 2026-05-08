@@ -36,5 +36,8 @@ export function calculateExpenceChart(
     return { name: key, value: expenseData.data[key] };
   });
 
-  return { total: expenseData.total, data: resultArray.sort((a,b) => b.value - a.value) };
+  return {
+    total: parseFloat(expenseData.total.toFixed(2)),
+    data: resultArray.sort((a, b) => b.value - a.value),
+  };
 }
