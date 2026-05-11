@@ -1,0 +1,124 @@
+.chartContainer {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  border: 1px solid rgb(228, 221, 221);
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  min-height: 0;
+}
+
+.chartTitle {
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+  margin: 5px 5px 5px 10px;
+}
+
+.chart {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.chartTitleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+.datePickerContainer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.categoriesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 12px 14px;
+  min-height: 0;
+  overflow: auto;
+}
+
+.categoryItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.iconCircle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #eef1ff;
+}
+
+.iconEmoji {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.categoryMain {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.categoryRowTop {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+}
+
+.categoryName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.categoryAmount {
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: #1a1a1a;
+}
+
+.categoryRowBar {
+  width: 100%;
+  min-width: 0;
+}
+
+.percentSlider {
+  margin: 0;
+
+  &:global(.ant-slider.ant-slider-disabled) {
+    cursor: default;
+  }
+
+  &:global(.ant-slider .ant-slider-rail) {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+
+  &:global(.ant-slider-disabled) :global(.ant-slider-track) {
+    background-color: rgba(6, 35, 251, 0.55) !important;
+  }
+}

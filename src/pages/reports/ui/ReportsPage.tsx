@@ -6,6 +6,7 @@ import { ExpenseChart } from "@/widgets/expenseChart";
 import { IncomeVsExpenceChart } from "@/widgets/incomeVsExpenceChart";
 import { MountlyExpenseChart } from "@/widgets/mountlyExpenseChart";
 import styles from "./ReportsPage.module.scss";
+import { TopCategories } from "@/widgets/topCategories";
 
 export function ReportsPage() {
   const { t } = useTranslation();
@@ -24,7 +25,7 @@ export function ReportsPage() {
 
           <div className={styles.monthlyGridRow}>
             <MountlyExpenseChart.Widget />
-            <div className={`dashboard-card ${styles.quarterBlock}`} />
+            <TopCategories.Widget />
             <div className={`dashboard-card ${styles.quarterBlock}`} />
           </div>
         </div>

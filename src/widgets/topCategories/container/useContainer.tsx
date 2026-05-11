@@ -1,10 +1,14 @@
 import type { ContainerComponentType } from "@/shared/types/types";
-import type { EChartsOption } from "echarts";
 import type { UIPropertyType } from "../ui";
 import { useTransactionQueries } from "@/features/transaction/manage/model/useTransactionQueries";
 import { useSetAllTransactions } from "@/entities/transaction/model/selectors";
 import { useEffect, useMemo, useState } from "react";
-import { getTransactionsByMonth } from "../model/lib";
+import { getTopCategories } from "../model/lib";
+
+const currencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
 
 export const useContainer: ContainerComponentType<UIPropertyType> = () => {
   const [targetDate, setTargetDate] = useState<Date>(new Date());
@@ -16,10 +20,21 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
 
   const setAllTransactions = useSetAllTransactions();
 
-  const chartData = useMemo(
-    () => getTransactionsByMonth(transactions, targetDate),
-    [transactions, targetDate],
-  );
+  const rows = useMemo(() => {
+    const categories = getTopCategories(transactions, targetDate);
+    const totalAmount = Math.max(
+      1,
+      categories.reduce((sum, item) => sum + item.amount, 0),
+    );
+
+    return categories.map((item) => ({
+      id: item.category.id,
+      name: item.category.name,
+      icon: item.category.icon,
+      amountLabel: currencyFormatter.format(item.amount),
+      percent: Math.round((item.amount / totalAmount) * 100),
+    })).slice(0,3);
+  }, [transactions, targetDate]);
 
   const onTargetDateChange = (date: Date | null) => {
     if (date) setTargetDate(date);
@@ -29,21 +44,5 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
     setAllTransactions(transactions);
   }, [transactions, setAllTransactions]);
 
-  const option: EChartsOption = {
-    xAxis: {
-      data: chartData.days,
-    },
-    yAxis: {},
-    series: [
-      {
-        data: chartData.amounts,
-        type: "line",
-        smooth: true,
-        areaStyle: {
-          color: "rgba(6, 35, 251, 0.2)",
-        },
-      },
-    ],
-  };
-  return { option, targetDate, onTargetDateChange };
+  return { targetDate, onTargetDateChange, rows };
 };
