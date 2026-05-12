@@ -13,46 +13,50 @@
 .chartsArea {
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+
+.chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: 1fr 1fr;
   gap: 10px;
   flex: 1 1 auto;
   min-height: 0;
 }
 
-.chartsRow {
+.cellSpan2 {
+  grid-column: span 2;
+  min-width: 0;
+  min-height: 0;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 10px;
-  flex: 1 1 0;
-  min-height: 220px;
+  flex-direction: column;
 }
 
-.chartsRow > * {
-  flex: 1 1 420px;
-  min-width: 320px;
-  height: 100%;
+.cellSpan1 {
+  grid-column: span 1;
+  min-width: 0;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.monthlyGridRow {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 10px;
-  flex: 1 1 0;
-  min-height: 220px;
-}
-
-.monthlyGridRow > * {
-  height: 100%;
+.cellSpan2 > *,
+.cellSpan1 > * {
+  flex: 1 1 auto;
   min-height: 0;
+  min-width: 0;
 }
 
 .quarterBlock {
-  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
-/* On narrow screens, let rows size naturally (scroll if needed) */
-@media (max-width: 900px) {
+/* Narrow: stack, allow scroll */
+@media (max-width: 1200px) {
   .page {
     height: auto;
   }
@@ -61,20 +65,16 @@
     flex: 0 0 auto;
   }
 
-  .chartsRow {
-    flex: 0 0 auto;
-    min-height: 0;
-  }
-
-  .chartsRow > * {
-    flex-basis: 100%;
-    min-width: 0;
-  }
-
-  .monthlyGridRow {
+  .chartsGrid {
     grid-template-columns: 1fr;
+    grid-template-rows: none;
+    grid-auto-rows: auto;
     flex: 0 0 auto;
     min-height: 0;
+  }
+
+  .cellSpan2,
+  .cellSpan1 {
+    grid-column: span 1;
   }
 }
-

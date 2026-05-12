@@ -35,6 +35,7 @@ export const UI = ({
             onTargetDateChange(value ? value.toDate() : null)
           }
           picker="month"
+          variant="filled"
         />
       </div>
       <div className={styles.categoriesContainer}>

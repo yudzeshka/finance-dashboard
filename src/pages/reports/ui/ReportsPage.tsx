@@ -18,15 +18,22 @@ export function ReportsPage() {
         <ReportCardWidget />
 
         <div className={styles.chartsArea}>
-          <div className={styles.chartsRow}>
-            <IncomeVsExpenceChart.Widget />
-            <ExpenseChart.Widget />
-          </div>
-
-          <div className={styles.monthlyGridRow}>
-            <MountlyExpenseChart.Widget />
-            <TopCategories.Widget />
-            <div className={`dashboard-card ${styles.quarterBlock}`} />
+          <div className={styles.chartsGrid}>
+            <div className={styles.cellSpan2}>
+              <IncomeVsExpenceChart.Widget />
+            </div>
+            <div className={styles.cellSpan2}>
+              <ExpenseChart.Widget />
+            </div>
+            <div className={styles.cellSpan2}>
+              <MountlyExpenseChart.Widget />
+            </div>
+            <div className={styles.cellSpan1}>
+              <TopCategories.Widget />
+            </div>
+            <div
+              className={`${styles.cellSpan1} dashboard-card ${styles.quarterBlock}`}
+            />
           </div>
         </div>
       </div>
