@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import type { TFunction } from "i18next";
 
 import type { Transaction } from "@/entities/transaction";
 import type { TransactionFilters } from "@/features/transaction/filters/model/types";
@@ -49,7 +50,10 @@ function getSelectedPeriod(filters: TransactionFilters) {
 
   // If user partially specified a range, assume a 30-day window anchored to the provided bound.
   if (filters.dateFrom && filters.dateTo) {
-    return { startDate: dayjs(filters.dateFrom), endDate: dayjs(filters.dateTo) };
+    return {
+      startDate: dayjs(filters.dateFrom),
+      endDate: dayjs(filters.dateTo),
+    };
   }
 
   if (filters.dateFrom) {
@@ -59,14 +63,20 @@ function getSelectedPeriod(filters: TransactionFilters) {
 
   if (filters.dateTo) {
     const endDate = dayjs(filters.dateTo);
-    return { startDate: endDate.subtract(fallbackPeriodDays - 1, "day"), endDate };
+    return {
+      startDate: endDate.subtract(fallbackPeriodDays - 1, "day"),
+      endDate,
+    };
   }
 
   return { startDate: now.subtract(1, "month"), endDate: now };
 }
 
 function getPeriodDays(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) {
-  return Math.max(endDate.startOf("day").diff(startDate.startOf("day"), "day") + 1, 1);
+  return Math.max(
+    endDate.startOf("day").diff(startDate.startOf("day"), "day") + 1,
+    1,
+  );
 }
 
 function getPreviousMonthPeriod(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) {
@@ -93,6 +103,7 @@ function getPeriodFilters(
 export function calculateReportCards(
   transactions: Transaction[],
   filters: TransactionFilters,
+  t: TFunction,
 ): ReportCardViewModel[] {
   const hasSelectedPeriod = Boolean(filters.dateFrom || filters.dateTo);
 
@@ -101,7 +112,10 @@ export function calculateReportCards(
     : undefined;
 
   const currentTransactions = hasSelectedPeriod
-    ? filterTransactions(transactions, getPeriodFilters(filters, currentPeriod!))
+    ? filterTransactions(
+        transactions,
+        getPeriodFilters(filters, currentPeriod!),
+      )
     : filterTransactions(transactions, {
         ...filters,
         type: undefined,
@@ -121,7 +135,10 @@ export function calculateReportCards(
     : null;
 
   const previousTransactions = hasSelectedPeriod
-    ? filterTransactions(transactions, getPeriodFilters(filters, comparisonPeriod!))
+    ? filterTransactions(
+        transactions,
+        getPeriodFilters(filters, comparisonPeriod!),
+      )
     : [];
 
   const comparisonDescription = hasSelectedPeriod
@@ -139,7 +156,7 @@ export function calculateReportCards(
 
     return {
       id: config.id,
-      title: config.title,
+      title: t(config.titleKey),
       value,
       percentage: showPercentage ? Math.abs(percentage) : undefined,
       positive: showPercentage ? percentage >= 0 : undefined,

@@ -13,7 +13,7 @@ export function ReportsPage() {
   const { t } = useTranslation();
 
   return (
-    <AppShell title={t("reports")} subtitle={t("reportsSubtitle")}>
+    <AppShell title={t("reports")} subtitle={t("reportsOnYourTransactions")}>
       <div className={styles.page}>
         <TransactionsFiltersWidget />
         <ReportCardWidget />

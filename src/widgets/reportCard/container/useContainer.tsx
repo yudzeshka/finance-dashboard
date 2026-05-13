@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useSetAllTransactions } from "@/entities/transaction/model/selectors";
 import { useFilters } from "@/features/transaction/filters/model/selectors";
@@ -8,6 +9,7 @@ import { calculateReportCards } from "../model/calculateReportCards";
 
 export const useContainer = () => {
   const { transactions, loading, error } = useTransactionQueries();
+  const { t, i18n } = useTranslation();
   const filters = useFilters();
   const setAllTransactions = useSetAllTransactions();
   const { debouncedValue: debouncedSearch } = useDebounce(
@@ -24,8 +26,8 @@ export const useContainer = () => {
   );
 
   const cards = useMemo(
-    () => calculateReportCards(transactions, reportFilters),
-    [transactions, reportFilters],
+    () => calculateReportCards(transactions, reportFilters, t),
+    [transactions, reportFilters, t, i18n.language],
   );
 
   useEffect(() => {

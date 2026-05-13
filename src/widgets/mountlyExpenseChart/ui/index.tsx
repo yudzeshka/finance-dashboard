@@ -6,6 +6,7 @@ import styles from "./styles.module.scss";
 import dayjs from "dayjs";
 import { Button, DatePicker } from "antd";
 import type { Dayjs } from "dayjs";
+import { useTranslation } from "react-i18next";
 
 export type UIPropertyType = {
   option: EChartsOption;
@@ -18,11 +19,12 @@ export const UI = ({
   targetDate,
   onTargetDateChange,
 }: UIPropertyType) => {
+  const { t } = useTranslation();
   return (
     <div className={styles.chartContainer}>
       <div className={styles.chartTitleContainer}>
         <h4 className={styles.chartTitle}>
-          Expenses by {dayjs(targetDate).format("MMMM YYYY")}
+          {t("expensesByMonth")} {dayjs(targetDate).format("MMMM YYYY")}
         </h4>{" "}
         <div className={styles.datePickerContainer}>
           <Button

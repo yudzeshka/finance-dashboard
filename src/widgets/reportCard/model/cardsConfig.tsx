@@ -10,10 +10,10 @@ import type { ReportCardConfig } from "./types";
 export const reportCardsConfig: ReportCardConfig[] = [
   {
     id: "income",
-    title: "Total Income",
+    titleKey: "totalIncome",
     Icon: DollarOutlined,
     tone: "green",
-    getValue: (transactions: Transaction[]) =>
+    getValue: (transactions: Transaction[], _periodDays: number) =>
       transactions.reduce(
         (acc, transaction) =>
           transaction.type === "INCOME" ? acc + transaction.amount : acc,
@@ -23,10 +23,10 @@ export const reportCardsConfig: ReportCardConfig[] = [
   },
   {
     id: "expense",
-    title: "Total Expense",
+    titleKey: "totalExpense",
     Icon: ArrowDownOutlined,
     tone: "red",
-    getValue: (transactions: Transaction[]) =>
+    getValue: (transactions: Transaction[], _periodDays: number) =>
       transactions.reduce(
         (acc, transaction) =>
           transaction.type === "EXPENSE" ? acc + transaction.amount : acc,
@@ -36,10 +36,10 @@ export const reportCardsConfig: ReportCardConfig[] = [
   },
   {
     id: "balance",
-    title: "Balance",
+    titleKey: "balance",
     Icon: WalletOutlined,
     tone: "purple",
-    getValue: (transactions: Transaction[]) =>
+    getValue: (transactions: Transaction[], _periodDays: number) =>
       transactions.reduce(
         (acc, transaction) =>
           transaction.type === "INCOME"
@@ -51,7 +51,7 @@ export const reportCardsConfig: ReportCardConfig[] = [
   },
   {
     id: "averagePerDay",
-    title: "Average per day",
+    titleKey: "averagePerDay",
     Icon: RiseOutlined,
     tone: "blue",
     getValue: (transactions: Transaction[], periodDays: number) => {

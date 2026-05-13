@@ -1,9 +1,7 @@
 import styles from "./styles.module.scss";
-
 import dayjs from "dayjs";
-
 import { DatePicker, Slider } from "antd";
-
+import { useTranslation } from "react-i18next";
 import type { Dayjs } from "dayjs";
 
 export type TopCategoryRowView = {
@@ -25,10 +23,11 @@ export const UI = ({
   onTargetDateChange,
   rows,
 }: UIPropertyType) => {
+  const { t } = useTranslation();
   return (
     <div className={styles.chartContainer}>
       <div className={styles.chartTitleContainer}>
-        <h4 className={styles.chartTitle}>Top Categories</h4>
+        <h4 className={styles.chartTitle}>{t("topCategories")}</h4>
         <DatePicker
           value={dayjs(targetDate)}
           onChange={(value: Dayjs | null) =>
