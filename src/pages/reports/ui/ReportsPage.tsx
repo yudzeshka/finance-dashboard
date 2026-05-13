@@ -7,6 +7,7 @@ import { IncomeVsExpenceChart } from "@/widgets/incomeVsExpenceChart";
 import { MountlyExpenseChart } from "@/widgets/mountlyExpenseChart";
 import styles from "./ReportsPage.module.scss";
 import { TopCategories } from "@/widgets/topCategories";
+import { LargestTransactions } from "@/widgets/largestTransactions";
 
 export function ReportsPage() {
   const { t } = useTranslation();
@@ -31,9 +32,9 @@ export function ReportsPage() {
             <div className={styles.cellSpan1}>
               <TopCategories.Widget />
             </div>
-            <div
-              className={`${styles.cellSpan1} dashboard-card ${styles.quarterBlock}`}
-            />
+            <div className={styles.cellSpan1}>
+              <LargestTransactions.Widget />
+            </div>
           </div>
         </div>
       </div>

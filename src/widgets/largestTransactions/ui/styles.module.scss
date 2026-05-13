@@ -1,0 +1,121 @@
+.chartContainer {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  flex-direction: column;
+  border: 1px solid rgb(228, 221, 221);
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  min-height: 0;
+}
+
+.chartTitle {
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+  margin: 5px 5px 5px 10px;
+}
+
+.chart {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.chartTitleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+.datePickerContainer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.categoriesContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  gap: 12px;
+  padding: 8px 12px 14px;
+  min-height: 0;
+  overflow: auto;
+}
+
+.categoryItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.iconCircle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #eef1ff;
+}
+
+.iconEmoji {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.categoryMain {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.categoryRowTop {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+}
+
+.categoryName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.2;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.categoryAmount {
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: #1a1a1a;
+}
+
+.transactionInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* :root uses font: 18px/145% — inherited line-height stays ~26px and inflates gaps between stacked lines */
+  gap: 2px;
+  line-height: 1.2;
+}
+
+.transactionDate {
+  font-size: 10px;
+  color: #666;
+  line-height: 1.2;
+}
