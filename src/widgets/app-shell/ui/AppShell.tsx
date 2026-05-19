@@ -1,8 +1,10 @@
-import { Layout, Typography } from "antd";
+import { Button, Layout, Typography } from "antd";
 import { useState } from "react";
 import { LangSwitcher } from "../../langSwitcher";
 import { useTranslation } from "react-i18next";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../app/providers/AuthProvider";
+import { LogoutOutlined } from "@ant-design/icons";
 
 type AppShellProps = {
   title: string;
@@ -18,8 +20,28 @@ export function AppShell({
   children,
 }: AppShellProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const { Header, Sider, Content, Footer } = Layout;
   const [isSiderCollapsed, setIsSiderCollapsed] = useState(false);
+
+  const { session, nhost } = useAuth();
+  const navigate = useNavigate();
+
+  const userLabel = user?.displayName || user?.email || "Guest";
+
+  const handleSignOut = async () => {
+    try {
+      if (session) {
+        await nhost.auth.signOut({
+          refreshToken: session.refreshToken,
+        });
+      }
+      navigate("/");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error("Error signing out:", message);
+    }
+  };
 
   return (
     <Layout className="dashboard-shell">
@@ -38,7 +60,6 @@ export function AppShell({
             </span>
           ) : null}
         </div>
-
         <div className="dashboard-sider__nav">
           <NavLink
             to="/"
@@ -73,6 +94,20 @@ export function AppShell({
             </span>
             {!isSiderCollapsed ? <span>{t("settings")}</span> : null}
           </NavLink>
+        </div>
+        <div className="dashboard-sider__user">
+          {!isSiderCollapsed ? (
+            <div className="dashboard-sider__userName">{userLabel}</div>
+          ) : null}
+          <Button
+            type="text"
+            className="dashboard-sider__userButton"
+            icon={<LogoutOutlined />}
+            onClick={handleSignOut}
+            title={t("logout")}
+          >
+            {!isSiderCollapsed ? t("logout") : null}
+          </Button>
         </div>
       </Sider>
 

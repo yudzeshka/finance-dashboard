@@ -1,15 +1,20 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  AuthCard,
-  BrandHeader,
-  CardFooter,
-} from "./authShared";
+import { AuthCard, BrandHeader, CardFooter } from "./authShared";
 import { IconChevronRight } from "./authIcons";
 import styles from "./AuthPage.module.scss";
+import { useEffect } from "react";
+import { useAuth } from "@/app/providers/AuthProvider";
 
 export function AuthHubPage() {
   const { t } = useTranslation();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
   return (
     <AuthCard>
       <BrandHeader />

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@apollo/client": "^4.1.7",
+    "@nhost/nhost-js": "^4.7.1",
     "antd": "^6.3.5",
     "dayjs": "^1.11.20",
     "echarts": "^6.0.0",

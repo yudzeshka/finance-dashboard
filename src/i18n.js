@@ -109,6 +109,14 @@ i18n
           authHubRegisterTitle: "I’m new here",
           authHubRegisterDesc: "Create an account to track your finances",
           authBackToHub: "Other options",
+          logout: "Logout",
+          authSignInFailed: "Failed to sign in. Please check your credentials.",
+          authSignInError: "An error occurred during sign in: {{message}}",
+          authUnknownError: "Unknown error",
+          authCheckEmailTitle: "Check your email",
+          authCheckEmailSent: "We've sent a verification link to",
+          authCheckEmailHint:
+            "Please check your email and click the verification link to activate your account.",
         },
       },
       ru: {
@@ -166,8 +174,7 @@ i18n
           authLoginTitle: "Вход в аккаунт",
           authLoginSubtitle: "Добро пожаловать! Войдите в свой аккаунт",
           authRegisterTitle: "Создание аккаунта",
-          authRegisterSubtitle:
-            "Создайте аккаунт для управления финансами",
+          authRegisterSubtitle: "Создайте аккаунт для управления финансами",
           authEmail: "Email",
           authPassword: "Пароль",
           authName: "Имя",
@@ -204,6 +211,15 @@ i18n
           authHubRegisterTitle: "У меня ещё нет аккаунта",
           authHubRegisterDesc: "Создать аккаунт для учёта финансов",
           authBackToHub: "Другие варианты",
+          logout: "Выйти",
+          authSignInFailed:
+            "Не удалось войти. Проверьте email и пароль.",
+          authSignInError: "Ошибка при входе: {{message}}",
+          authUnknownError: "Неизвестная ошибка",
+          authCheckEmailTitle: "Проверьте почту",
+          authCheckEmailSent: "Мы отправили ссылку для подтверждения на",
+          authCheckEmailHint:
+            "Откройте письмо и перейдите по ссылке, чтобы активировать аккаунт.",
         },
       },
     },
