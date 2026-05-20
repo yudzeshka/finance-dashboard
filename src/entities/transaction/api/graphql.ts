@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const GET_TRANSACTIONS = gql`
   query GetTransactions {
-    transactions {
+    transactions(order_by: { date: desc }) {
       id
       amount
       type
@@ -19,18 +19,20 @@ export const GET_TRANSACTIONS = gql`
 
 export const ADD_TRANSACTION = gql`
   mutation AddTransaction(
-    $amount: Float!
+    $amount: numeric!
     $description: String
-    $category: String
-    $date: String
-    $type: TransactionType!
+    $categoryId: uuid!
+    $date: timestamptz!
+    $type: transaction_type!
   ) {
-    addTransaction(
-      amount: $amount
-      description: $description
-      category: $category
-      date: $date
-      type: $type
+    insert_transactions_one(
+      object: {
+        amount: $amount
+        description: $description
+        category_id: $categoryId
+        date: $date
+        type: $type
+      }
     ) {
       id
       amount
@@ -48,20 +50,22 @@ export const ADD_TRANSACTION = gql`
 
 export const EDIT_TRANSACTION = gql`
   mutation EditTransaction(
-    $id: ID!
-    $amount: Float!
-    $type: TransactionType!
-    $category: String
-    $date: String
+    $id: uuid!
+    $amount: numeric!
+    $type: transaction_type!
+    $categoryId: uuid!
+    $date: timestamptz!
     $description: String
   ) {
-    editTransaction(
-      id: $id
-      amount: $amount
-      type: $type
-      category: $category
-      date: $date
-      description: $description
+    update_transactions_by_pk(
+      pk_columns: { id: $id }
+      _set: {
+        amount: $amount
+        type: $type
+        category_id: $categoryId
+        date: $date
+        description: $description
+      }
     ) {
       id
       amount
@@ -78,8 +82,8 @@ export const EDIT_TRANSACTION = gql`
 `;
 
 export const DELETE_TRANSACTION = gql`
-  mutation DeleteTransaction($id: ID!) {
-    deleteTransaction(id: $id) {
+  mutation DeleteTransaction($id: uuid!) {
+    delete_transactions_by_pk(id: $id) {
       id
       amount
       type

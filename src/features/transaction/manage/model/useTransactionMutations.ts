@@ -7,8 +7,8 @@ function toTransactionVariables(values: TransactionFormValues) {
   return {
     amount: Number(values.amount),
     description: values.description ?? null,
-    category: values.category ?? null,
-    date: values.date ? values.date.toISOString() : null,
+    categoryId: values.category,
+    date: values.date ? values.date.toISOString() : new Date().toISOString(),
     type: values.type,
   };
 }

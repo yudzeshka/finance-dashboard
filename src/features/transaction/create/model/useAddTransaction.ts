@@ -8,13 +8,13 @@ import {
 type AddTransactionVars = {
   amount: number;
   description?: string | null;
-  category?: string | null;
-  date?: string | null;
+  categoryId: string;
+  date: string;
   type: TransactionType;
 };
 
 type AddTransactionData = {
-  addTransaction: Transaction;
+  insert_transactions_one: Transaction | null;
 };
 
 type GetTransactionsData = {
@@ -24,7 +24,7 @@ type GetTransactionsData = {
 export function useAddTransaction() {
   return useMutation<AddTransactionData, AddTransactionVars>(ADD_TRANSACTION, {
     update(cache, result) {
-      const created = result.data?.addTransaction;
+      const created = result.data?.insert_transactions_one;
       if (!created) return;
 
       cache.updateQuery<GetTransactionsData>(

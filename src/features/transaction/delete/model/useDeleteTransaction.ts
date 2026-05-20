@@ -10,7 +10,7 @@ type DeleteTransactionVars = {
 };
 
 type DeleteTransactionData = {
-  deleteTransaction: Transaction;
+  delete_transactions_by_pk: Transaction | null;
 };
 
 type GetTransactionsData = {
@@ -22,7 +22,7 @@ export function useDeleteTransaction() {
     DELETE_TRANSACTION,
     {
       update(cache, result) {
-        const deleted = result.data?.deleteTransaction;
+        const deleted = result.data?.delete_transactions_by_pk;
         if (!deleted) return;
 
         cache.updateQuery<GetTransactionsData>(

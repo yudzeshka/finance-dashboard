@@ -7,7 +7,6 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 
@@ -50,7 +49,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [session, setSession] = useState<StoredSession | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const lastRefreshTokenIdRef = useRef<string | null>(null);
 
   // Initialize Nhost client with default SessionStorage (local storage)
   const nhost = useMemo(
@@ -68,20 +66,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
    *
    * @param currentRefreshTokenId - The current refresh token ID to compare against stored value
    */
-  const reloadSession = useCallback(
-    (currentRefreshTokenId: string | null) => {
-      if (currentRefreshTokenId !== lastRefreshTokenIdRef.current) {
-        lastRefreshTokenIdRef.current = currentRefreshTokenId;
-
-        // Update local authentication state to match current session
-        const currentSession = nhost.getUserSession();
-        setUser(currentSession?.user || null);
-        setSession(currentSession);
-        setIsAuthenticated(!!currentSession);
-      }
-    },
-    [nhost],
-  );
+  const reloadSession = useCallback(() => {
+    const currentSession = nhost.getUserSession();
+    setUser(currentSession?.user || null);
+    setSession(currentSession);
+    setIsAuthenticated(!!currentSession);
+  }, [nhost]);
 
   // Initialize authentication state and set up cross-tab session synchronization
   useEffect(() => {
@@ -92,13 +82,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(currentSession?.user || null);
     setSession(currentSession);
     setIsAuthenticated(!!currentSession);
-    lastRefreshTokenIdRef.current = currentSession?.refreshTokenId ?? null;
     setIsLoading(false);
 
     // Subscribe to session changes from other browser tabs
     // This enables real-time synchronization when user signs in/out in another tab
-    const unsubscribe = nhost.sessionStorage.onChange((session) => {
-      reloadSession(session?.refreshTokenId ?? null);
+    const unsubscribe = nhost.sessionStorage.onChange(() => {
+      reloadSession();
     });
 
     return unsubscribe;
@@ -112,7 +101,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
      * though it's less critical than in the Next.js SSR version.
      */
     const checkSessionOnFocus = () => {
-      reloadSession(nhost.getUserSession()?.refreshTokenId ?? null);
+      reloadSession();
     };
 
     // Monitor page visibility changes (tab switching, window minimizing)

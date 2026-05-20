@@ -9,13 +9,13 @@ type EditTransactionVars = {
   id: string;
   amount: number;
   description?: string | null;
-  category?: string | null;
-  date?: string | null;
+  categoryId: string;
+  date: string;
   type: TransactionType;
 };
 
 type EditTransactionData = {
-  editTransaction: Transaction;
+  update_transactions_by_pk: Transaction | null;
 };
 
 type GetTransactionsData = {
@@ -25,7 +25,7 @@ type GetTransactionsData = {
 export function useEditTransaction() {
   return useMutation<EditTransactionData, EditTransactionVars>(EDIT_TRANSACTION, {
     update(cache, result) {
-      const edited = result.data?.editTransaction;
+      const edited = result.data?.update_transactions_by_pk;
       if (!edited) return;
 
       cache.updateQuery<GetTransactionsData>(

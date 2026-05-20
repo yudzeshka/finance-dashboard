@@ -2,9 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { AppAntdProvider } from "./app/providers/AppAntdProvider";
+import { AppApolloProvider } from "./app/providers/AppApolloProvider";
 import { AuthProvider } from "./app/providers/AuthProvider";
-import { apolloClient } from "./app/providers/apollo";
-import { ApolloProvider } from "@apollo/client/react";
 import { DashboardPage } from "./pages/dashboard";
 import "./i18n";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -20,9 +19,9 @@ import ProtectedRoute from "./app/providers/ProtectedRoute";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ApolloProvider client={apolloClient()}>
-      <AppAntdProvider>
-        <AuthProvider>
+    <AppAntdProvider>
+      <AuthProvider>
+        <AppApolloProvider>
           <BrowserRouter>
             <Routes>
               <Route element={<ProtectedRoute />}>
@@ -38,8 +37,8 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/verify" element={<VerifyPage />} />
             </Routes>
           </BrowserRouter>
-        </AuthProvider>
-      </AppAntdProvider>
-    </ApolloProvider>
+        </AppApolloProvider>
+      </AuthProvider>
+    </AppAntdProvider>
   </StrictMode>,
 );
