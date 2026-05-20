@@ -54,27 +54,32 @@
   width: 100%;
   margin: 0;
   text-align: left;
-  min-height: 100svh;
+  height: 100svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 body {
   margin: 0;
+  overflow: hidden;
 }
 
 .dashboard-shell {
   --dashboard-header-height: 72px;
   --dashboard-footer-height: 52px;
-  min-height: 100svh;
+  height: 100svh;
   background: var(--bg);
   text-align: left;
+  overflow: hidden;
 }
 
 .dashboard-shell > .ant-layout {
-  min-height: 100svh;
+  height: 100svh;
+  min-height: 0;
   align-items: stretch;
+  overflow: hidden;
 }
 
 .dashboard-sider {
@@ -192,6 +197,7 @@ body {
 .dashboard-header {
   background: transparent !important;
   border-bottom: 1px solid var(--border);
+  box-sizing: border-box;
   height: var(--dashboard-header-height) !important;
   padding: 0 20px !important;
   line-height: normal !important;
@@ -208,6 +214,8 @@ body {
 }
 
 .dashboard-content {
+  flex: 1 1 auto;
+  min-height: 0;
   padding: 20px;
   overflow: auto;
 }
@@ -235,6 +243,7 @@ body {
 .dashboard-footer {
   background: transparent !important;
   border-top: 1px solid var(--border);
+  box-sizing: border-box;
   text-align: center;
   height: var(--dashboard-footer-height) !important;
   padding: 0 20px !important;
