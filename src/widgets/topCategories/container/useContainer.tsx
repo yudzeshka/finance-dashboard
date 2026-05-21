@@ -12,11 +12,7 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
 
 export const useContainer: ContainerComponentType<UIPropertyType> = () => {
   const [targetDate, setTargetDate] = useState<Date>(new Date());
-  const {
-    transactions,
-    loading: _loading,
-    error: _error,
-  } = useTransactionQueries();
+  const { transactions, loading, error: _error } = useTransactionQueries();
 
   const setAllTransactions = useSetAllTransactions();
 
@@ -27,13 +23,15 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
       categories.reduce((sum, item) => sum + item.amount, 0),
     );
 
-    return categories.map((item) => ({
-      id: item.category.id,
-      name: item.category.name,
-      icon: item.category.icon,
-      amountLabel: currencyFormatter.format(item.amount),
-      percent: Math.round((item.amount / totalAmount) * 100),
-    })).slice(0,3);
+    return categories
+      .map((item) => ({
+        id: item.category.id,
+        name: item.category.name,
+        icon: item.category.icon,
+        amountLabel: currencyFormatter.format(item.amount),
+        percent: Math.round((item.amount / totalAmount) * 100),
+      }))
+      .slice(0, 3);
   }, [transactions, targetDate]);
 
   const onTargetDateChange = (date: Date | null) => {
@@ -44,5 +42,5 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
     setAllTransactions(transactions);
   }, [transactions, setAllTransactions]);
 
-  return { targetDate, onTargetDateChange, rows };
+  return { targetDate, onTargetDateChange, rows, loading };
 };

@@ -324,7 +324,6 @@ code {
   border-top: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
 .dashboard-sider__userName {
@@ -334,11 +333,12 @@ code {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: center;
 }
 
 .dashboard-sider__userButton {
   width: 100%;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .dashboard-sider.ant-layout-sider-collapsed .dashboard-sider__user {

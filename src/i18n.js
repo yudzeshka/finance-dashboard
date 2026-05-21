@@ -142,7 +142,7 @@ i18n
           reports: "Отчеты",
           settings: "Настройки",
           transactions: "Транзакции",
-          trackIncomeAndExpenses: "Отслеживать доходы и расходы",
+          trackIncomeAndExpenses: "Отслеживай свои доходы и расходы",
           addTransaction: "Добавить транзакцию",
           amountIsRequired: "Сумма обязательна",
           description: "Описание",
@@ -212,8 +212,7 @@ i18n
           authHubRegisterDesc: "Создать аккаунт для учёта финансов",
           authBackToHub: "Другие варианты",
           logout: "Выйти",
-          authSignInFailed:
-            "Не удалось войти. Проверьте email и пароль.",
+          authSignInFailed: "Не удалось войти. Проверьте email и пароль.",
           authSignInError: "Ошибка при входе: {{message}}",
           authUnknownError: "Неизвестная ошибка",
           authCheckEmailTitle: "Проверьте почту",

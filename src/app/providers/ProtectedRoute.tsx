@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
+import { Flex, Spin } from "antd";
 
 interface ProtectedRouteProps {
   redirectTo?: string;
@@ -12,12 +13,13 @@ export default function ProtectedRoute({
 
   if (isLoading) {
     return (
-      <div className="loading-container">
-        <div className="loading-content">
-          <div className="spinner"></div>
-          <span className="loading-text">Loading...</span>
-        </div>
-      </div>
+      <Flex
+        justify="center"
+        align="center"
+        style={{ width: "100%", height: "100%" }}
+      >
+        <Spin size="large" />
+      </Flex>
     );
   }
 

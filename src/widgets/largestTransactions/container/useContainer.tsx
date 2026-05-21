@@ -9,11 +9,7 @@ import type { UIPropertyType } from "../ui";
 import type { Transaction } from "@/entities/transaction";
 
 export const useContainer: ContainerComponentType<UIPropertyType> = () => {
-  const {
-    transactions,
-    loading: _loading,
-    error: _error,
-  } = useTransactionQueries();
+  const { transactions, loading, error: _error } = useTransactionQueries();
 
   const setAllTransactions = useSetAllTransactions();
 
@@ -43,5 +39,5 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
     setAllTransactions(transactions);
   }, [transactions, setAllTransactions]);
 
-  return { rows: rows as unknown as Transaction[] };
+  return { rows: rows as unknown as Transaction[], loading };
 };
