@@ -84,6 +84,17 @@ export function AppShell({
             {!isSiderCollapsed ? <span>{t("reports")}</span> : null}
           </NavLink>
           <NavLink
+            to="/categories"
+            className={({ isActive }) =>
+              `dashboard-navItem${isActive ? " dashboard-navItem--active" : ""}`
+            }
+          >
+            <span className="dashboard-navItem__icon" aria-hidden>
+              🏷️
+            </span>
+            {!isSiderCollapsed ? <span>{t("categories")}</span> : null}
+          </NavLink>
+          <NavLink
             to="/settings"
             className={({ isActive }) =>
               `dashboard-navItem${isActive ? " dashboard-navItem--active" : ""}`

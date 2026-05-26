@@ -1,0 +1,56 @@
+.emojiCell {
+  display: flex;
+  align-items: center;
+}
+
+.emojiCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+  background: var(--social-bg);
+  border: 1px solid var(--border);
+}
+
+.typeTagIncome {
+  margin: 0;
+}
+
+.typeTagExpense {
+  margin: 0;
+}
+
+.actionsCell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.emojiField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.emojiPickerTrigger {
+  width: fit-content;
+  min-width: 56px;
+  height: 44px;
+  font-size: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emojiPickerPopover :global(.EmojiPickerReact) {
+  --epr-bg-color: var(--bg);
+  --epr-category-label-bg-color: var(--bg);
+  --epr-text-color: var(--text-h);
+  --epr-hover-bg-color: var(--accent-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}

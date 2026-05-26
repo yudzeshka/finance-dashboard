@@ -8,6 +8,7 @@ import { DashboardPage } from "./pages/dashboard";
 import "./i18n";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ReportsPage } from "./pages/reports";
+import { CategoriesPage } from "./pages/categories";
 import {
   AuthHubPage,
   AuthLayout,
@@ -27,6 +28,7 @@ createRoot(document.getElementById("root")!).render(
               <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<DashboardPage />} />
                 <Route path="/reports" element={<ReportsPage />} />
+                <Route path="/categories" element={<CategoriesPage />} />
               </Route>
               <Route path="/auth" element={<AuthLayout />}>
                 <Route index element={<AuthHubPage />} />
