@@ -3,16 +3,18 @@ import type { EmojiClickData } from "emoji-picker-react";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { GET_CATEGORIES } from "@/entities/category";
+import {
+  DELETE_CATEGORY,
+  GET_CATEGORIES,
+  INSERT_CATEGORY,
+  UPDATE_CATEGORY,
+} from "@/entities/category";
 import type { Category } from "@/entities/category";
 import { GET_TRANSACTIONS } from "@/entities/transaction";
 import type { Transaction } from "@/entities/transaction";
-import { useQuery } from "@apollo/client/react";
+import { useMutation, useQuery } from "@apollo/client/react";
 
-import {
-  countTransactionsByCategory,
-  mapCategoryToRow,
-} from "../model/lib";
+import { countTransactionsByCategory, mapCategoryToRow } from "../model/lib";
 import type {
   CategoryFormValues,
   CategoryModalMode,
@@ -27,56 +29,72 @@ type GetTransactionsData = {
   transactions: Transaction[];
 };
 
+type InsertCategoryData = {
+  insert_categories_one: Category | null;
+};
+
+type UpdateCategoryData = {
+  update_categories_by_pk: Category | null;
+};
+
+type DeleteCategoryData = {
+  delete_categories_by_pk: { id: string } | null;
+};
+
 const DEFAULT_EMOJI = "🙂";
+
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : "Unknown error";
+}
 
 export function useContainer() {
   const { t } = useTranslation();
   const [form] = Form.useForm<CategoryFormValues>();
 
-  const [customCategories, setCustomCategories] = useState<CategoryRowViewModel[]>(
-    [],
-  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<CategoryModalMode>("create");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [selectedEmoji, setSelectedEmoji] = useState(DEFAULT_EMOJI);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const {
     data: categoriesData,
     loading: categoriesLoading,
     error: categoriesError,
+    refetch: refetchCategories,
   } = useQuery<GetCategoriesData>(GET_CATEGORIES);
 
   const { data: transactionsData, loading: transactionsLoading } =
     useQuery<GetTransactionsData>(GET_TRANSACTIONS);
+
+  const [insertCategory, { loading: insertLoading }] = useMutation<
+    InsertCategoryData,
+    CategoryFormValues
+  >(INSERT_CATEGORY);
+
+  const [updateCategory, { loading: updateLoading }] = useMutation<
+    UpdateCategoryData,
+    CategoryFormValues & { id: string }
+  >(UPDATE_CATEGORY);
+
+  const [deleteCategory, { loading: deleteLoading }] = useMutation<
+    DeleteCategoryData,
+    { id: string }
+  >(DELETE_CATEGORY);
 
   const transactionCounts = useMemo(
     () => countTransactionsByCategory(transactionsData?.transactions ?? []),
     [transactionsData?.transactions],
   );
 
-  const systemCategories = useMemo(() => {
-    return (categoriesData?.categories ?? []).map((category) =>
-      mapCategoryToRow(
-        { ...category, isSystem: true },
-        transactionCounts.get(category.id) ?? 0,
-      ),
-    );
-  }, [categoriesData?.categories, transactionCounts]);
-
   const categories = useMemo(() => {
-    const customWithCounts = customCategories.map((category) => ({
-      ...category,
-      transactionsCount: transactionCounts.get(category.id) ?? 0,
-    }));
-
-    return [...systemCategories, ...customWithCounts].sort((a, b) =>
-      a.name.localeCompare(b.name),
-    );
-  }, [customCategories, systemCategories, transactionCounts]);
+    return (categoriesData?.categories ?? [])
+      .map((category) =>
+        mapCategoryToRow(category, transactionCounts.get(category.id) ?? 0),
+      )
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [categoriesData?.categories, transactionCounts]);
 
   const resetModalState = useCallback(() => {
     setIsModalOpen(false);
@@ -88,6 +106,7 @@ export function useContainer() {
   }, [form]);
 
   const openCreate = useCallback(() => {
+    setActionError(null);
     setModalMode("create");
     setEditingId(null);
     setSelectedEmoji(DEFAULT_EMOJI);
@@ -103,6 +122,7 @@ export function useContainer() {
     (category: CategoryRowViewModel) => {
       if (category.isSystem) return;
 
+      setActionError(null);
       setModalMode("edit");
       setEditingId(category.id);
       setSelectedEmoji(category.icon);
@@ -127,53 +147,55 @@ export function useContainer() {
 
   const submit = useCallback(async () => {
     const values = await form.validateFields();
-    setIsSubmitting(true);
+    setActionError(null);
 
     try {
       if (modalMode === "create") {
-        setCustomCategories((prev) => [
-          ...prev,
-          {
-            id: crypto.randomUUID(),
+        await insertCategory({
+          variables: {
             name: values.name.trim(),
-            type: values.type,
             icon: values.icon,
-            transactionsCount: 0,
-            isSystem: false,
+            type: values.type,
           },
-        ]);
+        });
       } else if (editingId) {
-        setCustomCategories((prev) =>
-          prev.map((category) =>
-            category.id === editingId
-              ? {
-                  ...category,
-                  name: values.name.trim(),
-                  type: values.type,
-                  icon: values.icon,
-                }
-              : category,
-          ),
-        );
+        await updateCategory({
+          variables: {
+            id: editingId,
+            name: values.name.trim(),
+            icon: values.icon,
+            type: values.type,
+          },
+        });
       }
 
+      await refetchCategories();
       resetModalState();
-    } finally {
-      setIsSubmitting(false);
+    } catch (error) {
+      setActionError(getErrorMessage(error));
     }
-  }, [editingId, form, modalMode, resetModalState]);
+  }, [
+    editingId,
+    form,
+    insertCategory,
+    modalMode,
+    refetchCategories,
+    resetModalState,
+    updateCategory,
+  ]);
 
   const remove = useCallback(
     async (id: string) => {
-      setIsDeleting(true);
+      setActionError(null);
 
       try {
-        setCustomCategories((prev) => prev.filter((category) => category.id !== id));
-      } finally {
-        setIsDeleting(false);
+        await deleteCategory({ variables: { id } });
+        await refetchCategories();
+      } catch (error) {
+        setActionError(getErrorMessage(error));
       }
     },
-    [],
+    [deleteCategory, refetchCategories],
   );
 
   const modalTitle =
@@ -182,11 +204,11 @@ export function useContainer() {
   return {
     categories,
     loading: categoriesLoading || transactionsLoading,
-    errorMessage: categoriesError?.message ?? null,
-    deleteLoading: isDeleting,
+    errorMessage: categoriesError?.message ?? actionError,
+    deleteLoading,
     isModalOpen,
     modalTitle,
-    confirmLoading: isSubmitting,
+    confirmLoading: insertLoading || updateLoading,
     form,
     isEmojiPickerOpen,
     selectedEmoji,
