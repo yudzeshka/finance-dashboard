@@ -1,2 +1,2 @@
-export { useRegister } from "./model/useVerify";
-export type { UseRegisterResult } from "./model/types";
+export { useVerify } from "./model/useVerify";
+export type { UseVerifyResult } from "./model/types";
