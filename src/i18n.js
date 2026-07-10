@@ -11,7 +11,7 @@ i18n
   // init i18next
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
-    debug: true,
+    debug: import.meta.env.DEV,
     fallbackLng: "en",
     supportedLngs: ["en", "ru"],
     nonExplicitSupportedLngs: true,
@@ -124,7 +124,10 @@ i18n
           logout: "Logout",
           authSignInFailed: "Failed to sign in. Please check your credentials.",
           authSignInError: "An error occurred during sign in: {{message}}",
+          authSignUpError: "An error occurred during sign up: {{message}}",
           authUnknownError: "Unknown error",
+          authPasswordMinLength: "Password must be at least {{min}} characters",
+          authPasswordsDoNotMatch: "Passwords do not match",
           authCheckEmailTitle: "Check your email",
           authCheckEmailSent: "We've sent a verification link to",
           authCheckEmailHint:
@@ -238,7 +241,10 @@ i18n
           logout: "Выйти",
           authSignInFailed: "Не удалось войти. Проверьте email и пароль.",
           authSignInError: "Ошибка при входе: {{message}}",
+          authSignUpError: "Ошибка при регистрации: {{message}}",
           authUnknownError: "Неизвестная ошибка",
+          authPasswordMinLength: "Пароль должен содержать не менее {{min}} символов",
+          authPasswordsDoNotMatch: "Пароли не совпадают",
           authCheckEmailTitle: "Проверьте почту",
           authCheckEmailSent: "Мы отправили ссылку для подтверждения на",
           authCheckEmailHint:
