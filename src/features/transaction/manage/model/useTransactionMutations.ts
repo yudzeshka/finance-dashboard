@@ -36,8 +36,15 @@ export function useTransactionMutations() {
     });
   };
 
-  const removeTransaction = (id: string) => {
-    void deleteTransaction({ variables: { id } });
+  const removeTransaction = async (id: string) => {
+    try {
+      await deleteTransaction({ variables: { id } });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to delete transaction";
+      console.error("Delete transaction failed:", message);
+      throw error;
+    }
   };
 
   return {
