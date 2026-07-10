@@ -1,14 +1,16 @@
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useEffect, useState, type FormEvent } from "react";
-// import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import type { UseRegisterResult } from "./types";
 import { generatePKCEPair } from "@nhost/nhost-js/auth";
 
+const MIN_PASSWORD_LENGTH = 8;
+
 export function useRegister(): UseRegisterResult {
   const { nhost, isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,9 +30,21 @@ export function useRegister(): UseRegisterResult {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setError(null);
     setSuccess(false);
+
+    // Client-side validation
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      setError(t("authPasswordMinLength", { min: MIN_PASSWORD_LENGTH }));
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError(t("authPasswordsDoNotMatch"));
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
       const { verifier, challenge } = await generatePKCEPair();
@@ -52,8 +66,8 @@ export function useRegister(): UseRegisterResult {
         setSuccess(true);
       }
     } catch (err) {
-      const message = (err as Error).message || "Unknown error";
-      setError(`An error occurred during sign up: ${message}`);
+      const message = err instanceof Error ? err.message : t("authUnknownError");
+      setError(t("authSignUpError", { message }));
     } finally {
       setIsSubmitting(false);
     }
