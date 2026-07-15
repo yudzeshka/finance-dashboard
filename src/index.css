@@ -181,6 +181,7 @@ body {
   bottom: auto !important;
   inset: auto !important;
   width: 100% !important;
+  box-sizing: border-box;
   flex-shrink: 0;
   margin-top: auto;
   background: var(--social-bg) !important;
@@ -244,6 +245,8 @@ body {
   background: transparent !important;
   border-top: 1px solid var(--border);
   box-sizing: border-box;
+  flex-shrink: 0;
+  min-height: var(--dashboard-footer-height);
   text-align: center;
   height: var(--dashboard-footer-height) !important;
   padding: 0 20px !important;
