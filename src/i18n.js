@@ -132,6 +132,10 @@ i18n
           authCheckEmailSent: "We've sent a verification link to",
           authCheckEmailHint:
             "Please check your email and click the verification link to activate your account.",
+          authVerifyNoCode: "No authorization code found in URL",
+          authVerifyNoVerifier:
+            "No PKCE verifier found. The sign-in must be initiated from the same browser tab.",
+          authVerifyError: "An error occurred during verification: {{message}}",
         },
       },
       ru: {
@@ -249,6 +253,10 @@ i18n
           authCheckEmailSent: "Мы отправили ссылку для подтверждения на",
           authCheckEmailHint:
             "Откройте письмо и перейдите по ссылке, чтобы активировать аккаунт.",
+          authVerifyNoCode: "Код авторизации не найден в URL",
+          authVerifyNoVerifier:
+            "PKCE-верификатор не найден. Регистрация должна быть завершена в той же вкладке браузера.",
+          authVerifyError: "Ошибка при верификации: {{message}}",
         },
       },
     },
