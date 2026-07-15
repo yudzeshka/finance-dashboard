@@ -30,6 +30,9 @@ interface AuthContextType {
 // Create React context for authentication state and nhost client
 const AuthContext = createContext<AuthContextType | null>(null);
 
+/** Interval in milliseconds for periodic session refresh (10 minutes) */
+const SESSION_REFRESH_INTERVAL_MS = 10 * 60 * 1000;
+
 interface AuthProviderProps {
   children: ReactNode;
 }
@@ -42,6 +45,7 @@ interface AuthProviderProps {
  * - Managing authentication state (user, session, loading, authenticated status)
  * - Cross-tab session synchronization using sessionStorage.onChange events
  * - Page visibility and focus event handling to maintain session consistency
+ * - Periodic session refresh (every 10 minutes) to prevent token expiry during inactivity
  * - Client-side only session management (no server-side rendering)
  */
 export const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -120,6 +124,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       window.removeEventListener("focus", checkSessionOnFocus);
     };
   }, [nhost, reloadSession]);
+
+  // Periodic session refresh to keep tokens fresh during prolonged inactivity.
+  // Complements the event-driven refresh (focus/visibility/cross-tab) by ensuring
+  // the session is checked even when the user never switches tabs.
+  useEffect(() => {
+    const interval = setInterval(() => {
+      reloadSession();
+    }, SESSION_REFRESH_INTERVAL_MS);
+
+    return () => clearInterval(interval);
+  }, [reloadSession]);
 
   const value: AuthContextType = {
     user,
