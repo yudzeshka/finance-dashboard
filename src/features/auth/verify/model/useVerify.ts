@@ -1,15 +1,15 @@
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useEffect, useState } from "react";
-// import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { UseVerifyResult } from "./types";
 
 const PKCE_VERIFIER_KEY = "nhost_pkce_verifier";
 
 function consumePKCEVerifier(): string | null {
-  const verifier = localStorage.getItem(PKCE_VERIFIER_KEY);
+  const verifier = sessionStorage.getItem(PKCE_VERIFIER_KEY);
   if (verifier) {
-    localStorage.removeItem(PKCE_VERIFIER_KEY);
+    sessionStorage.removeItem(PKCE_VERIFIER_KEY);
   }
   return verifier;
 }
@@ -22,9 +22,9 @@ export function useVerify(): UseVerifyResult {
     "verifying",
   );
   const [error, setError] = useState<string>("");
-  const [urlParams, setUrlParams] = useState<Record<string, string>>({});
 
   const { nhost } = useAuth();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -32,11 +32,13 @@ export function useVerify(): UseVerifyResult {
     const authErrorDescription = params.get("errorDescription");
     const code = params.get("code");
 
-    const allParams: Record<string, string> = {};
-    params.forEach((value, key) => {
-      allParams[key] = value;
-    });
-    setUrlParams(allParams);
+    if (import.meta.env.DEV) {
+      const allParams: Record<string, string> = {};
+      params.forEach((value, key) => {
+        allParams[key] = value;
+      });
+      console.log("Verify page URL params:", allParams);
+    }
 
     if (authError) {
       setStatus("error");
@@ -46,7 +48,7 @@ export function useVerify(): UseVerifyResult {
 
     if (!code) {
       setStatus("error");
-      setError("No authorization code found in URL");
+      setError(t("authVerifyNoCode"));
       return;
     }
 
@@ -63,9 +65,7 @@ export function useVerify(): UseVerifyResult {
         const codeVerifier = consumePKCEVerifier();
         if (!codeVerifier) {
           setStatus("error");
-          setError(
-            "No PKCE verifier found. The sign-in must be initiated from the same browser tab.",
-          );
+          setError(t("authVerifyNoVerifier"));
           return;
         }
 
@@ -79,11 +79,12 @@ export function useVerify(): UseVerifyResult {
           if (isMounted) navigate("/");
         }, 1500);
       } catch (err) {
-        const message = (err as Error).message || "Unknown error";
+        const message =
+          err instanceof Error ? err.message : t("authUnknownError");
         if (!isMounted) return;
 
         setStatus("error");
-        setError(`An error occurred during verification: ${message}`);
+        setError(t("authVerifyError", { message }));
       }
     }
 
@@ -96,7 +97,6 @@ export function useVerify(): UseVerifyResult {
 
   return {
     error,
-    urlParams,
     status,
   };
 }

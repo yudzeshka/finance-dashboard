@@ -48,7 +48,7 @@ export function useRegister(): UseRegisterResult {
 
     try {
       const { verifier, challenge } = await generatePKCEPair();
-      localStorage.setItem("nhost_pkce_verifier", verifier);
+      sessionStorage.setItem("nhost_pkce_verifier", verifier);
       const response = await nhost.auth.signUpEmailPassword({
         email,
         password,
