@@ -17,6 +17,7 @@ import {
   VerifyPage,
 } from "./pages/auth";
 import ProtectedRoute from "./app/providers/ProtectedRoute";
+import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -26,11 +27,11 @@ createRoot(document.getElementById("root")!).render(
           <BrowserRouter>
             <Routes>
               <Route element={<ProtectedRoute />}>
-                <Route path="/" element={<DashboardPage />} />
-                <Route path="/reports" element={<ReportsPage />} />
-                <Route path="/categories" element={<CategoriesPage />} />
+                <Route path="/" element={<ErrorBoundary><DashboardPage /></ErrorBoundary>} />
+                <Route path="/reports" element={<ErrorBoundary><ReportsPage /></ErrorBoundary>} />
+                <Route path="/categories" element={<ErrorBoundary><CategoriesPage /></ErrorBoundary>} />
               </Route>
-              <Route path="/auth" element={<AuthLayout />}>
+              <Route path="/auth" element={<ErrorBoundary><AuthLayout /></ErrorBoundary>}>
                 <Route index element={<AuthHubPage />} />
                 <Route path="login" element={<LoginPage />} />
                 <Route path="register" element={<RegisterPage />} />
