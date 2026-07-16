@@ -7,7 +7,7 @@ import {
 } from "@/entities/transaction/model/selectors";
 import { useDebounce } from "@/shared/hooks/UseDebounce";
 import { useFilters } from "../../filters/model/selectors";
-import { filterTransactions } from "./filterTransactions";
+import { filterTransactions } from "@/entities/transaction/model/filterTransactions";
 
 export function useFilteredTransactions(transactions: Transaction[]) {
   const filters = useFilters();

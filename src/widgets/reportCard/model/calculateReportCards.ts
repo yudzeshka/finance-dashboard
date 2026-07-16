@@ -3,7 +3,7 @@ import type { TFunction } from "i18next";
 
 import type { Transaction } from "@/entities/transaction";
 import type { TransactionFilters } from "@/features/transaction/filters/model/types";
-import { filterTransactions } from "@/features/transaction/manage/model/filterTransactions";
+import { filterTransactions } from "@/entities/transaction/model/filterTransactions";
 import { reportCardsConfig } from "./cardsConfig";
 import type { ReportCardViewModel } from "./types";
 

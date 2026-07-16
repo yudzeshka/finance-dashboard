@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 
-import type { Transaction } from "../../../../entities/transaction";
-import type { TransactionFilters } from "../../filters/model/types";
+import type { Transaction } from "@/entities/transaction/model/types";
+import type { TransactionFilters } from "@/features/transaction/filters/model/types";
 
 export function filterTransactions(
   transactions: Transaction[],
