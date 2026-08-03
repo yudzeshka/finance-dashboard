@@ -1,10 +1,13 @@
-import { Button, Layout, Typography } from "antd";
+import { Button, Layout, Tag, Typography } from "antd";
 import { useState } from "react";
 import { LangSwitcher } from "../../langSwitcher";
 import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
-import { LogoutOutlined } from "@ant-design/icons";
+import { purgeApolloCache } from "../../../app/providers/apollo";
+import { useOnlineStatus } from "../../../shared/lib/useOnlineStatus";
+import { useOfflineQueue } from "../../../shared/lib/offlineQueue";
+import { LogoutOutlined, WifiOutlined } from "@ant-design/icons";
 
 type AppShellProps = {
   title: string;
@@ -26,6 +29,8 @@ export function AppShell({
 
   const { session, nhost } = useAuth();
   const navigate = useNavigate();
+  const isOnline = useOnlineStatus();
+  const pendingCount = useOfflineQueue((s) => s.queue.length);
 
   const userLabel = user?.displayName || user?.email || "Guest";
 
@@ -36,6 +41,7 @@ export function AppShell({
           refreshToken: session.refreshToken,
         });
       }
+      await purgeApolloCache();
       navigate("/");
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
@@ -135,6 +141,51 @@ export function AppShell({
 
           <div className="dashboard-header__right">{primaryAction}</div>
         </Header>
+
+        {!isOnline && (
+          <div
+            style={{
+              background: "#fff7e6",
+              borderBottom: "1px solid #ffd591",
+              padding: "6px 24px",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              fontSize: 13,
+              color: "#ad6800",
+            }}
+          >
+            <WifiOutlined />
+            <span>You're offline.</span>
+            {pendingCount > 0 && (
+              <span>
+                · {pendingCount} change{pendingCount > 1 ? "s" : ""} pending
+              </span>
+            )}
+          </div>
+        )}
+
+        {isOnline && pendingCount > 0 && (
+          <div
+            style={{
+              background: "#e6f7ff",
+              borderBottom: "1px solid #91d5ff",
+              padding: "4px 24px",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              fontSize: 13,
+              color: "#0050b3",
+            }}
+          >
+            <Tag color="processing" style={{ margin: 0 }}>
+              {pendingCount}
+            </Tag>
+            <span>
+              change{pendingCount > 1 ? "s" : ""} pending sync
+            </span>
+          </div>
+        )}
 
         <Content className="dashboard-content">
           <div className="dashboard-contentInner">{children}</div>
