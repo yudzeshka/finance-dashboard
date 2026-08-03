@@ -50,3 +50,5 @@ out
 *.njsproj
 *.sln
 *.sw?
+
+testsprite_tests\tmp\config.json
