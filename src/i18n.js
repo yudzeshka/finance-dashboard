@@ -164,6 +164,8 @@ i18n
           income30Days: "Income (30d)",
           expense30Days: "Expense (30d)",
           largestTransaction: "Largest Transaction",
+          retry: "Retry",
+          loadingError: "Failed to load data",
         },
       },
       ru: {
@@ -313,6 +315,8 @@ i18n
           income30Days: "Доход (30д)",
           expense30Days: "Расход (30д)",
           largestTransaction: "Крупнейшая транзакция",
+          retry: "Повторить",
+          loadingError: "Не удалось загрузить данные",
         },
       },
     },
