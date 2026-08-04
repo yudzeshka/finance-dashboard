@@ -157,6 +157,10 @@ i18n
           last30Days: "last 30 days",
           trendUp: "Trend up",
           trendDown: "Trend down",
+          // Dashboard insights
+          income30Days: "Income (30d)",
+          expense30Days: "Expense (30d)",
+          largestTransaction: "Largest Transaction",
         },
       },
       ru: {
@@ -299,6 +303,10 @@ i18n
           last30Days: "за 30 дней",
           trendUp: "Рост",
           trendDown: "Снижение",
+          // Dashboard insights
+          income30Days: "Доход (30д)",
+          expense30Days: "Расход (30д)",
+          largestTransaction: "Крупнейшая транзакция",
         },
       },
     },
