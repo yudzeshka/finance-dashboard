@@ -23,6 +23,9 @@ coverage
 *.lcov
 .nyc_output
 
+# Local QA / review artifacts (screenshots, scripts, session state)
+artifacts/
+
 # Caches
 .cache
 .parcel-cache
@@ -51,4 +54,4 @@ out
 *.sln
 *.sw?
 
-testsprite_tests\tmp\config.json
+testsprite_tests/tmp/config.json
