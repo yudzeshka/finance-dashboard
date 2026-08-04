@@ -11,6 +11,24 @@
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
+  /* Aurora design tokens (dashboard redesign) */
+  --aurora-surface: #F7F5FB;
+  --aurora-surface-card: #FFFFFF;
+  --aurora-surface-elevated: #FFFFFF;
+  --aurora-accent: #7C3AED;
+  --aurora-accent-soft: #EDE9FE;
+  --aurora-success: #0E9F6E;
+  --aurora-success-soft: #D1FAE5;
+  --aurora-danger: #E0457B;
+  --aurora-danger-soft: #FCE7F3;
+  --aurora-text: #1E1B2E;
+  --aurora-text-secondary: #6B6680;
+  --aurora-border: #E8E4F0;
+  --aurora-shadow-color: rgba(76, 29, 149, 0.08);
+  --aurora-shadow-sm: 0 1px 2px var(--aurora-shadow-color);
+  --aurora-shadow-md: 0 4px 12px var(--aurora-shadow-color);
+  --aurora-shadow-lg: 0 12px 32px var(--aurora-shadow-color);
+
   --sans: system-ui, "Segoe UI", Roboto, sans-serif;
   --heading: system-ui, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
@@ -419,5 +437,104 @@ code {
     inset: 0;
     background: rgba(0, 0, 0, 0.45);
     z-index: 1050;
+  }
+}
+
+/* === Aurora global utility classes === */
+
+.aurora-surface {
+  background: var(--aurora-surface);
+}
+
+.aurora-card {
+  background: var(--aurora-surface-card);
+  border-radius: 16px;
+  box-shadow: var(--aurora-shadow-sm);
+  border: 1px solid var(--aurora-border);
+}
+
+.aurora-card--elevated {
+  background: var(--aurora-surface-elevated);
+  box-shadow: var(--aurora-shadow-lg);
+  border: 1px solid var(--aurora-border);
+  border-radius: 16px;
+}
+
+.aurora-card--insight {
+  background: var(--aurora-surface-card);
+  box-shadow: var(--aurora-shadow-sm);
+  border: 1px solid var(--aurora-border);
+  border-radius: 16px;
+  padding: 20px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  cursor: default;
+}
+
+.aurora-card--insight:hover {
+  box-shadow: var(--aurora-shadow-md);
+}
+
+.aurora-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.aurora-focus-ring:focus-visible {
+  outline: 2px solid var(--aurora-accent);
+  outline-offset: 2px;
+}
+
+.aurora-row-hover:hover {
+  background: rgba(124, 58, 237, 0.04) !important;
+}
+
+.aurora-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  gap: 12px;
+  color: var(--aurora-text-secondary);
+}
+
+.aurora-empty-state__icon {
+  font-size: 48px;
+  opacity: 0.6;
+}
+
+.aurora-empty-state__title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--aurora-text);
+}
+
+.aurora-text-primary {
+  color: var(--aurora-text);
+}
+
+.aurora-text-secondary {
+  color: var(--aurora-text-secondary);
+}
+
+.aurora-text-success {
+  color: var(--aurora-success);
+}
+
+.aurora-text-danger {
+  color: var(--aurora-danger);
+}
+
+.aurora-font-display {
+  font-family: 'Sora', system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+.aurora-font-body {
+  font-family: 'Inter', system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+@media (max-width: 768px) {
+  .aurora-card--insight {
+    padding: 16px;
   }
 }
