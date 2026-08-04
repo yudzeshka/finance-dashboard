@@ -9,4 +9,7 @@ export {
   EDIT_TRANSACTION,
   GET_TRANSACTIONS,
 } from "./api/graphql";
+export { aggregateBalanceByDay } from "./model/aggregateByDay";
+export { calculateDashboardStats } from "./model/calculateDashboardStats";
+export type { DashboardStats } from "./model/calculateDashboardStats";
 
