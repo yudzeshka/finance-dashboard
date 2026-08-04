@@ -16,8 +16,6 @@ export function useDashboardHero() {
 
   return {
     balance: stats.balance,
-    income30d: stats.income30d,
-    expense30d: stats.expense30d,
     deltaPercent: stats.deltaPercent,
     sparklineData: stats.sparkline.cumulative,
     isPositive,

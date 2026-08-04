@@ -136,7 +136,7 @@ export function DashboardHeroView({
                 className={`${styles.heroDelta} ${deltaClass}`}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: config.deltaDelay, duration: 0.3 }}
+                transition={{ delay: config.deltaDelay, duration: config.prefersReduced ? 0 : 0.3 }}
                 aria-label={`${deltaPercent! >= 0 ? t("trendUp") : t("trendDown")}: ${Math.abs(deltaPercent!).toFixed(1)}%`}
               >
                 {deltaPercent! >= 0 ? "↑" : "↓"}{" "}

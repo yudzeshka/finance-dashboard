@@ -68,7 +68,7 @@ export function DashboardPage() {
         </Button>
       }
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <div className="aurora-surface" style={{ display: "flex", flexDirection: "column", gap: 20 }}>
         {/* 1. Hero Balance */}
         <DashboardHero.Widget />
 

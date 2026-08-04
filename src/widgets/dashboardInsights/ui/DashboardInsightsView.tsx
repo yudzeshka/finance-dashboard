@@ -21,7 +21,7 @@ function InsightTile({ tile, index }: { tile: InsightTileData; index: number }) 
       transition={
         config.prefersReduced
           ? { duration: 0 }
-          : { ...config.springSnappy, delay: index * 0.05 }
+          : { ...config.springSnappy, delay: config.prefersReduced ? 0 : index * config.staggerChildren }
       }
     >
       <div className={styles.tileHeader}>

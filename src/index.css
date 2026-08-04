@@ -466,6 +466,16 @@ code {
   outline-offset: 2px;
 }
 
+/* Aurora focus ring on interactive elements */
+.ant-btn:focus-visible,
+.ant-input:focus-visible,
+.ant-input-affix-wrapper:focus-visible,
+.ant-select-selector:focus-visible,
+.ant-picker:focus-visible {
+  outline: 2px solid var(--aurora-accent);
+  outline-offset: 2px;
+}
+
 .aurora-row-hover:hover {
   background: rgba(124, 58, 237, 0.04) !important;
 }

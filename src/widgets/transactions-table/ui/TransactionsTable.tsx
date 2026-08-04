@@ -212,7 +212,6 @@ export function TransactionsTable({
       dataSource={dataSource}
       columns={columns}
       rowKey="id"
-      key={mountKey}
       scroll={{ x: "max-content" }}
       pagination={{
         pageSize: 10,
@@ -242,7 +241,9 @@ export function TransactionsTable({
       })}
       components={{
         body: {
-          row: MotionRow,
+          row: (props: React.HTMLAttributes<HTMLTableRowElement> & { "data-row-key"?: string }) => (
+            <MotionRow key={`${props["data-row-key"] ?? ""}-${mountKey}`} {...props} />
+          ),
         },
       }}
       locale={{
