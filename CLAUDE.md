@@ -4,6 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
+## Language
+
+Always communicate with the user in Russian.
+All explanations, progress updates, plans and summaries must be written in Russian.
+Code, identifiers, API names, commit messages requested by the project, and code comments should follow the project's existing language conventions.
+Do not translate code or technical terms when it would make them less clear.
+
 - `npm run dev` — Vite dev server on port 5173. Restart after changing `.env.development`.
 - `npm run build` — `tsc -b && vite build` (type-checks then builds). Expect type-check failures until known issues are fixed (see Known Issues).
 - `npm run lint` — `eslint .` (flat config, ESLint 9).

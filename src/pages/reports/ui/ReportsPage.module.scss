@@ -4,10 +4,9 @@
   gap: 12px;
 
   /* Fill the visible Content area (Content padding is 20px top/bottom => 40px) */
-  height: calc(
+  min-height: calc(
     100svh - var(--dashboard-header-height) - var(--dashboard-footer-height) - 40px
   );
-  min-height: 0;
 }
 
 .chartsArea {
@@ -30,7 +29,8 @@
 .cellSpan2 {
   grid-column: span 2;
   min-width: 0;
-  min-height: 0;
+  min-height: 260px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -38,7 +38,8 @@
 .cellSpan1 {
   grid-column: span 1;
   min-width: 0;
-  min-height: 0;
+  min-height: 260px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -73,8 +74,12 @@
     min-height: 0;
   }
 
-  .cellSpan2,
+  .cellSpan2 {
+    grid-column: span 1;
+    min-height: 320px;
+  }
   .cellSpan1 {
     grid-column: span 1;
+    min-height: 300px;
   }
 }

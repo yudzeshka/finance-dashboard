@@ -144,6 +144,7 @@ export function TransactionsTable({
       dataSource={dataSource}
       columns={columns}
       rowKey="id"
+      scroll={{ x: "max-content" }}
       pagination={{ pageSize: 10, showSizeChanger: true }}
       summary={() => (
         <Table.Summary.Cell index={0} colSpan={columns.length}>

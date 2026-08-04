@@ -71,16 +71,16 @@
   font-weight: 600;
 }
 .positive {
-  color: #008000;
+  color: #16a34a;
 }
 .negative {
-  color: #ff0000;
+  color: #dc2626;
 }
 
 .cardTextStartDate {
   font-size: 12px;
   font-weight: 400;
-  color: #6b6375;
+  color: var(--text);
 }
 
 @media (max-width: 1200px) {
@@ -92,5 +92,31 @@
 @media (max-width: 640px) {
   .cardsGrid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .positive {
+    color: #4ade80;
+  }
+  .negative {
+    color: #f87171;
+  }
+
+  .green {
+    color: #4ade80;
+    background-color: rgba(22, 163, 74, 0.18);
+  }
+  .red {
+    color: #f87171;
+    background-color: rgba(220, 38, 38, 0.18);
+  }
+  .purple {
+    color: #c084fc;
+    background-color: rgba(139, 92, 246, 0.18);
+  }
+  .blue {
+    color: #60a5fa;
+    background-color: rgba(37, 99, 235, 0.18);
   }
 }

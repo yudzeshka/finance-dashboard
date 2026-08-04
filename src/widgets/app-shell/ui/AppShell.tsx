@@ -7,7 +7,8 @@ import { useAuth } from "../../../app/providers/AuthProvider";
 import { purgeApolloCache } from "../../../app/providers/apollo";
 import { useOnlineStatus } from "../../../shared/lib/useOnlineStatus";
 import { useOfflineQueue } from "../../../shared/lib/offlineQueue";
-import { LogoutOutlined, WifiOutlined } from "@ant-design/icons";
+import { LogoutOutlined, MenuOutlined, WifiOutlined } from "@ant-design/icons";
+import { useMedia } from "@/shared/hooks/useMedia";
 
 type AppShellProps = {
   title: string;
@@ -25,8 +26,8 @@ export function AppShell({
   const { t } = useTranslation();
   const { user } = useAuth();
   const { Header, Sider, Content, Footer } = Layout;
-  const [isSiderCollapsed, setIsSiderCollapsed] = useState(false);
-
+  const { isMobile } = useMedia();
+  const [mobileOpen, setMobileOpen] = useState(false);
   const { session, nhost } = useAuth();
   const navigate = useNavigate();
   const isOnline = useOnlineStatus();
@@ -53,14 +54,15 @@ export function AppShell({
     <Layout className="dashboard-shell">
       <Sider
         className="dashboard-sider"
-        collapsed={isSiderCollapsed}
-        collapsible
-        onCollapse={(collapsed) => setIsSiderCollapsed(collapsed)}
+        collapsed={isMobile ? !mobileOpen : false}
+        collapsible={isMobile}
+        collapsedWidth={0}
+        trigger={null}
         width={240}
       >
         <div className="dashboard-sider__logo">
           <span className="dashboard-sider__logoMark">FD</span>
-          {!isSiderCollapsed ? (
+          {(!isMobile || mobileOpen) ? (
             <span className="dashboard-sider__logoText">
               {t("financeDashboard")}
             </span>
@@ -72,48 +74,60 @@ export function AppShell({
             className={({ isActive }) =>
               `dashboard-navItem${isActive ? " dashboard-navItem--active" : ""}`
             }
+            onClick={() => {
+              if (isMobile) setMobileOpen(false);
+            }}
           >
             <span className="dashboard-navItem__icon" aria-hidden>
               📊
             </span>
-            {!isSiderCollapsed ? <span>{t("dashboard")}</span> : null}
+            {(!isMobile || mobileOpen) ? <span>{t("dashboard")}</span> : null}
           </NavLink>
           <NavLink
             to="/reports"
             className={({ isActive }) =>
               `dashboard-navItem${isActive ? " dashboard-navItem--active" : ""}`
             }
+            onClick={() => {
+              if (isMobile) setMobileOpen(false);
+            }}
           >
             <span className="dashboard-navItem__icon" aria-hidden>
               📈
             </span>
-            {!isSiderCollapsed ? <span>{t("reports")}</span> : null}
+            {(!isMobile || mobileOpen) ? <span>{t("reports")}</span> : null}
           </NavLink>
           <NavLink
             to="/categories"
             className={({ isActive }) =>
               `dashboard-navItem${isActive ? " dashboard-navItem--active" : ""}`
             }
+            onClick={() => {
+              if (isMobile) setMobileOpen(false);
+            }}
           >
             <span className="dashboard-navItem__icon" aria-hidden>
               🏷️
             </span>
-            {!isSiderCollapsed ? <span>{t("categories")}</span> : null}
+            {(!isMobile || mobileOpen) ? <span>{t("categories")}</span> : null}
           </NavLink>
           <NavLink
             to="/settings"
             className={({ isActive }) =>
               `dashboard-navItem${isActive ? " dashboard-navItem--active" : ""}`
             }
+            onClick={() => {
+              if (isMobile) setMobileOpen(false);
+            }}
           >
             <span className="dashboard-navItem__icon" aria-hidden>
               ⚙️
             </span>
-            {!isSiderCollapsed ? <span>{t("settings")}</span> : null}
+            {(!isMobile || mobileOpen) ? <span>{t("settings")}</span> : null}
           </NavLink>
         </div>
         <div className="dashboard-sider__user">
-          {!isSiderCollapsed ? (
+          {(!isMobile || mobileOpen) ? (
             <div className="dashboard-sider__userName">{userLabel}</div>
           ) : null}
           <Button
@@ -123,20 +137,38 @@ export function AppShell({
             onClick={handleSignOut}
             title={t("logout")}
           >
-            {!isSiderCollapsed ? t("logout") : null}
+            {(!isMobile || mobileOpen) ? t("logout") : null}
           </Button>
         </div>
       </Sider>
 
       <Layout>
+        {isMobile && mobileOpen ? (
+          <div
+            className="dashboard-sider-overlay"
+            onClick={() => setMobileOpen(false)}
+            aria-hidden
+          />
+        ) : null}
         <Header className="dashboard-header">
           <div className="dashboard-header__left">
-            <Typography.Title level={3} style={{ margin: 0 }}>
-              {title}
-            </Typography.Title>
-            {subtitle ? (
-              <Typography.Text type="secondary">{subtitle}</Typography.Text>
+            {isMobile && !mobileOpen ? (
+              <Button
+                type="text"
+                icon={<MenuOutlined />}
+                className="dashboard-header__hamburger"
+                onClick={() => setMobileOpen(true)}
+                aria-label={t("menu")}
+              />
             ) : null}
+            <div className="dashboard-header__titles">
+              <Typography.Title level={3} style={{ margin: 0 }}>
+                {title}
+              </Typography.Title>
+              {subtitle ? (
+                <Typography.Text type="secondary">{subtitle}</Typography.Text>
+              ) : null}
+            </div>
           </div>
 
           <div className="dashboard-header__right">{primaryAction}</div>

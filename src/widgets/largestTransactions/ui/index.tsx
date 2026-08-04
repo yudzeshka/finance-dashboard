@@ -46,10 +46,7 @@ export const UI = ({ rows, loading }: UIPropertyType) => {
                     </div>
 
                     <span
-                      style={{
-                        color: row.type === "EXPENSE" ? "red" : "green",
-                      }}
-                      className={styles.categoryAmount}
+                      className={`${styles.categoryAmount} ${row.type === "EXPENSE" ? styles.amountExpense : styles.amountIncome}`}
                     >
                       ${row.amount}
                     </span>

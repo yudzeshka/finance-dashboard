@@ -4,16 +4,16 @@
   height: 100%;
   flex: 1 1 auto;
   flex-direction: column;
-  border: 1px solid rgb(228, 221, 221);
+  border: 1px solid var(--border);
   border-radius: 10px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow);
   min-height: 0;
 }
 
 .chartTitle {
   font-size: 14px;
   font-weight: bold;
-  color: #000;
+  color: var(--text-h);
   margin: 5px 5px 5px 10px;
 }
 

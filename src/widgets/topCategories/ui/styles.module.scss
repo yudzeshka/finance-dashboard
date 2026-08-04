@@ -4,16 +4,16 @@
   height: 100%;
   flex: 1 1 auto;
   flex-direction: column;
-  border: 1px solid rgb(228, 221, 221);
+  border: 1px solid var(--border);
   border-radius: 10px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow);
   min-height: 0;
 }
 
 .chartTitle {
   font-size: 14px;
   font-weight: bold;
-  color: #000;
+  color: var(--text-h);
   margin: 5px 5px 5px 10px;
 }
 
@@ -61,7 +61,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background-color: #eef1ff;
+  background-color: var(--accent-bg);
 }
 
 .iconEmoji {
@@ -89,7 +89,7 @@
 .categoryName {
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-h);
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -101,7 +101,7 @@
   font-size: 14px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: #1a1a1a;
+  color: var(--text-h);
 }
 
 .categoryRowBar {
@@ -118,9 +118,12 @@
 
   &:global(.ant-slider .ant-slider-rail) {
     background-color: rgba(0, 0, 0, 0.06);
+    @media (prefers-color-scheme: dark) {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
   }
 
   &:global(.ant-slider-disabled) :global(.ant-slider-track) {
-    background-color: rgba(6, 35, 251, 0.55) !important;
+    background-color: var(--accent) !important;
   }
 }
