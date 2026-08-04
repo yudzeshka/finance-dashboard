@@ -7,6 +7,7 @@ import type { Transaction } from "../../../entities/transaction";
 import type { Category } from "../../../entities/category";
 import { useTranslation } from "react-i18next";
 import { useMotionConfig } from "@/shared/lib/motion";
+import { CategoryIcon } from "@/shared/ui/CategoryIcon";
 
 type TransactionRow = {
   key: string;
@@ -134,7 +135,9 @@ export function TransactionsTable({
           a.category.name.localeCompare(b.category.name),
         render: (category: Category) => (
           <div>
-            <span style={{ marginRight: 8 }}>{category.icon}</span>
+            <span style={{ marginRight: 8, display: "inline-flex", verticalAlign: "middle" }}>
+              <CategoryIcon icon={category.icon} size={18} />
+            </span>
             <span>{category.name}</span>
           </div>
         ),
@@ -162,7 +165,7 @@ export function TransactionsTable({
               <Button
                 type="link"
                 danger
-                icon={<span role="img" aria-label={t("delete")}>🗑️</span>}
+                icon={<CategoryIcon icon="delete" size={16} title={t("delete")} />}
                 loading={deleteLoading}
                 aria-label={t("delete")}
                 style={{ minWidth: 44, minHeight: 44, display: "inline-flex", alignItems: "center", justifyContent: "center" }}
@@ -170,7 +173,7 @@ export function TransactionsTable({
             </Popconfirm>
             <Button
               type="link"
-              icon={<span role="img" aria-label={t("editTransaction")}>✏️</span>}
+              icon={<CategoryIcon icon="edit" size={16} title={t("editTransaction")} />}
               onClick={() => onEdit(record.transaction)}
               aria-label={t("editTransaction")}
               style={{ minWidth: 44, minHeight: 44, display: "inline-flex", alignItems: "center", justifyContent: "center" }}
@@ -249,7 +252,7 @@ export function TransactionsTable({
       locale={{
         emptyText: dataSource.length === 0 ? (
           <div className="aurora-empty-state">
-            <div className="aurora-empty-state__icon">📋</div>
+            <div className="aurora-empty-state__icon"><CategoryIcon icon="other" size={32} /></div>
             <div className="aurora-empty-state__title">
               {t("noTransactionsYet")}
             </div>

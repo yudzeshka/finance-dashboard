@@ -10,6 +10,7 @@ import {
 import type { FormInstance } from "antd";
 import type { TransactionCategoryOption } from "@/entities/transaction";
 import { useTranslation } from "react-i18next";
+import { CategoryIcon } from "@/shared/ui/CategoryIcon";
 
 export type TransactionFormModalProps = {
   isModalOpen: boolean;
@@ -63,7 +64,21 @@ export function TransactionFormModal({
           name="category"
           rules={[{ required: true, message: t("categoryIsRequired") }]}
         >
-          <Select options={categoryOptions} />
+          <Select
+            options={categoryOptions}
+            optionRender={(option) => (
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                <CategoryIcon icon={option.data.icon} size={16} />
+                {option.label}
+              </span>
+            )}
+            labelRender={(props) => (
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                <CategoryIcon icon={props.data.icon} size={16} />
+                {props.label}
+              </span>
+            )}
+          />
         </Form.Item>
         <Form.Item
           label={t("date")}

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useMotionConfig } from "@/shared/lib/motion";
 import { Sparkline } from "@/widgets/dashboardHero/ui/Sparkline";
+import { CategoryIcon } from "@/shared/ui/CategoryIcon";
 import type { InsightTileData } from "../container/useContainer";
 import styles from "./DashboardInsights.module.scss";
 
@@ -26,7 +27,9 @@ function InsightTile({ tile, index }: { tile: InsightTileData; index: number }) 
       }
     >
       <div className={styles.tileHeader}>
-        <div className={styles.tileIcon}>{tile.icon}</div>
+        <div className={styles.tileIcon}>
+          <CategoryIcon icon={tile.icon} size={20} />
+        </div>
         <div className={styles.tileLabel}>{tile.label}</div>
       </div>
       <div className={styles.tileValue} style={{ color: tile.color }}>

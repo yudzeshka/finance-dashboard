@@ -54,7 +54,7 @@ export function useDashboardInsights() {
         value: stats.income30d,
         formattedValue: "+" + formatInsight(stats.income30d),
         color: "var(--aurora-success)",
-        icon: "💰",
+        icon: "income",
         sublabel: t("last30Days"),
         sparkline: incomeSparkline,
         sparklineColor: "#0E9F6E",
@@ -65,7 +65,7 @@ export function useDashboardInsights() {
         value: stats.expense30d,
         formattedValue: "−" + formatInsight(stats.expense30d),
         color: "var(--aurora-danger)",
-        icon: "💸",
+        icon: "expense",
         sublabel: t("last30Days"),
         sparkline: expenseSparkline,
         sparklineColor: "#E0457B",
@@ -79,7 +79,7 @@ export function useDashboardInsights() {
             formatInsight(stats.largestTransaction.amount)
           : "—",
         color: "var(--aurora-accent)",
-        icon: stats.largestTransaction?.category?.icon ?? "📌",
+        icon: stats.largestTransaction?.category?.icon ?? "other",
         sublabel: stats.largestTransaction?.category?.name ?? "",
       },
     ];
