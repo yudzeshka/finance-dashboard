@@ -30,27 +30,25 @@
   gap: 4px;
 }
 
-.emojiField {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.emojiPickerTrigger {
-  width: fit-content;
-  min-width: 56px;
+.iconPickerTrigger {
   height: 44px;
-  font-size: 22px;
-  display: inline-flex;
+  width: 44px;
+  border: 1px solid var(--aurora-border);
+  border-radius: 10px;
+  background: var(--aurora-surface-card);
+  display: flex;
   align-items: center;
   justify-content: center;
-}
+  cursor: pointer;
+  color: var(--aurora-text);
+  transition: all 0.15s ease;
 
-.emojiPickerPopover :global(.EmojiPickerReact) {
-  --epr-bg-color: var(--bg);
-  --epr-category-label-bg-color: var(--bg);
-  --epr-text-color: var(--text-h);
-  --epr-hover-bg-color: var(--accent-bg);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
+  &:hover {
+    border-color: var(--aurora-accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--aurora-accent);
+    outline-offset: 2px;
+  }
 }

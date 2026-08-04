@@ -48,7 +48,7 @@ export function CategoriesTable({
         ),
       },
       {
-        title: t("categoryEmoji"),
+        title: t("categoryIcon"),
         dataIndex: "icon",
         key: "icon",
         width: 120,

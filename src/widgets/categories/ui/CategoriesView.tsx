@@ -1,6 +1,5 @@
 import { Button } from "antd";
 import type { FormInstance } from "antd";
-import type { EmojiClickData } from "emoji-picker-react";
 import { useTranslation } from "react-i18next";
 
 import { AppShell } from "@/widgets/app-shell/ui/AppShell";
@@ -19,16 +18,16 @@ export type CategoriesViewProps = {
   modalTitle: string;
   confirmLoading?: boolean;
   form: FormInstance<CategoryFormValues>;
-  isEmojiPickerOpen: boolean;
-  selectedEmoji: string;
+  isIconPickerOpen: boolean;
+  selectedIcon: string;
 
   onAddClick: () => void;
   onEdit: (category: CategoryRowViewModel) => void;
   onDelete: (id: string) => void;
   onModalOk: () => void;
   onModalCancel: () => void;
-  onEmojiPickerOpenChange: (open: boolean) => void;
-  onEmojiClick: (emoji: EmojiClickData) => void;
+  onIconPickerOpenChange: (open: boolean) => void;
+  onIconSelect: (key: string) => void;
 };
 
 export function CategoriesView({
@@ -40,15 +39,15 @@ export function CategoriesView({
   modalTitle,
   confirmLoading,
   form,
-  isEmojiPickerOpen,
-  selectedEmoji,
+  isIconPickerOpen,
+  selectedIcon,
   onAddClick,
   onEdit,
   onDelete,
   onModalOk,
   onModalCancel,
-  onEmojiPickerOpenChange,
-  onEmojiClick,
+  onIconPickerOpenChange,
+  onIconSelect,
 }: CategoriesViewProps) {
   const { t } = useTranslation();
 
@@ -81,10 +80,10 @@ export function CategoriesView({
         title={modalTitle}
         confirmLoading={confirmLoading}
         form={form}
-        isEmojiPickerOpen={isEmojiPickerOpen}
-        onEmojiPickerOpenChange={onEmojiPickerOpenChange}
-        onEmojiClick={onEmojiClick}
-        selectedEmoji={selectedEmoji}
+        isIconPickerOpen={isIconPickerOpen}
+        onIconPickerOpenChange={onIconPickerOpenChange}
+        onIconSelect={onIconSelect}
+        selectedIcon={selectedIcon}
         onOk={onModalOk}
         onCancel={onModalCancel}
       />
