@@ -129,3 +129,23 @@ export function AuthCard({ children }: AuthCardProps) {
     </div>
   );
 }
+
+export function ShowcasePanel() {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.showcaseInner}>
+      <div className={styles.showcaseBrand}>
+        <div className={styles.showcaseLogo} aria-hidden>
+          <IconChart />
+        </div>
+        <span className={styles.showcaseAppName}>{t("financeDashboard")}</span>
+      </div>
+      <div className={styles.showcaseCopy}>
+        <h1 className={styles.showcaseHeadline}>{t("authShowcaseHeadline")}</h1>
+        <p className={styles.showcaseDesc}>{t("authShowcaseDesc1")}</p>
+        <p className={styles.showcaseDesc}>{t("authShowcaseDesc2")}</p>
+      </div>
+      <p className={styles.showcaseMeta}>{t("authShowcaseMeta")}</p>
+    </div>
+  );
+}

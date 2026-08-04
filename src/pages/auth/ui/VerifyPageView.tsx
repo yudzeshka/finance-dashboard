@@ -1,44 +1,58 @@
+import { Button, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
-
+import { useTranslation } from "react-i18next";
 import type { UseVerifyResult } from "@/features/auth/verify/model/types";
+import { AuthCard } from "./authShared";
+import { IconCheck, IconAlert } from "./authIcons";
+import styles from "./AuthPage.module.scss";
 
 export function VerifyPageView({ status, error }: UseVerifyResult) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
+  let title = "";
+  let subtitle = "";
+
+  if (status === "verifying") {
+    title = t("authVerifyingTitle");
+    subtitle = t("authVerifyingSubtitle");
+  } else if (status === "success") {
+    title = t("authVerifySuccessTitle");
+    subtitle = t("authVerifySuccessSubtitle");
+  } else {
+    title = t("authVerifyErrorTitle");
+    subtitle = error ?? "";
+  }
+
   return (
-    <div>
-      <h1>Email Verification</h1>
-
-      <div className="page-center">
-        {status === "verifying" && (
-          <div>
-            <p className="margin-bottom">Verifying your email...</p>
-            <div className="spinner-verify" />
-          </div>
-        )}
-
-        {status === "success" && (
-          <div>
-            <p className="verification-status">✓ Successfully verified!</p>
-            <p>You'll be redirected to your profile page shortly...</p>
-          </div>
-        )}
-
-        {status === "error" && (
-          <div>
-            <p className="verification-status error">Verification failed</p>
-            {error ? <p className="margin-bottom">{error}</p> : null}
-
-            <button
-              type="button"
-              onClick={() => navigate("/auth/login")}
-              className="auth-button secondary"
-            >
-              Back to Sign In
-            </button>
-          </div>
-        )}
-      </div>
+    <div className={styles.verifyStandalone}>
+      <AuthCard>
+        <div className={styles.verifyStatus} role="status" aria-live="polite">
+          {status === "verifying" ? (
+            <Spin size="large" />
+          ) : (
+            <span className={styles.verifyIcon} aria-hidden>
+              {status === "success" ? <IconCheck /> : <IconAlert />}
+            </span>
+          )}
+          <h2 className={styles.sectionTitle}>{title}</h2>
+          {subtitle ? (
+            <p className={styles.sectionSubtitle}>{subtitle}</p>
+          ) : null}
+          {status === "error" ? (
+            <div className={styles.verifyActions}>
+              <Button
+                type="primary"
+                block
+                className={styles.primaryBtn}
+                onClick={() => navigate("/auth/login")}
+              >
+                {t("authVerifyBackToSignIn")}
+              </Button>
+            </div>
+          ) : null}
+        </div>
+      </AuthCard>
     </div>
   );
 }

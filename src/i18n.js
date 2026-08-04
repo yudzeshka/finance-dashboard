@@ -121,6 +121,7 @@ i18n
           authHubRegisterTitle: "I’m new here",
           authHubRegisterDesc: "Create an account to track your finances",
           authBackToHub: "Other options",
+          menu: "Menu",
           logout: "Logout",
           authSignInFailed: "Failed to sign in. Please check your credentials.",
           authSignInError: "An error occurred during sign in: {{message}}",
@@ -136,6 +137,20 @@ i18n
           authVerifyNoVerifier:
             "No PKCE verifier found. The sign-in must be initiated from the same browser tab.",
           authVerifyError: "An error occurred during verification: {{message}}",
+          authShowcaseHeadline: "Your money, clearly in view.",
+          authShowcaseDesc1:
+            "Track income and expenses, sort them into categories, and see exactly where your money goes.",
+          authShowcaseDesc2:
+            "Interactive charts, offline-first sync, and everything saved locally until you reconnect.",
+          authShowcaseMeta: "Works offline · English / Русский",
+          authVerifyingTitle: "Verifying your email",
+          authVerifyingSubtitle:
+            "Hang on a moment while we confirm your account.",
+          authVerifySuccessTitle: "Email verified",
+          authVerifySuccessSubtitle:
+            "You'll be taken to your dashboard shortly.",
+          authVerifyErrorTitle: "Verification failed",
+          authVerifyBackToSignIn: "Back to sign in",
         },
       },
       ru: {
@@ -242,6 +257,7 @@ i18n
           authHubRegisterTitle: "У меня ещё нет аккаунта",
           authHubRegisterDesc: "Создать аккаунт для учёта финансов",
           authBackToHub: "Другие варианты",
+          menu: "Меню",
           logout: "Выйти",
           authSignInFailed: "Не удалось войти. Проверьте email и пароль.",
           authSignInError: "Ошибка при входе: {{message}}",
@@ -257,6 +273,20 @@ i18n
           authVerifyNoVerifier:
             "PKCE-верификатор не найден. Регистрация должна быть завершена в той же вкладке браузера.",
           authVerifyError: "Ошибка при верификации: {{message}}",
+          authShowcaseHeadline: "Ваши деньги — как на ладони.",
+          authShowcaseDesc1:
+            "Учитывайте доходы и расходы, распределяйте их по категориям и видите, куда уходят деньги.",
+          authShowcaseDesc2:
+            "Интерактивные графики, работа офлайн и сохранение данных до подключения к сети.",
+          authShowcaseMeta: "Работает офлайн · English / Русский",
+          authVerifyingTitle: "Подтверждаем email",
+          authVerifyingSubtitle:
+            "Минуту, мы проверяем ваш аккаунт.",
+          authVerifySuccessTitle: "Email подтверждён",
+          authVerifySuccessSubtitle:
+            "Сейчас вы попадёте на главную страницу.",
+          authVerifyErrorTitle: "Не удалось подтвердить",
+          authVerifyBackToSignIn: "Вернуться ко входу",
         },
       },
     },
