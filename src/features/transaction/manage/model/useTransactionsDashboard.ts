@@ -4,7 +4,7 @@ import { useTransactionMutations } from "./useTransactionMutations";
 import { useTransactionQueries } from "./useTransactionQueries";
 
 export function useTransactionsDashboard() {
-  const { transactions, categoryOptions, loading, error } =
+  const { transactions, categoryOptions, loading, error, refetch } =
     useTransactionQueries();
   const filteredTransactions = useFilteredTransactions(transactions);
   const mutations = useTransactionMutations();
@@ -23,6 +23,7 @@ export function useTransactionsDashboard() {
     // query state
     loading,
     error,
+    refetch,
 
     // modal state
     isModalOpen: formModal.isModalOpen,
