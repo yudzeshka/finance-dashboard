@@ -532,9 +532,30 @@ code {
   }
 }
 
-/* Action icons always visible on mobile */
+/* Action buttons: hidden by default on desktop, revealed on row hover */
+.aurora-row-hover .aurora-row-actions {
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.aurora-row-hover:hover .aurora-row-actions {
+  opacity: 1;
+}
+
+/* Keep focus-within visible — keyboard users tabbing to a button must see it */
+.aurora-row-hover:focus-within .aurora-row-actions {
+  opacity: 1;
+}
+
+/* Always visible on mobile (hover unavailable) */
 @media (max-width: 768px) {
-  .ant-table-cell .ant-btn-link {
-    opacity: 1 !important;
+  .aurora-row-hover .aurora-row-actions {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-row-hover .aurora-row-actions {
+    transition: none;
   }
 }

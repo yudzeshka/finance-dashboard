@@ -152,7 +152,7 @@ export function TransactionsTable({
         dataIndex: "actions",
         key: "actions",
         render: (_: unknown, record: TransactionRow) => (
-          <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+          <div className="aurora-row-actions" style={{ display: "flex", gap: 4, alignItems: "center" }}>
             <Popconfirm
               title={t("deleteTransactionConfirm")}
               onConfirm={() => onDelete(record.id)}
