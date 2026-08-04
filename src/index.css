@@ -289,23 +289,6 @@ body {
   width: 120px;
   margin: 0;
 }
-.transaction-row--income > td {
-  background: rgba(34, 197, 94, 0.07) !important;
-}
-
-.transaction-row--expense > td {
-  background: rgba(239, 68, 68, 0.07) !important;
-}
-
-/* Ant Design table row hover */
-.ant-table-tbody > tr.transaction-row--income:hover > td {
-  background: rgba(34, 197, 94, 0.32) !important;
-}
-
-.ant-table-tbody > tr.transaction-row--expense:hover > td {
-  background: rgba(239, 68, 68, 0.32) !important;
-}
-
 h1,
 h2 {
   font-family: var(--heading);
