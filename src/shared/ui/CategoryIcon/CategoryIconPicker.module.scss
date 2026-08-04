@@ -1,0 +1,32 @@
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+  gap: 8px;
+  max-width: 320px;
+  padding: 4px;
+}
+
+.iconGridButton {
+  height: 44px;
+  min-width: 44px;
+  border: 1px solid var(--aurora-border);
+  border-radius: 10px;
+  background: var(--aurora-surface-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--aurora-text-secondary);
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: var(--aurora-accent);
+    color: var(--aurora-accent);
+  }
+}
+
+.iconGridButtonSelected {
+  border-color: var(--aurora-accent);
+  background: var(--aurora-accent-soft);
+  color: var(--aurora-accent);
+}
