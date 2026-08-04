@@ -30,3 +30,9 @@
   background: var(--aurora-accent-soft);
   color: var(--aurora-accent);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .iconGridButton {
+    transition: none;
+  }
+}
