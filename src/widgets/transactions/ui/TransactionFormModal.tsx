@@ -68,13 +68,13 @@ export function TransactionFormModal({
             options={categoryOptions}
             optionRender={(option) => (
               <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                <CategoryIcon icon={option.data.icon} size={16} />
+                <CategoryIcon icon={option.data?.icon} size={16} />
                 {option.label}
               </span>
             )}
             labelRender={(props) => (
               <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                <CategoryIcon icon={props.data.icon} size={16} />
+                <CategoryIcon icon={props.data?.icon} size={16} />
                 {props.label}
               </span>
             )}
