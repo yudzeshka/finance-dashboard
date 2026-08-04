@@ -1,35 +1,3 @@
-.emojiCell {
-  display: flex;
-  align-items: center;
-}
-
-.emojiCircle {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  line-height: 1;
-  background: var(--social-bg);
-  border: 1px solid var(--border);
-}
-
-.typeTagIncome {
-  margin: 0;
-}
-
-.typeTagExpense {
-  margin: 0;
-}
-
-.actionsCell {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
 .iconPickerTrigger {
   height: 44px;
   width: 44px;

@@ -1,0 +1,132 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--aurora-surface-card);
+  border: 1px solid var(--aurora-border);
+  box-shadow: var(--aurora-shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--aurora-shadow-md);
+  }
+}
+
+.iconCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--aurora-accent-soft);
+  color: var(--aurora-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--aurora-text);
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.typeTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.typeTagIncome {
+  background: var(--aurora-success-soft);
+  color: var(--aurora-success);
+}
+
+.typeTagExpense {
+  background: var(--aurora-danger-soft);
+  color: var(--aurora-danger);
+}
+
+.count {
+  font-size: 13px;
+  color: var(--aurora-text-secondary);
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--aurora-surface-card);
+  border: 1px solid var(--aurora-border);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--aurora-text-secondary);
+  transition: all 0.15s ease;
+
+  &:hover {
+    color: var(--aurora-accent);
+    border-color: var(--aurora-accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--aurora-accent);
+    outline-offset: 2px;
+  }
+}
+
+.deleteButton {
+  &:hover {
+    color: var(--aurora-danger);
+    border-color: var(--aurora-danger);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .actionButton {
+    transition: none;
+  }
+}

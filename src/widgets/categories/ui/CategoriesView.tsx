@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
 import { AppShell } from "@/widgets/app-shell/ui/AppShell";
 
 import type { CategoryFormValues, CategoryRowViewModel } from "../model/types";
-import { CategoriesTable } from "./CategoriesTable";
 import { CategoryFormModal } from "./CategoryFormModal";
+import { CategoriesGrid } from "./CategoriesGrid";
 
 export type CategoriesViewProps = {
   categories: CategoryRowViewModel[];
@@ -32,8 +32,10 @@ export type CategoriesViewProps = {
 
 export function CategoriesView({
   categories,
-  loading,
-  errorMessage,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  loading: _loading,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  errorMessage: _errorMessage,
   deleteLoading,
   isModalOpen,
   modalTitle,
@@ -62,15 +64,12 @@ export function CategoriesView({
           </Button>
         }
       >
-        {errorMessage ? <p>{errorMessage}</p> : null}
-
-        <div className="dashboard-card">
-          <CategoriesTable
-            categories={categories}
-            deleteLoading={deleteLoading}
+        <div className="aurora-surface" style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          <CategoriesGrid
+            rows={categories}
             onEdit={onEdit}
             onDelete={onDelete}
-            loading={loading}
+            deleteLoading={deleteLoading}
           />
         </div>
       </AppShell>
