@@ -1,0 +1,138 @@
+.hero {
+  position: relative;
+  padding: 32px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+}
+
+.heroTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.heroMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.heroEyebrow {
+  font-family: 'Inter', system-ui, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--aurora-text-secondary);
+  margin-bottom: 8px;
+}
+
+.heroBalance {
+  font-family: 'Sora', system-ui, "Segoe UI", Roboto, sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--aurora-text);
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+
+  @media (max-width: 768px) {
+    font-size: 36px;
+  }
+}
+
+.heroBalanceSymbol {
+  font-size: 32px;
+  font-weight: 600;
+
+  @media (max-width: 768px) {
+    font-size: 26px;
+  }
+}
+
+.heroDelta {
+  font-family: 'Inter', system-ui, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.heroDelta--positive {
+  color: var(--aurora-success);
+  background: var(--aurora-success-soft);
+}
+
+.heroDelta--negative {
+  color: var(--aurora-danger);
+  background: var(--aurora-danger-soft);
+}
+
+.heroDelta--neutral {
+  color: var(--aurora-text-secondary);
+  background: var(--aurora-accent-soft);
+}
+
+.heroSparkline {
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+/* Aurora orb */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.orb1 {
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(
+    circle,
+    rgba(124, 58, 237, 0.15) 0%,
+    rgba(124, 58, 237, 0) 70%
+  );
+  top: -60px;
+  right: -40px;
+}
+
+.orb2 {
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(
+    circle,
+    rgba(14, 159, 110, 0.1) 0%,
+    rgba(14, 159, 110, 0) 70%
+  );
+  bottom: -50px;
+  left: -30px;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+}

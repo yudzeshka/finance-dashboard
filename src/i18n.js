@@ -151,6 +151,12 @@ i18n
             "You'll be taken to your dashboard shortly.",
           authVerifyErrorTitle: "Verification failed",
           authVerifyBackToSignIn: "Back to sign in",
+          // Dashboard hero
+          currentBalance: "Current Balance",
+          vsPreviousPeriod: "vs previous period",
+          last30Days: "last 30 days",
+          trendUp: "Trend up",
+          trendDown: "Trend down",
         },
       },
       ru: {
@@ -287,6 +293,12 @@ i18n
             "Сейчас вы попадёте на главную страницу.",
           authVerifyErrorTitle: "Не удалось подтвердить",
           authVerifyBackToSignIn: "Вернуться ко входу",
+          // Dashboard hero
+          currentBalance: "Текущий баланс",
+          vsPreviousPeriod: "к предыдущему периоду",
+          last30Days: "за 30 дней",
+          trendUp: "Рост",
+          trendDown: "Снижение",
         },
       },
     },
