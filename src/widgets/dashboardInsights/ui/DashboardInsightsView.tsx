@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useMotionConfig } from "@/shared/lib/motion";
+import { Sparkline } from "@/widgets/dashboardHero/ui/Sparkline";
 import type { InsightTileData } from "../container/useContainer";
 import styles from "./DashboardInsights.module.scss";
 
@@ -31,6 +32,17 @@ function InsightTile({ tile, index }: { tile: InsightTileData; index: number }) 
       <div className={styles.tileValue} style={{ color: tile.color }}>
         {tile.formattedValue}
       </div>
+      {tile.sparkline && tile.sparkline.length >= 2 && tile.sparklineColor && (
+        <div className={styles.tileSparkline}>
+          <Sparkline
+            data={tile.sparkline}
+            color={tile.sparklineColor}
+            width={120}
+            height={36}
+            ariaLabel={tile.label}
+          />
+        </div>
+      )}
       <div className={styles.tileSublabel}>{tile.sublabel}</div>
     </motion.div>
   );

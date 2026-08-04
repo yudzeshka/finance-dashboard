@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 
 type SparklineProps = {
   data: number[];
@@ -16,7 +16,7 @@ export function Sparkline({
   ariaLabel,
 }: SparklineProps) {
   const path = useMemo(() => {
-    if (data.length < 2) return { polyline: "", area: "" };
+    if (data.length < 2) return { polyline: "", areaPoints: "" };
 
     const min = Math.min(...data);
     const max = Math.max(...data);
@@ -34,12 +34,14 @@ export function Sparkline({
     });
 
     const polyline = points.join(" ");
-    const area = `${points[0]} ${polyline} ${points[points.length - 1]}`;
+    // Area polygon: line points + bottom-right + bottom-left (closes back to first point)
+    const areaPoints = `${polyline} ${padding + chartWidth},${padding + chartHeight} ${padding},${padding + chartHeight}`;
 
-    return { polyline, area };
+    return { polyline, areaPoints };
   }, [data, width, height]);
 
-  const gradientId = `sparkline-grad-${color.replace("#", "")}`;
+  const rawId = useId();
+  const gradientId = `sparkline-grad-${rawId.replace(/:/g, "")}`;
 
   if (data.length < 2) {
     return (
@@ -80,7 +82,7 @@ export function Sparkline({
       </defs>
       {/* Area fill */}
       <polygon
-        points={`${path.polyline} ${width},${height} 2,${height}`}
+        points={path.areaPoints}
         fill={`url(#${gradientId})`}
       />
       {/* Line */}

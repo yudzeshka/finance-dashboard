@@ -52,6 +52,16 @@
   }
 }
 
+.tileSparkline {
+  margin-top: 4px;
+  width: 100%;
+  overflow: hidden;
+
+  svg {
+    display: block;
+  }
+}
+
 .tileSublabel {
   font-family: 'Inter', system-ui, "Segoe UI", Roboto, sans-serif;
   font-size: 12px;

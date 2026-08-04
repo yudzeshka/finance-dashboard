@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useTransactionsStore } from "@/entities/transaction/model/store";
 import { calculateDashboardStats } from "@/entities/transaction/model/calculateDashboardStats";
+import { aggregateByTypeByDay } from "@/entities/transaction/model/aggregateByDay";
 import type { DashboardStats } from "@/entities/transaction/model/calculateDashboardStats";
 
 export type InsightTileData = {
@@ -12,6 +13,8 @@ export type InsightTileData = {
   color: string;
   icon: string;
   sublabel: string;
+  sparkline?: number[];
+  sparklineColor?: string;
 };
 
 function formatInsight(value: number): string {
@@ -32,8 +35,19 @@ export function useDashboardInsights() {
     [allTransactions],
   );
 
-  const tiles: InsightTileData[] = useMemo(
-    () => [
+  const tiles: InsightTileData[] = useMemo(() => {
+    const incomeSparkline = aggregateByTypeByDay(
+      allTransactions,
+      30,
+      "INCOME",
+    ).values;
+    const expenseSparkline = aggregateByTypeByDay(
+      allTransactions,
+      30,
+      "EXPENSE",
+    ).values;
+
+    return [
       {
         id: "income",
         label: t("income30Days"),
@@ -42,6 +56,8 @@ export function useDashboardInsights() {
         color: "var(--aurora-success)",
         icon: "💰",
         sublabel: t("last30Days"),
+        sparkline: incomeSparkline,
+        sparklineColor: "#0E9F6E",
       },
       {
         id: "expense",
@@ -51,6 +67,8 @@ export function useDashboardInsights() {
         color: "var(--aurora-danger)",
         icon: "💸",
         sublabel: t("last30Days"),
+        sparkline: expenseSparkline,
+        sparklineColor: "#E0457B",
       },
       {
         id: "largest",
@@ -64,9 +82,8 @@ export function useDashboardInsights() {
         icon: stats.largestTransaction?.category?.icon ?? "📌",
         sublabel: stats.largestTransaction?.category?.name ?? "",
       },
-    ],
-    [stats, t],
-  );
+    ];
+  }, [stats, allTransactions, t]);
 
   return { tiles };
 }

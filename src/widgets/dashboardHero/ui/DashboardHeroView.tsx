@@ -52,9 +52,9 @@ export function DashboardHeroView({
   const sparklineColor =
     sparklineData.length >= 2
       ? sparklineData[sparklineData.length - 1] >= sparklineData[0]
-        ? "var(--aurora-success)"
-        : "var(--aurora-danger)"
-      : "var(--aurora-accent)";
+        ? "#0E9F6E"
+        : "#E0457B"
+      : "#7C3AED";
 
   const sparklineAriaLabel =
     sparklineData.length >= 2
