@@ -136,3 +136,18 @@
   position: relative;
   z-index: 1;
 }
+
+@media (max-width: 480px) {
+  .heroBalance {
+    font-size: 30px;
+  }
+
+  .heroBalanceSymbol {
+    font-size: 22px;
+  }
+
+  .heroDelta {
+    font-size: 12px;
+    padding: 3px 8px;
+  }
+}

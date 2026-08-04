@@ -2,7 +2,10 @@ import { Skeleton } from "antd";
 
 export function DashboardPageSkeleton() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+    <div
+      className="dashboard-skeleton-grid"
+      style={{ display: "flex", flexDirection: "column", gap: 16 }}
+    >
       {/* Hero placeholder */}
       <div
         className="aurora-card--elevated"
@@ -13,6 +16,7 @@ export function DashboardPageSkeleton() {
 
       {/* 3 insight tiles placeholder */}
       <div
+        className="dashboard-skeleton-insights"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
@@ -35,8 +39,20 @@ export function DashboardPageSkeleton() {
         className="aurora-card"
         style={{ padding: 20, minHeight: 300 }}
       >
-        <Skeleton active title={{ width: "30%" }} paragraph={{ rows: 10 }} />
+        <Skeleton
+          active
+          title={{ width: "30%" }}
+          paragraph={{ rows: 10 }}
+        />
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .dashboard-skeleton-insights {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

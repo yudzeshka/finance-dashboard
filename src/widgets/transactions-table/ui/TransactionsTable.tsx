@@ -40,8 +40,9 @@ function formatTableAmount(value: number): string {
 // React.HTMLAttributes<HTMLTableRowElement> which is incompatible
 // with framer-motion's HTMLMotionProps<"tr"> (onDrag signature differs).
 // Casting is safe: only className/style/children are actually forwarded.
-function MotionRow(props: React.HTMLAttributes<HTMLTableRowElement> & { "data-row-key"?: string }) {
+function MotionRow(props: React.HTMLAttributes<HTMLTableRowElement> & { "data-row-key"?: string; index?: number }) {
   const config = useMotionConfig();
+  const rowDelay = config.prefersReduced ? 0 : Math.min((props.index ?? 0) * config.rowStagger, 0.4);
   return (
     <motion.tr
       {...(props as React.ComponentPropsWithoutRef<typeof motion.tr>)}
@@ -53,6 +54,7 @@ function MotionRow(props: React.HTMLAttributes<HTMLTableRowElement> & { "data-ro
           : {
               duration: 0.2,
               ease: config.easeOut as [number, number, number, number],
+              delay: rowDelay,
             }
       }
     />

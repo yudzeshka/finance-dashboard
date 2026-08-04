@@ -521,3 +521,10 @@ code {
     padding: 16px;
   }
 }
+
+/* Action icons always visible on mobile */
+@media (max-width: 768px) {
+  .ant-table-cell .ant-btn-link {
+    opacity: 1 !important;
+  }
+}

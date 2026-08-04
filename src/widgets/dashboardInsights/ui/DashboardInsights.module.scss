@@ -58,3 +58,15 @@
   font-weight: 400;
   color: var(--aurora-text-secondary);
 }
+
+@media (max-width: 480px) {
+  .tileValue {
+    font-size: 22px;
+  }
+
+  .tileIcon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+}
