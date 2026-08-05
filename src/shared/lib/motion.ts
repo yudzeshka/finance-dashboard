@@ -45,6 +45,17 @@ export function useMotionConfig() {
       heroEnterDuration: prefersReduced ? 0 : 0.3,
       heroEnterDelay: prefersReduced ? 0 : 0.05,
       heroEnterY: prefersReduced ? 0 : 12,
+
+      // Scroll reveal — for charts in bento
+      scrollRevealHidden: prefersReduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 },
+      scrollRevealVisible: { opacity: 1, y: 0 },
+      scrollRevealDuration: prefersReduced ? 0 : 0.35,
+      scrollRevealViewport: { once: true, margin: "-40px" } as const,
+
+      // Tab panel transition
+      tabPanelHidden: prefersReduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 },
+      tabPanelVisible: { opacity: 1, y: 0 },
+      tabPanelExit: prefersReduced ? { opacity: 1, y: 0 } : { opacity: 0, y: -8 },
     }),
     [prefersReduced],
   );
