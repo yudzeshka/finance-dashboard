@@ -452,6 +452,8 @@ code {
     transform: translateX(-100%);
     pointer-events: none;
     box-shadow: none;
+    overflow: hidden !important;
+    border-right: none;
   }
 
   .aurora-sider-overlay {
