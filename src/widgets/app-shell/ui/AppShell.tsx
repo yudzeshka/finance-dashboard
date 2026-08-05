@@ -157,7 +157,7 @@ export function AppShell({
       <Layout>
         {isMobile && mobileOpen ? (
           <div
-            className="dashboard-sider-overlay"
+            className="aurora-sider-overlay"
             onClick={() => setMobileOpen(false)}
             aria-hidden
           />
