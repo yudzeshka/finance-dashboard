@@ -2,7 +2,7 @@ import type { Transaction } from "@/entities/transaction";
 import {
   DollarOutlined,
   WalletOutlined,
-  RiseOutlined,
+  PieChartOutlined,
   ArrowDownOutlined,
 } from "@ant-design/icons";
 import type { ReportCardConfig } from "./types";
@@ -13,12 +13,14 @@ export const reportCardsConfig: ReportCardConfig[] = [
     titleKey: "totalIncome",
     Icon: DollarOutlined,
     tone: "green",
-    getValue: (transactions: Transaction[], _periodDays: number) =>
-      transactions.reduce(
+    getValue: (transactions: Transaction[], _periodDays: number) => {
+      void _periodDays;
+      return transactions.reduce(
         (acc, transaction) =>
           transaction.type === "INCOME" ? acc + transaction.amount : acc,
         0,
-      ),
+      );
+    },
     showPercentage: true,
   },
   {
@@ -26,12 +28,14 @@ export const reportCardsConfig: ReportCardConfig[] = [
     titleKey: "totalExpense",
     Icon: ArrowDownOutlined,
     tone: "red",
-    getValue: (transactions: Transaction[], _periodDays: number) =>
-      transactions.reduce(
+    getValue: (transactions: Transaction[], _periodDays: number) => {
+      void _periodDays;
+      return transactions.reduce(
         (acc, transaction) =>
           transaction.type === "EXPENSE" ? acc + transaction.amount : acc,
         0,
-      ),
+      );
+    },
     showPercentage: true,
   },
   {
@@ -39,31 +43,32 @@ export const reportCardsConfig: ReportCardConfig[] = [
     titleKey: "balance",
     Icon: WalletOutlined,
     tone: "purple",
-    getValue: (transactions: Transaction[], _periodDays: number) =>
-      transactions.reduce(
-        (acc, transaction) =>
-          transaction.type === "INCOME"
-            ? acc + transaction.amount
-            : acc - transaction.amount,
-        0,
-      ),
-    showPercentage: true,
-  },
-  {
-    id: "averagePerDay",
-    titleKey: "averagePerDay",
-    Icon: RiseOutlined,
-    tone: "blue",
-    getValue: (transactions: Transaction[], periodDays: number) => {
-      const balance = transactions.reduce(
+    getValue: (transactions: Transaction[], _periodDays: number) => {
+      void _periodDays;
+      return transactions.reduce(
         (acc, transaction) =>
           transaction.type === "INCOME"
             ? acc + transaction.amount
             : acc - transaction.amount,
         0,
       );
-
-      return periodDays > 0 ? balance / periodDays : 0;
+    },
+    showPercentage: true,
+  },
+  {
+    id: "savingsRate",
+    titleKey: "savingsRate",
+    Icon: PieChartOutlined,
+    tone: "neutral",
+    getValue: (transactions: Transaction[], _periodDays: number) => {
+      void _periodDays;
+      const income = transactions
+        .filter((tx) => tx.type === "INCOME")
+        .reduce((acc, tx) => acc + tx.amount, 0);
+      const expense = transactions
+        .filter((tx) => tx.type === "EXPENSE")
+        .reduce((acc, tx) => acc + tx.amount, 0);
+      return income > 0 ? Math.round(((income - expense) / income) * 100) : 0;
     },
     showPercentage: false,
   },

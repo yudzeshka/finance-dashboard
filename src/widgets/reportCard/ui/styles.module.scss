@@ -2,121 +2,106 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
-  margin-bottom: 20px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .card {
   width: 100%;
-  border-radius: 14px;
 }
 
-.cardWrapper {
+.cardInner {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 14px;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .iconWrapper {
-  width: 56px;
-  height: 56px;
-  border-radius: 18px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
 }
+
 .icon {
-  font-size: 26px;
-  color: currentColor;
+  font-size: 20px;
 }
 
+// Tone classes using aurora tokens
 .green {
-  color: #16a34a;
-  background-color: #dcfce7;
+  color: var(--aurora-success);
+  background-color: var(--aurora-success-soft);
 }
 
 .red {
-  color: #ef4444;
-  background-color: #fee2e2;
+  color: var(--aurora-danger);
+  background-color: var(--aurora-danger-soft);
 }
 
 .purple {
-  color: #8b5cf6;
-  background-color: #ede9fe;
+  color: var(--aurora-accent);
+  background-color: var(--aurora-accent-soft);
 }
 
-.blue {
-  color: #2563eb;
-  background-color: #dbeafe;
+.neutral {
+  color: var(--aurora-text-secondary);
+  background-color: var(--aurora-accent-soft);
 }
 
-.cardTextWrapper {
+.label {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--aurora-text-secondary);
+}
+
+.value {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--aurora-text);
+
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
+}
+
+.footer {
   display: flex;
-  flex-direction: column;
-  min-width: 0;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  flex-wrap: wrap;
 }
-.cardText {
-  font-size: 12px;
+
+.deltaPositive {
+  color: var(--aurora-success);
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
 }
-.cardTextValue {
-  font-size: 24px;
+
+.deltaNegative {
+  color: var(--aurora-danger);
   font-weight: 600;
-  color: var(--text-h);
-  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
 }
-.cardTextPercentage {
+
+.description {
   font-size: 12px;
-  font-weight: 600;
-}
-.positive {
-  color: #16a34a;
-}
-.negative {
-  color: #dc2626;
-}
-
-.cardTextStartDate {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--text);
-}
-
-@media (max-width: 1200px) {
-  .cardsGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 640px) {
-  .cardsGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .positive {
-    color: #4ade80;
-  }
-  .negative {
-    color: #f87171;
-  }
-
-  .green {
-    color: #4ade80;
-    background-color: rgba(22, 163, 74, 0.18);
-  }
-  .red {
-    color: #f87171;
-    background-color: rgba(220, 38, 38, 0.18);
-  }
-  .purple {
-    color: #c084fc;
-    background-color: rgba(139, 92, 246, 0.18);
-  }
-  .blue {
-    color: #60a5fa;
-    background-color: rgba(37, 99, 235, 0.18);
-  }
+  color: var(--aurora-text-secondary);
+  white-space: nowrap;
 }

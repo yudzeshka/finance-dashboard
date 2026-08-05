@@ -8,7 +8,7 @@ import { useDebounce } from "@/shared/hooks/UseDebounce";
 import { calculateReportCards } from "../model/calculateReportCards";
 
 export const useContainer = () => {
-  const { transactions, loading, error } = useTransactionQueries();
+  const { transactions, loading, error, refetch } = useTransactionQueries();
   const { t, i18n } = useTranslation();
   const filters = useFilters();
   const setAllTransactions = useSetAllTransactions();
@@ -27,6 +27,8 @@ export const useContainer = () => {
 
   const cards = useMemo(
     () => calculateReportCards(transactions, reportFilters, t),
+    // i18n.language signals that t() results changed — intentional dep
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [transactions, reportFilters, t, i18n.language],
   );
 
@@ -38,5 +40,6 @@ export const useContainer = () => {
     cards,
     loading,
     error,
+    refetch,
   };
 };
