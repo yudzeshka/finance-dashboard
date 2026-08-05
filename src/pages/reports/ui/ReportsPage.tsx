@@ -30,7 +30,10 @@ export function ReportsPage() {
   if (error) {
     return (
       <AppShell title={t("reports")} subtitle={t("reportsOnYourTransactions")}>
-        <div className="aurora-surface" style={{ padding: 0 }}>
+        <div className="aurora-surface" style={{ padding: 0, display: "flex", flexDirection: "column", gap: 20 }}>
+          <div className="aurora-card" style={{ padding: "12px 16px" }}>
+            <TransactionsFiltersWidget />
+          </div>
           <div className="aurora-card" style={{ padding: 48, textAlign: "center" }}>
             <ExclamationCircleOutlined
               style={{
@@ -61,7 +64,10 @@ export function ReportsPage() {
   if (isEmpty) {
     return (
       <AppShell title={t("reports")} subtitle={t("reportsOnYourTransactions")}>
-        <div className="aurora-surface" style={{ padding: 0 }}>
+        <div className="aurora-surface" style={{ padding: 0, display: "flex", flexDirection: "column", gap: 20 }}>
+          <div className="aurora-card" style={{ padding: "12px 16px" }}>
+            <TransactionsFiltersWidget />
+          </div>
           <div className="aurora-card">
             <div className="aurora-empty-state">
               <InboxOutlined className="aurora-empty-state__icon" />
