@@ -1,85 +1,27 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 20px;
 
-  /* Fill the visible Content area (Content padding is 20px top/bottom => 40px) */
-  min-height: calc(
-    100svh - var(--dashboard-header-height) - var(--dashboard-footer-height) - 40px
-  );
+  @media (max-width: 1200px) {
+    gap: 16px;
+  }
 }
 
-.chartsArea {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
-
-.chartsGrid {
+.bentoGrid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-rows: 1fr 1fr;
-  gap: 10px;
-  flex: 1 1 auto;
-  min-height: 0;
-}
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 
-.cellSpan2 {
-  grid-column: span 2;
-  min-width: 0;
-  min-height: 260px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.cellSpan1 {
-  grid-column: span 1;
-  min-width: 0;
-  min-height: 260px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.cellSpan2 > *,
-.cellSpan1 > * {
-  flex: 1 1 auto;
-  min-height: 0;
-  min-width: 0;
-}
-
-.quarterBlock {
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
-/* Narrow: stack, allow scroll */
-@media (max-width: 1200px) {
-  .page {
-    height: auto;
-  }
-
-  .chartsArea {
-    flex: 0 0 auto;
-  }
-
-  .chartsGrid {
+  @media (max-width: 1200px) {
     grid-template-columns: 1fr;
-    grid-template-rows: none;
-    grid-auto-rows: auto;
-    flex: 0 0 auto;
-    min-height: 0;
+    gap: 16px;
   }
 
-  .cellSpan2 {
-    grid-column: span 1;
+  // Each direct child fills height
+  > * {
     min-height: 320px;
-  }
-  .cellSpan1 {
-    grid-column: span 1;
-    min-height: 300px;
+    display: flex;
+    flex-direction: column;
   }
 }
