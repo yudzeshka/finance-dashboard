@@ -10,9 +10,13 @@ export type UIPropertyType = {
 export const UI = ({ option }: UIPropertyType) => {
   const { t } = useTranslation();
   return (
-    <div className={styles.chartContainer}>
-      <h4 className={styles.chartTitle}>{t("expensesByCategory")}</h4>
-      <ReactECharts option={option} className={styles.chart} />
+    <div className="aurora-card" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      <div className={styles.chartContainer}>
+        <h4 className={`aurora-font-display ${styles.chartTitle}`}>
+          {t("expensesByCategory")}
+        </h4>
+        <ReactECharts option={option} className={styles.chart} />
+      </div>
     </div>
   );
 };
