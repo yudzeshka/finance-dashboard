@@ -37,6 +37,17 @@ const IconSettings = () => (
   </svg>
 );
 
+function getInitials(label: string | undefined | null): string {
+  if (!label) return "U";
+  const trimmed = label.trim();
+  if (!trimmed) return "U";
+  const parts = trimmed.split(/\s+/);
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  return parts[0][0].toUpperCase();
+}
+
 type AppShellProps = {
   title: string;
   subtitle?: string;
@@ -61,6 +72,7 @@ export function AppShell({
   const pendingCount = useOfflineQueue((s) => s.queue.length);
 
   const userLabel = user?.displayName || user?.email || "Guest";
+  const userInitials = getInitials(userLabel);
 
   const handleSignOut = async () => {
     try {
@@ -138,7 +150,7 @@ export function AppShell({
           </NavLink>
         </nav>
         <div className="aurora-sider__userCard">
-          <span className="aurora-sider__avatar">{userLabel}</span>
+          <span className="aurora-sider__avatar">{userInitials}</span>
           {(!isMobile || mobileOpen) ? (
             <span className="aurora-sider__userMeta">
               <span className="aurora-sider__userName">{userLabel}</span>
