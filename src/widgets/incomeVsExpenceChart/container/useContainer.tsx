@@ -1,35 +1,28 @@
-import type { ContainerComponentType } from "@/shared/types/types";
 import type { EChartsOption } from "echarts";
+import { useMemo, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import type { ContainerComponentType } from "@/shared/types/types";
 import type { UIPropertyType } from "../ui";
 import { useFilters } from "@/features/transaction/filters/model/selectors";
 import { useTransactionQueries } from "@/features/transaction/manage/model/useTransactionQueries";
 import { useSetAllTransactions } from "@/entities/transaction/model/selectors";
 import { useDebounce } from "@/shared/hooks/UseDebounce";
 import { useMedia } from "@/shared/hooks/useMedia";
-import { useEffect, useMemo } from "react";
-import { useTranslation } from "react-i18next";
 import { calculateIncomeVsExpenceChart } from "../model/lib";
 
+const INCOME_COLOR = "#0E9F6E";
+const EXPENSE_COLOR = "#E0457B";
+
 export const useContainer: ContainerComponentType<UIPropertyType> = () => {
-  const {
-    transactions,
-    loading: _loading,
-    error: _error,
-  } = useTransactionQueries();
+  const { transactions } = useTransactionQueries();
   const filters = useFilters();
   const setAllTransactions = useSetAllTransactions();
-  const { debouncedValue: debouncedSearch } = useDebounce(
-    filters.search ?? "",
-    250,
-  );
-  const { isDark, isMobile } = useMedia();
+  const { debouncedValue: debouncedSearch } = useDebounce(filters.search ?? "", 250);
+  const { isMobile } = useMedia();
   const { t } = useTranslation();
 
   const reportFilters = useMemo(
-    () => ({
-      ...filters,
-      search: debouncedSearch,
-    }),
+    () => ({ ...filters, search: debouncedSearch }),
     [filters, debouncedSearch],
   );
 
@@ -42,63 +35,79 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
     setAllTransactions(transactions);
   }, [transactions, setAllTransactions]);
 
-  const textColor = isDark ? "#f3f4f6" : "#08060d";
-  const subTextColor = isDark ? "#9ca3af" : "#6b6375";
-
-  const option: EChartsOption = {
+  const option: EChartsOption = useMemo(() => ({
+    textStyle: { fontFamily: "'Inter', sans-serif" },
+    tooltip: {
+      trigger: "axis" as const,
+      axisPointer: { type: "shadow" as const },
+      backgroundColor: "#FFFFFF",
+      borderColor: "#E8E4F0",
+      textStyle: { color: "#1E1B2E", fontSize: 13 },
+      extraCssText: "box-shadow: 0 4px 12px rgba(76,29,149,0.10); border-radius: 12px; padding: 10px 14px;",
+    },
     grid: {
-      left: 8,
-      right: 8,
-      bottom: isMobile ? 40 : 24,
+      left: 16,
+      right: 16,
+      bottom: isMobile ? 48 : 32,
+      top: 40,
       containLabel: true,
     },
     xAxis: {
       data: chartData.names,
       axisLabel: {
-        color: subTextColor,
+        color: "#6B6680",
         rotate: isMobile ? 45 : 0,
         fontSize: isMobile ? 10 : 12,
-        interval: 0,
       },
-      axisLine: {
-        lineStyle: { color: subTextColor },
-      },
+      axisLine: { show: false },
+      axisTick: { show: false },
     },
     yAxis: {
-      axisLabel: {
-        color: subTextColor,
-      },
-      axisLine: {
-        lineStyle: { color: subTextColor },
-      },
-      splitLine: {
-        lineStyle: { color: isDark ? "#2e303a" : "#e5e4e7" },
-      },
+      axisLabel: { color: "#6B6680", fontSize: 12 },
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: { lineStyle: { color: "#E8E4F0", type: "dashed" } },
     },
     series: [
       {
         name: t("expense"),
         type: "bar",
         data: chartData.expenseValues,
+        color: EXPENSE_COLOR,
+        itemStyle: { borderRadius: [6, 6, 0, 0] },
+        barMaxWidth: isMobile ? 28 : 40,
+        animationDuration: 600,
+        animationEasing: "cubicOut" as const,
       },
       {
         name: t("income"),
         type: "bar",
         data: chartData.incomeValues,
+        color: INCOME_COLOR,
+        itemStyle: { borderRadius: [6, 6, 0, 0] },
+        barMaxWidth: isMobile ? 28 : 40,
+        animationDuration: 600,
+        animationEasing: "cubicOut" as const,
       },
     ],
-    legend: {
-      data: [t("expense"), t("income")],
-      textStyle: { color: textColor },
-      top: 0,
-    },
-    tooltip: {
-      trigger: "axis",
-      axisPointer: {
-        type: "shadow",
-      },
-    },
-    color: ["#FF4D4F", "#52C41A"],
-  };
+    legend: isMobile
+      ? {
+          data: [t("expense"), t("income")],
+          bottom: 0,
+          textStyle: { color: "#6B6680", fontSize: 14 },
+          itemWidth: 10,
+          itemHeight: 10,
+          icon: "roundRect" as const,
+        }
+      : {
+          data: [t("expense"), t("income")],
+          top: 0,
+          textStyle: { color: "#6B6680", fontSize: 14 },
+          itemWidth: 10,
+          itemHeight: 10,
+          icon: "roundRect" as const,
+        },
+  }), [chartData, isMobile, t]);
+
   return { option };
 };
