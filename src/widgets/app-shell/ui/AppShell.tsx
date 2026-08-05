@@ -10,6 +10,33 @@ import { useOfflineQueue } from "../../../shared/lib/offlineQueue";
 import { LogoutOutlined, MenuOutlined, WifiOutlined } from "@ant-design/icons";
 import { useMedia } from "@/shared/hooks/useMedia";
 
+const IconDashboard = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <rect x="3" y="3" width="7" height="9" rx="1.5" />
+    <rect x="14" y="3" width="7" height="5" rx="1.5" />
+    <rect x="14" y="12" width="7" height="9" rx="1.5" />
+    <rect x="3" y="16" width="7" height="5" rx="1.5" />
+  </svg>
+);
+const IconReports = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 3v18h18" />
+    <path d="M7 14l4-4 3 3 5-6" />
+  </svg>
+);
+const IconCategories = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+    <circle cx="7" cy="7" r="1.2" />
+  </svg>
+);
+const IconSettings = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="3" />
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+  </svg>
+);
+
 type AppShellProps = {
   title: string;
   subtitle?: string;
@@ -53,92 +80,77 @@ export function AppShell({
   return (
     <Layout className="dashboard-shell">
       <Sider
-        className="dashboard-sider"
+        className="aurora-sider"
         collapsed={isMobile ? !mobileOpen : false}
         collapsible={isMobile}
         collapsedWidth={0}
         trigger={null}
         width={240}
       >
-        <div className="dashboard-sider__logo">
-          <span className="dashboard-sider__logoMark">FD</span>
+        <div className="aurora-sider__logo">
+          <span className="aurora-sider__orb" aria-hidden="true" />
+          <span className="aurora-sider__logoMark">FD</span>
           {(!isMobile || mobileOpen) ? (
-            <span className="dashboard-sider__logoText">
-              {t("financeDashboard")}
-            </span>
+            <span className="aurora-sider__logoText">{t("financeDashboard")}</span>
           ) : null}
         </div>
-        <div className="dashboard-sider__nav">
+        <nav className="aurora-sider__nav">
           <NavLink
             to="/"
+            end
             className={({ isActive }) =>
-              `dashboard-navItem${isActive ? " dashboard-navItem--active" : ""}`
+              `aurora-navItem${isActive ? " aurora-navItem--active" : ""}`
             }
-            onClick={() => {
-              if (isMobile) setMobileOpen(false);
-            }}
+            onClick={() => isMobile && setMobileOpen(false)}
           >
-            <span className="dashboard-navItem__icon" aria-hidden>
-              📊
-            </span>
-            {(!isMobile || mobileOpen) ? <span>{t("dashboard")}</span> : null}
+            <span className="aurora-navItem__icon"><IconDashboard /></span>
+            {(!isMobile || mobileOpen) ? <span className="aurora-navItem__label">{t("dashboard")}</span> : null}
           </NavLink>
           <NavLink
             to="/reports"
             className={({ isActive }) =>
-              `dashboard-navItem${isActive ? " dashboard-navItem--active" : ""}`
+              `aurora-navItem${isActive ? " aurora-navItem--active" : ""}`
             }
-            onClick={() => {
-              if (isMobile) setMobileOpen(false);
-            }}
+            onClick={() => isMobile && setMobileOpen(false)}
           >
-            <span className="dashboard-navItem__icon" aria-hidden>
-              📈
-            </span>
-            {(!isMobile || mobileOpen) ? <span>{t("reports")}</span> : null}
+            <span className="aurora-navItem__icon"><IconReports /></span>
+            {(!isMobile || mobileOpen) ? <span className="aurora-navItem__label">{t("reports")}</span> : null}
           </NavLink>
           <NavLink
             to="/categories"
             className={({ isActive }) =>
-              `dashboard-navItem${isActive ? " dashboard-navItem--active" : ""}`
+              `aurora-navItem${isActive ? " aurora-navItem--active" : ""}`
             }
-            onClick={() => {
-              if (isMobile) setMobileOpen(false);
-            }}
+            onClick={() => isMobile && setMobileOpen(false)}
           >
-            <span className="dashboard-navItem__icon" aria-hidden>
-              🏷️
-            </span>
-            {(!isMobile || mobileOpen) ? <span>{t("categories")}</span> : null}
+            <span className="aurora-navItem__icon"><IconCategories /></span>
+            {(!isMobile || mobileOpen) ? <span className="aurora-navItem__label">{t("categories")}</span> : null}
           </NavLink>
           <NavLink
             to="/settings"
             className={({ isActive }) =>
-              `dashboard-navItem${isActive ? " dashboard-navItem--active" : ""}`
+              `aurora-navItem${isActive ? " aurora-navItem--active" : ""}`
             }
-            onClick={() => {
-              if (isMobile) setMobileOpen(false);
-            }}
+            onClick={() => isMobile && setMobileOpen(false)}
           >
-            <span className="dashboard-navItem__icon" aria-hidden>
-              ⚙️
-            </span>
-            {(!isMobile || mobileOpen) ? <span>{t("settings")}</span> : null}
+            <span className="aurora-navItem__icon"><IconSettings /></span>
+            {(!isMobile || mobileOpen) ? <span className="aurora-navItem__label">{t("settings")}</span> : null}
           </NavLink>
-        </div>
-        <div className="dashboard-sider__user">
+        </nav>
+        <div className="aurora-sider__userCard">
+          <span className="aurora-sider__avatar">{userLabel}</span>
           {(!isMobile || mobileOpen) ? (
-            <div className="dashboard-sider__userName">{userLabel}</div>
+            <span className="aurora-sider__userMeta">
+              <span className="aurora-sider__userName">{userLabel}</span>
+              <Button
+                type="text"
+                size="small"
+                className="aurora-sider__logoutBtn"
+                icon={<LogoutOutlined />}
+                onClick={handleSignOut}
+              />
+            </span>
           ) : null}
-          <Button
-            type="text"
-            className="dashboard-sider__userButton"
-            icon={<LogoutOutlined />}
-            onClick={handleSignOut}
-            title={t("logout")}
-          >
-            {(!isMobile || mobileOpen) ? t("logout") : null}
-          </Button>
         </div>
       </Sider>
 
