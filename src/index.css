@@ -608,7 +608,7 @@ code {
 }
 
 .settings-tabs .ant-tabs-nav {
-  margin-bottom: 0;
+  margin-bottom: 16px;
 }
 
 .settings-tabs .ant-tabs-nav::before {
@@ -638,13 +638,16 @@ code {
 }
 
 .settings-tabContent {
-  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .settings-card__section {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding: 24px;
   max-width: 480px;
 }
 
@@ -730,9 +733,6 @@ code {
 }
 
 @media (max-width: 768px) {
-  .settings-tabContent {
-    padding: 16px;
-  }
   .settings-card__section {
     max-width: 100%;
   }
