@@ -217,8 +217,6 @@ export function SettingsView(props: SettingsContainerProps) {
   ];
 
   return (
-    <div className="dashboard-contentInner">
-      <Tabs className="settings-tabs" defaultActiveKey="appearance" items={tabItems} />
-    </div>
+    <Tabs className="settings-tabs" defaultActiveKey="appearance" items={tabItems} />
   );
 }
