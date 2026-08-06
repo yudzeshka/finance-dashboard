@@ -156,40 +156,42 @@ export function SettingsView(props: SettingsContainerProps) {
       label: t("settingsData"),
       children: (
         <div className="settings-tabContent">
-          <div className="aurora-card">
-            <div className="settings-card__section">
-              <Typography.Title level={5}>
-                {t("settingsExport")}
-              </Typography.Title>
-              <Typography.Text type="secondary">
-                {t("settingsExportDesc")}
-              </Typography.Text>
+          <div className="settings-dataGrid">
+            <div className="aurora-card">
+              <div className="settings-card__section">
+                <Typography.Title level={5}>
+                  {t("settingsExport")}
+                </Typography.Title>
+                <Typography.Text type="secondary">
+                  {t("settingsExportDesc")}
+                </Typography.Text>
+                <Button
+                  icon={<DownloadOutlined />}
+                  loading={exporting}
+                  onClick={onExportCsv}
+                >
+                  {t("settingsExportCsv")}
+                </Button>
+              </div>
+            </div>
+            <div className="settings-dangerCard">
+              <div className="settings-dangerCard__header">
+                <ExclamationCircleOutlined className="settings-dangerCard__icon" />
+                <span className="settings-dangerCard__title">
+                  {t("settingsClearData")}
+                </span>
+              </div>
+              <div className="settings-dangerCard__desc">
+                {t("settingsClearDataDesc")}
+              </div>
               <Button
-                icon={<DownloadOutlined />}
-                loading={exporting}
-                onClick={onExportCsv}
+                danger
+                loading={clearing}
+                onClick={() => setConfirmOpen(true)}
               >
-                {t("settingsExportCsv")}
+                {t("settingsClearData")}
               </Button>
             </div>
-          </div>
-          <div className="settings-dangerCard">
-            <div className="settings-dangerCard__header">
-              <ExclamationCircleOutlined className="settings-dangerCard__icon" />
-              <span className="settings-dangerCard__title">
-                {t("settingsClearData")}
-              </span>
-            </div>
-            <div className="settings-dangerCard__desc">
-              {t("settingsClearDataDesc")}
-            </div>
-            <Button
-              danger
-              loading={clearing}
-              onClick={() => setConfirmOpen(true)}
-            >
-              {t("settingsClearData")}
-            </Button>
           </div>
           <Modal
             open={confirmOpen}

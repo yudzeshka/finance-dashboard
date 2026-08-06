@@ -682,7 +682,26 @@ code {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-width: 480px;
+}
+
+.settings-dataGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.settings-dataGrid .aurora-card {
+  height: 100%;
+}
+
+.settings-dataGrid .settings-card__section {
+  max-width: none;
+  height: 100%;
+}
+
+.settings-dataGrid .settings-dangerCard {
+  max-width: none;
 }
 
 .settings-dangerCard__header {
@@ -733,6 +752,9 @@ code {
 }
 
 @media (max-width: 768px) {
+  .settings-dataGrid {
+    grid-template-columns: 1fr;
+  }
   .settings-card__section {
     max-width: 100%;
   }
