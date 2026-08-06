@@ -600,3 +600,148 @@ code {
     transition: none;
   }
 }
+
+/* === Settings Page === */
+
+.settings-tabs.ant-tabs {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.settings-tabs .ant-tabs-nav {
+  margin-bottom: 0;
+}
+
+.settings-tabs .ant-tabs-nav::before {
+  border-bottom-color: var(--aurora-border);
+}
+
+.settings-tabs .ant-tabs-tab {
+  padding: 11px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--aurora-text-secondary);
+  transition: color 0.15s;
+}
+
+.settings-tabs .ant-tabs-tab:hover {
+  color: var(--aurora-accent);
+}
+
+.settings-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--aurora-accent);
+  font-weight: 600;
+}
+
+.settings-tabs .ant-tabs-ink-bar {
+  background: var(--aurora-accent);
+  height: 2px;
+}
+
+.settings-tabContent {
+  padding: 28px 24px;
+}
+
+.settings-card__section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 44px;
+}
+
+.settings-row__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--aurora-text);
+  line-height: 1.4;
+}
+
+.settings-row--stacked {
+  flex-direction: column;
+  align-items: flex-start;
+}
+.settings-row--stacked .settings-row__label {
+  margin-bottom: -8px;
+}
+
+.settings-dangerCard {
+  background: var(--aurora-danger-soft);
+  border: 1px solid var(--aurora-danger);
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 480px;
+}
+
+.settings-dangerCard__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-dangerCard__icon {
+  color: var(--aurora-danger);
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.settings-dangerCard__title {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--aurora-danger);
+}
+
+.settings-dangerCard__desc {
+  font-size: 13px;
+  color: var(--aurora-text-secondary);
+  line-height: 1.5;
+}
+
+.settings-modal .ant-modal-content {
+  border-radius: 16px;
+  border: 1px solid var(--aurora-border);
+}
+
+.settings-confirmInput {
+  margin-top: 4px;
+}
+.settings-confirmInput .ant-input {
+  border-color: var(--aurora-danger);
+}
+.settings-confirmInput .ant-input:focus {
+  border-color: var(--aurora-danger);
+  box-shadow: 0 0 0 3px rgba(224, 69, 123, 0.15);
+}
+
+.settings-divider {
+  height: 1px;
+  background: var(--aurora-border);
+  margin: 4px 0 12px;
+}
+
+@media (max-width: 768px) {
+  .settings-tabContent {
+    padding: 16px;
+  }
+  .settings-card__section {
+    max-width: 100%;
+  }
+  .settings-dangerCard {
+    max-width: 100%;
+  }
+  .settings-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
