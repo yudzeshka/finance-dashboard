@@ -2,6 +2,7 @@ import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { useEffect, type FC } from "react";
 import { Sparkline } from "./Sparkline";
 import { useMotionConfig } from "@/shared/lib/motion";
+import { useCurrencyFormatter } from "@/shared/lib/useCurrencyFormatter";
 import styles from "./DashboardHero.module.scss";
 
 type DashboardHeroViewProps = {
@@ -12,22 +13,14 @@ type DashboardHeroViewProps = {
   t: (key: string) => string;
 };
 
-function formatCurrency(value: number): string {
-  const abs = Math.abs(value);
-  const formatted = new Intl.NumberFormat("ru-RU", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(abs);
-  return formatted.replace(",", ".").replace(/\s/g, " ") + " ₽";
-}
-
-const CountUpBalance: FC<{ value: number; duration: number }> = ({
-  value,
-  duration,
-}) => {
+const CountUpBalance: FC<{
+  value: number;
+  duration: number;
+  format: (v: number) => string;
+}> = ({ value, duration, format }) => {
   const motionVal = useMotionValue(0);
   const rounded = useTransform(motionVal, (v) => Math.round(v));
-  const display = useTransform(rounded, (v) => formatCurrency(v));
+  const display = useTransform(rounded, (v) => format(v));
 
   useEffect(() => {
     const controls = animate(motionVal, value, {
@@ -48,6 +41,7 @@ export function DashboardHeroView({
   t,
 }: DashboardHeroViewProps) {
   const config = useMotionConfig();
+  const formatCurrency = useCurrencyFormatter();
 
   const sparklineColor =
     sparklineData.length >= 2
@@ -129,6 +123,7 @@ export function DashboardHeroView({
               <CountUpBalance
                 value={Math.abs(balance)}
                 duration={config.countUpDuration}
+                format={formatCurrency}
               />
             </div>
             {deltaLabel && (

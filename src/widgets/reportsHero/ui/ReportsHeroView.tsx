@@ -3,6 +3,7 @@ import type { TFunction } from "i18next";
 import { IncomeVsExpenceChart } from "@/widgets/incomeVsExpenceChart";
 import { CountUpValue } from "@/shared/ui/CountUpValue";
 import { useMotionConfig } from "@/shared/lib/motion";
+import { useCurrencyFormatter } from "@/shared/lib/useCurrencyFormatter";
 import styles from "./ReportsHero.module.scss";
 
 type Props = {
@@ -12,17 +13,9 @@ type Props = {
   t: TFunction;
 };
 
-function formatCurrencyUSD(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
 export function ReportsHeroView({ totalIncome, totalExpense, balance, t }: Props) {
   const config = useMotionConfig();
+  const formatCurrency = useCurrencyFormatter();
 
   return (
     <motion.div
@@ -83,7 +76,7 @@ export function ReportsHeroView({ totalIncome, totalExpense, balance, t }: Props
               <span className={styles.summaryLabel}>{t("totalIncome")}</span>
               <CountUpValue
                 value={totalIncome}
-                format={formatCurrencyUSD}
+                format={formatCurrency}
                 className={`aurora-font-display aurora-tabular aurora-text-success ${styles.summaryValue}`}
               />
             </div>
@@ -91,7 +84,7 @@ export function ReportsHeroView({ totalIncome, totalExpense, balance, t }: Props
               <span className={styles.summaryLabel}>{t("totalExpense")}</span>
               <CountUpValue
                 value={totalExpense}
-                format={formatCurrencyUSD}
+                format={formatCurrency}
                 className={`aurora-font-display aurora-tabular aurora-text-danger ${styles.summaryValue}`}
               />
             </div>
@@ -104,7 +97,7 @@ export function ReportsHeroView({ totalIncome, totalExpense, balance, t }: Props
               >
                 <CountUpValue
                   value={balance}
-                  format={formatCurrencyUSD}
+                  format={formatCurrency}
                   className={`aurora-font-display aurora-tabular ${styles.summaryValue}`}
                 />
               </span>

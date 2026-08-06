@@ -5,17 +5,9 @@ import {
 } from "@ant-design/icons";
 import { CountUpValue } from "@/shared/ui/CountUpValue";
 import { useMotionConfig } from "@/shared/lib/motion";
+import { useCurrencyFormatter } from "@/shared/lib/useCurrencyFormatter";
 import type { ReportCardViewModel } from "../model/types";
 import styles from "./styles.module.scss";
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value);
-}
 
 function formatPercent(value: number): string {
   return `${Math.round(value)}%`;
@@ -32,6 +24,7 @@ export function ReportCard({
   id,
 }: ReportCardViewModel) {
   const { springSnappy, prefersReduced } = useMotionConfig();
+  const formatCurrency = useCurrencyFormatter();
 
   const isPercentage = id === "savingsRate";
   const formatFn = isPercentage ? formatPercent : formatCurrency;

@@ -8,6 +8,7 @@ import { useTransactionQueries } from "@/features/transaction/manage/model/useTr
 import { useSetAllTransactions } from "@/entities/transaction/model/selectors";
 import { useDebounce } from "@/shared/hooks/UseDebounce";
 import { useMedia } from "@/shared/hooks/useMedia";
+import { useCurrencyFormatter } from "@/shared/lib/useCurrencyFormatter";
 import { calculateExpenceChart } from "../model/lib";
 import type { PieDataItemOption } from "echarts/types/src/chart/pie/PieSeries.js";
 
@@ -23,6 +24,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
   const { debouncedValue: debouncedSearch } = useDebounce(filters.search ?? "", 250);
   const { isMobile } = useMedia();
   const { t } = useTranslation();
+  const formatCurrency = useCurrencyFormatter();
 
   const reportFilters = useMemo(
     () => ({ ...filters, search: debouncedSearch }),
@@ -51,7 +53,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
         textStyle: { color: "#1E1B2E", fontSize: 13 },
       },
       title: {
-        text: `${t("total")}: $${chartData.total.toLocaleString()}`,
+        text: `${t("total")}: ${formatCurrency(chartData.total)}`,
         left: "center",
         top: "center",
         textStyle: {
@@ -103,7 +105,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
             itemHeight: 8,
           },
     };
-  }, [chartData, isMobile, t]);
+  }, [chartData, isMobile, t, formatCurrency]);
 
   return { option };
 };
