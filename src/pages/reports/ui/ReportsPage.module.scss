@@ -12,6 +12,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  min-width: 0;
 
   @media (max-width: 1200px) {
     grid-template-columns: 1fr;
@@ -21,6 +22,7 @@
   // Each direct child fills height
   > * {
     min-height: 320px;
+    min-width: 0;
     display: flex;
     flex-direction: column;
   }
