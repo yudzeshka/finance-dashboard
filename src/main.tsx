@@ -9,6 +9,7 @@ import "./i18n";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ReportsPage } from "./pages/reports";
 import { CategoriesPage } from "./pages/categories";
+import { SettingsPage } from "./pages/settings";
 import {
   AuthHubPage,
   AuthLayout,
@@ -30,6 +31,7 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="/" element={<ErrorBoundary><DashboardPage /></ErrorBoundary>} />
                 <Route path="/reports" element={<ErrorBoundary><ReportsPage /></ErrorBoundary>} />
                 <Route path="/categories" element={<ErrorBoundary><CategoriesPage /></ErrorBoundary>} />
+                <Route path="/settings" element={<ErrorBoundary><SettingsPage /></ErrorBoundary>} />
               </Route>
               <Route path="/auth" element={<ErrorBoundary><AuthLayout /></ErrorBoundary>}>
                 <Route index element={<AuthHubPage />} />
