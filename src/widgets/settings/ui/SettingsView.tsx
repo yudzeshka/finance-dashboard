@@ -51,6 +51,7 @@ export function SettingsView(props: SettingsContainerProps) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmText, setConfirmText] = useState("");
+  const confirmWord = t("settingsClearDataConfirmWord");
 
   const handleResetPassword = async () => {
     try {
@@ -192,13 +193,13 @@ export function SettingsView(props: SettingsContainerProps) {
           </div>
           <Modal
             open={confirmOpen}
-            onCancel={() => setConfirmOpen(false)}
+            onCancel={() => { setConfirmOpen(false); setConfirmText(""); }}
             title={t("settingsClearData")}
             className="settings-modal"
             okText={t("settingsClearData")}
             okButtonProps={{
               danger: true,
-              disabled: confirmText !== "ОЧИСТИТЬ",
+              disabled: confirmText !== confirmWord,
             }}
             confirmLoading={clearing}
             onOk={handleClearData}
@@ -208,7 +209,7 @@ export function SettingsView(props: SettingsContainerProps) {
               className="settings-confirmInput"
               value={confirmText}
               onChange={(e) => setConfirmText(e.target.value)}
-              placeholder="ОЧИСТИТЬ"
+              placeholder={confirmWord}
             />
           </Modal>
         </div>
