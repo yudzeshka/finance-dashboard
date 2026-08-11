@@ -4,17 +4,21 @@
   height: 100%;
   flex: 1 1 auto;
   flex-direction: column;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  box-shadow: var(--shadow);
   min-height: 0;
+  min-height: 320px;
+
+  @media (max-width: 768px) {
+    min-height: 320px;
+  }
 }
 
 .chartTitle {
-  font-size: 14px;
-  font-weight: bold;
-  color: var(--text-h);
-  margin: 5px 5px 5px 10px;
+  font-family: 'Sora', 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--aurora-text);
+  margin: 0 0 8px 0;
+  padding: 16px 16px 0;
 }
 
 .chart {

@@ -37,7 +37,7 @@ function buildTempTransaction(
   ) ?? {
     id: formValues.category,
     name: formValues.category,
-    icon: "❓",
+    icon: "other",
     type: formValues.type,
     user_id: null,
   };

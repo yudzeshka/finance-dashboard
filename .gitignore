@@ -55,3 +55,6 @@ out
 *.sw?
 
 testsprite_tests/tmp/config.json
+
+# Superpowers brainstorm mockups
+.superpowers/

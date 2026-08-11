@@ -1,17 +1,16 @@
 import type { ComponentType } from "react";
 import type { Transaction } from "@/entities/transaction";
 
-export type ReportCardTone = "green" | "red" | "purple" | "blue";
+export type ReportCardTone = "green" | "red" | "purple" | "neutral";
 
-/** Keys under the default `translation` namespace in i18n */
 export type ReportCardTitleKey =
   | "totalIncome"
   | "totalExpense"
   | "balance"
-  | "averagePerDay";
+  | "savingsRate";
 
 export type ReportCardConfig = {
-  id: "income" | "expense" | "balance" | "averagePerDay";
+  id: "income" | "expense" | "balance" | "savingsRate";
   titleKey: ReportCardTitleKey;
   Icon: ComponentType<{ className?: string }>;
   tone: ReportCardTone;
