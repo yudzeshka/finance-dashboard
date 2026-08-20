@@ -18,6 +18,7 @@ import type {
 import { AppShell } from "../../app-shell/ui/AppShell";
 import { TransactionsTable } from "../../transactions-table/ui/TransactionsTable";
 import { useTranslation } from "react-i18next";
+import { CategoryIcon } from "@/shared/ui/CategoryIcon";
 
 export type TransactionsWidgetProps = {
   transactions: Transaction[];
@@ -108,7 +109,21 @@ export function TransactionsWidget({
             name="category"
             rules={[{ required: true, message: t("categoryIsRequired") }]}
           >
-            <Select options={categoryOptions} />
+            <Select
+              options={categoryOptions}
+              optionRender={(option) => (
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                  <CategoryIcon icon={option.data?.icon} size={16} />
+                  {option.label}
+                </span>
+              )}
+              labelRender={(props) => (
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                  <CategoryIcon icon={props.data?.icon} size={16} />
+                  {props.label}
+                </span>
+              )}
+            />
           </Form.Item>
           <Form.Item
             label={t("date")}

@@ -1,5 +1,5 @@
 import { Form } from "antd";
-import type { EmojiClickData } from "emoji-picker-react";
+
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -41,7 +41,7 @@ type DeleteCategoryData = {
   delete_categories_by_pk: { id: string } | null;
 };
 
-const DEFAULT_EMOJI = "🙂";
+const DEFAULT_ICON_KEY = "other";
 
 function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "Unknown error";
@@ -54,8 +54,8 @@ export function useContainer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<CategoryModalMode>("create");
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
-  const [selectedEmoji, setSelectedEmoji] = useState(DEFAULT_EMOJI);
+  const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState(DEFAULT_ICON_KEY);
   const [actionError, setActionError] = useState<string | null>(null);
 
   const {
@@ -100,8 +100,8 @@ export function useContainer() {
     setIsModalOpen(false);
     setModalMode("create");
     setEditingId(null);
-    setIsEmojiPickerOpen(false);
-    setSelectedEmoji(DEFAULT_EMOJI);
+    setIsIconPickerOpen(false);
+    setSelectedIcon(DEFAULT_ICON_KEY);
     form.resetFields();
   }, [form]);
 
@@ -109,11 +109,11 @@ export function useContainer() {
     setActionError(null);
     setModalMode("create");
     setEditingId(null);
-    setSelectedEmoji(DEFAULT_EMOJI);
+    setSelectedIcon(DEFAULT_ICON_KEY);
     form.setFieldsValue({
       name: "",
       type: "EXPENSE",
-      icon: DEFAULT_EMOJI,
+      icon: DEFAULT_ICON_KEY,
     });
     setIsModalOpen(true);
   }, [form]);
@@ -125,7 +125,7 @@ export function useContainer() {
       setActionError(null);
       setModalMode("edit");
       setEditingId(category.id);
-      setSelectedEmoji(category.icon);
+      setSelectedIcon(category.icon);
       form.setFieldsValue({
         name: category.name,
         type: category.type,
@@ -136,11 +136,11 @@ export function useContainer() {
     [form],
   );
 
-  const handleEmojiClick = useCallback(
-    (emoji: EmojiClickData) => {
-      setSelectedEmoji(emoji.emoji);
-      form.setFieldValue("icon", emoji.emoji);
-      setIsEmojiPickerOpen(false);
+  const handleIconSelect = useCallback(
+    (key: string) => {
+      setSelectedIcon(key);
+      form.setFieldValue("icon", key);
+      setIsIconPickerOpen(false);
     },
     [form],
   );
@@ -210,14 +210,15 @@ export function useContainer() {
     modalTitle,
     confirmLoading: insertLoading || updateLoading,
     form,
-    isEmojiPickerOpen,
-    selectedEmoji,
+    isIconPickerOpen,
+    selectedIcon,
     onAddClick: openCreate,
     onEdit: openEdit,
     onDelete: remove,
     onModalOk: submit,
     onModalCancel: resetModalState,
-    onEmojiPickerOpenChange: setIsEmojiPickerOpen,
-    onEmojiClick: handleEmojiClick,
+    onIconPickerOpenChange: setIsIconPickerOpen,
+    onIconSelect: handleIconSelect,
+    refetch: refetchCategories,
   };
 }

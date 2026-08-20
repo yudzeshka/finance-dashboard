@@ -4,6 +4,7 @@ import { DatePicker, Slider } from "antd";
 import { useTranslation } from "react-i18next";
 import type { Dayjs } from "dayjs";
 import { TopCategoriesSkeleton } from "./TopCategoriesSkeleton";
+import { CategoryIcon } from "@/shared/ui/CategoryIcon";
 
 export type TopCategoryRowView = {
   id: string;
@@ -50,7 +51,7 @@ export const UI = ({
             {rows.map((row) => (
               <div key={row.id} className={styles.categoryItem}>
                 <div className={styles.iconCircle} aria-hidden>
-                  <span className={styles.iconEmoji}>{row.icon}</span>
+                  <CategoryIcon icon={row.icon} size={22} />
                 </div>
                 <div className={styles.categoryMain}>
                   <div className={styles.categoryRowTop}>

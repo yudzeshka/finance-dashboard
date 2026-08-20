@@ -1,10 +1,13 @@
-import { Button, Input, Table } from "antd";
+import { Button, Input, Popconfirm, Table } from "antd";
 import type { TableProps } from "antd";
 import dayjs from "dayjs";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import type { Transaction } from "../../../entities/transaction";
 import type { Category } from "../../../entities/category";
 import { useTranslation } from "react-i18next";
+import { useMotionConfig } from "@/shared/lib/motion";
+import { CategoryIcon } from "@/shared/ui/CategoryIcon";
 
 type TransactionRow = {
   key: string;
@@ -22,16 +25,61 @@ export type TransactionsTableProps = {
   onEdit: (t: Transaction) => void;
   onDelete: (id: string) => void;
   deleteLoading?: boolean;
+  onAddClick?: () => void;
 };
+
+function formatTableAmount(value: number): string {
+  const abs = Math.abs(value);
+  const formatted = new Intl.NumberFormat("ru-RU", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(abs);
+  return formatted.replace(",", ".").replace(/\s/g, " ");
+}
+
+// motion.tr wrapper — Ant Table components.body.row passes
+// React.HTMLAttributes<HTMLTableRowElement> which is incompatible
+// with framer-motion's HTMLMotionProps<"tr"> (onDrag signature differs).
+// Casting is safe: only className/style/children are actually forwarded.
+function MotionRow(props: React.HTMLAttributes<HTMLTableRowElement> & { "data-row-key"?: string; index?: number }) {
+  const config = useMotionConfig();
+  const rowDelay = config.prefersReduced ? 0 : Math.min((props.index ?? 0) * config.rowStagger, 0.4);
+  return (
+    <motion.tr
+      {...(props as React.ComponentPropsWithoutRef<typeof motion.tr>)}
+      initial={config.prefersReduced ? {} : { opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={
+        config.prefersReduced
+          ? { duration: 0 }
+          : {
+              duration: 0.2,
+              ease: config.easeOut as [number, number, number, number],
+              delay: rowDelay,
+            }
+      }
+    />
+  );
+}
 
 export function TransactionsTable({
   transactions,
   onEdit,
   onDelete,
   deleteLoading,
+  onAddClick,
 }: TransactionsTableProps) {
   const { t } = useTranslation();
   const [descriptionFilter, setDescriptionFilter] = useState("");
+
+  // Track mount for row animation keys
+  const [mountKey, setMountKey] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+    setMountKey((prev) => prev + 1);
+  }, []);
 
   const columns = useMemo(() => {
     return [
@@ -56,18 +104,28 @@ export function TransactionsTable({
             .includes(String(value).toLowerCase()),
       },
       {
-        title: t("transactionType"),
-        dataIndex: "type",
-        key: "type",
-        sorter: (a: TransactionRow, b: TransactionRow) =>
-          a.type.localeCompare(b.type),
-      },
-      {
         title: t("amount"),
         dataIndex: "amount",
         key: "amount",
         sorter: (a: TransactionRow, b: TransactionRow) => a.amount - b.amount,
-        render: (amount: number) => amount.toFixed(2),
+        render: (amount: number, record: TransactionRow) => {
+          const sign = record.type === "INCOME" ? "+" : "−";
+          const color =
+            record.type === "INCOME"
+              ? "var(--aurora-success)"
+              : "var(--aurora-danger)";
+          const ariaType = record.type === "INCOME" ? "Income" : "Expense";
+          return (
+            <span
+              className="aurora-tabular"
+              style={{ color, fontWeight: 500 }}
+              aria-label={`${ariaType}: ${sign}${formatTableAmount(amount)} RUB`}
+            >
+              {sign}
+              {formatTableAmount(amount)} ₽
+            </span>
+          );
+        },
       },
       {
         title: t("category"),
@@ -77,7 +135,9 @@ export function TransactionsTable({
           a.category.name.localeCompare(b.category.name),
         render: (category: Category) => (
           <div>
-            <span style={{ marginRight: 8 }}>{category.icon}</span>
+            <span style={{ marginRight: 8, display: "inline-flex", verticalAlign: "middle" }}>
+              <CategoryIcon icon={category.icon} size={18} />
+            </span>
             <span>{category.name}</span>
           </div>
         ),
@@ -95,21 +155,29 @@ export function TransactionsTable({
         dataIndex: "actions",
         key: "actions",
         render: (_: unknown, record: TransactionRow) => (
-          <div style={{ display: "flex", gap: 1 }}>
-            <Button
-              type="link"
-              danger
-              onClick={() => onDelete(record.id)}
-              loading={deleteLoading}
+          <div className="aurora-row-actions" style={{ display: "flex", gap: 4, alignItems: "center" }}>
+            <Popconfirm
+              title={t("deleteTransactionConfirm")}
+              onConfirm={() => onDelete(record.id)}
+              okText={t("delete")}
+              cancelText={t("cancel")}
             >
-              🗑️
-            </Button>
+              <Button
+                type="link"
+                danger
+                icon={<CategoryIcon icon="delete" size={16} title={t("delete")} />}
+                loading={deleteLoading}
+                aria-label={t("delete")}
+                style={{ minWidth: 44, minHeight: 44, display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+              />
+            </Popconfirm>
             <Button
               type="link"
+              icon={<CategoryIcon icon="edit" size={16} title={t("editTransaction")} />}
               onClick={() => onEdit(record.transaction)}
-            >
-              ✏️
-            </Button>
+              aria-label={t("editTransaction")}
+              style={{ minWidth: 44, minHeight: 44, display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+            />
           </div>
         ),
       },
@@ -130,14 +198,17 @@ export function TransactionsTable({
   );
 
   const total = useMemo(() => {
-    return dataSource
-      .reduce(
-        (acc, record) =>
-          record.type === "INCOME" ? acc + record.amount : acc - record.amount,
-        0,
-      )
-      .toFixed(2);
+    return dataSource.reduce(
+      (acc, record) =>
+        record.type === "INCOME" ? acc + record.amount : acc - record.amount,
+      0,
+    );
   }, [dataSource]);
+
+  const totalFormatted = useMemo(() => {
+    const sign = total >= 0 ? "+" : "−";
+    return `${sign}${formatTableAmount(total)} ₽`;
+  }, [total]);
 
   return (
     <Table
@@ -145,19 +216,56 @@ export function TransactionsTable({
       columns={columns}
       rowKey="id"
       scroll={{ x: "max-content" }}
-      pagination={{ pageSize: 10, showSizeChanger: true }}
+      pagination={{
+        pageSize: 10,
+        showSizeChanger: true,
+        current: currentPage,
+        onChange: handlePageChange,
+      }}
       summary={() => (
-        <Table.Summary.Cell index={0} colSpan={columns.length}>
-          <span>
-            {t("total")}: ${total}
-          </span>
-        </Table.Summary.Cell>
+        <Table.Summary.Row>
+          <Table.Summary.Cell index={0} colSpan={columns.length}>
+            <span
+              className="aurora-font-display"
+              style={{
+                fontSize: 16,
+                fontWeight: 600,
+                fontVariantNumeric: "tabular-nums",
+                color: "var(--aurora-text)",
+              }}
+            >
+              {t("total")}: {totalFormatted}
+            </span>
+          </Table.Summary.Cell>
+        </Table.Summary.Row>
       )}
-      rowClassName={(record) =>
-        record.type === "INCOME"
-          ? "transaction-row--income"
-          : "transaction-row--expense"
-      }
+      onRow={() => ({
+        className: "aurora-row-hover",
+      })}
+      components={{
+        body: {
+          row: (props: React.HTMLAttributes<HTMLTableRowElement> & { "data-row-key"?: string }) => (
+            <MotionRow key={`${props["data-row-key"] ?? ""}-${mountKey}`} {...props} />
+          ),
+        },
+      }}
+      locale={{
+        emptyText: dataSource.length === 0 ? (
+          <div className="aurora-empty-state">
+            <div className="aurora-empty-state__icon"><CategoryIcon icon="other" size={32} /></div>
+            <div className="aurora-empty-state__title">
+              {t("noTransactionsYet")}
+            </div>
+            {onAddClick ? (
+              <Button type="primary" onClick={onAddClick}>
+                {t("addFirstTransaction")}
+              </Button>
+            ) : null}
+          </div>
+        ) : (
+          " "
+        ),
+      }}
     />
   );
 }

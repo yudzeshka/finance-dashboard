@@ -25,8 +25,9 @@ export function useTransactionQueries() {
     data: transactionsData,
     loading,
     error,
+    refetch,
   } = useQuery<GetTransactionsData>(GET_TRANSACTIONS);
-  const { data: categoriesData } = useQuery<GetCategoriesData>(GET_CATEGORIES);
+  const { data: categoriesData, refetch: refetchCategories } = useQuery<GetCategoriesData>(GET_CATEGORIES);
 
   const transactions = transactionsData?.transactions ?? emptyTransactions;
   const categories = categoriesData?.categories ?? emptyCategories;
@@ -45,5 +46,8 @@ export function useTransactionQueries() {
     categoryOptions,
     loading,
     error,
+    refetch: async () => {
+      await Promise.all([refetch(), refetchCategories()]);
+    },
   };
 }

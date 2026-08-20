@@ -7,7 +7,7 @@ const antdTheme = {
     borderRadius: 10,
     borderRadiusLG: 10,
     fontFamily:
-      'system-ui, "Segoe UI", Roboto, sans-serif',
+      "'Inter', system-ui, \"Segoe UI\", Roboto, sans-serif",
   },
   components: {
     Button: {

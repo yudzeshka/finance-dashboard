@@ -1,0 +1,105 @@
+.hero {
+  position: relative;
+  padding: 32px;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.heroLeft {
+  min-width: 0;
+}
+
+.heroRight {
+  min-width: 0;
+}
+
+.summaryGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.summaryLabel {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--aurora-text-secondary);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.summaryValue {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
+}
+
+/* Aurora orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.orb1 {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(
+    circle,
+    rgba(124, 58, 237, 0.15) 0%,
+    rgba(124, 58, 237, 0) 70%
+  );
+  top: -40px;
+  left: -20px;
+}
+
+.orb2 {
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(
+    circle,
+    rgba(124, 58, 237, 0.1) 0%,
+    rgba(124, 58, 237, 0) 70%
+  );
+  bottom: -30px;
+  left: 40%;
+}
+
+@media (max-width: 480px) {
+  .orb {
+    display: none;
+  }
+
+  .summaryValue {
+    font-size: 22px;
+  }
+}

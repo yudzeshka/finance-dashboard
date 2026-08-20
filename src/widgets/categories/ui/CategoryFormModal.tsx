@@ -1,8 +1,8 @@
-import { Button, Form, Input, Modal, Popover, Radio } from "antd";
+import { Form, Input, Modal, Popover, Radio } from "antd";
 import type { FormInstance } from "antd";
-import EmojiPicker, { type EmojiClickData, Theme } from "emoji-picker-react";
 import { useTranslation } from "react-i18next";
 
+import { CategoryIcon, CategoryIconPicker } from "@/shared/ui/CategoryIcon";
 import type { CategoryFormValues } from "../model/types";
 import styles from "./CategoriesView.module.scss";
 
@@ -11,10 +11,10 @@ export type CategoryFormModalProps = {
   title: string;
   confirmLoading?: boolean;
   form: FormInstance<CategoryFormValues>;
-  isEmojiPickerOpen: boolean;
-  onEmojiPickerOpenChange: (open: boolean) => void;
-  onEmojiClick: (emoji: EmojiClickData) => void;
-  selectedEmoji: string;
+  isIconPickerOpen: boolean;
+  onIconPickerOpenChange: (open: boolean) => void;
+  onIconSelect: (key: string) => void;
+  selectedIcon: string;
   onOk: () => void;
   onCancel: () => void;
 };
@@ -24,10 +24,10 @@ export function CategoryFormModal({
   title,
   confirmLoading,
   form,
-  isEmojiPickerOpen,
-  onEmojiPickerOpenChange,
-  onEmojiClick,
-  selectedEmoji,
+  isIconPickerOpen,
+  onIconPickerOpenChange,
+  onIconSelect,
+  selectedIcon,
   onOk,
   onCancel,
 }: CategoryFormModalProps) {
@@ -67,31 +67,27 @@ export function CategoryFormModal({
         </Form.Item>
 
         <Form.Item
-          label={t("categoryEmoji")}
+          label={t("categoryIcon")}
           name="icon"
-          rules={[{ required: true, message: t("categoryEmojiIsRequired") }]}
+          rules={[{ required: true, message: t("categoryIconIsRequired") }]}
         >
-          <div className={styles.emojiField}>
-            <Popover
-              open={isEmojiPickerOpen}
-              onOpenChange={onEmojiPickerOpenChange}
-              trigger="click"
-              placement="bottomLeft"
-              overlayClassName={styles.emojiPickerPopover}
-              content={
-                <EmojiPicker
-                  onEmojiClick={onEmojiClick}
-                  theme={Theme.AUTO}
-                  width="100%"
-                  searchPlaceholder={t("search")}
-                />
-              }
+          <Popover
+            content={<CategoryIconPicker value={selectedIcon} onChange={onIconSelect} />}
+            title={t("chooseIcon")}
+            trigger="click"
+            open={isIconPickerOpen}
+            onOpenChange={onIconPickerOpenChange}
+          >
+            <button
+              type="button"
+              className={styles.iconPickerTrigger}
+              aria-label={t("chooseIcon")}
+              aria-haspopup="listbox"
+              aria-expanded={isIconPickerOpen}
             >
-              <Button className={styles.emojiPickerTrigger}>
-                {selectedEmoji || "🙂"}
-              </Button>
-            </Popover>
-          </div>
+              <CategoryIcon icon={selectedIcon} size={24} />
+            </button>
+          </Popover>
         </Form.Item>
       </Form>
     </Modal>

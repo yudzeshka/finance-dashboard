@@ -3,6 +3,7 @@ import styles from "./styles.module.scss";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 import { LargestTransactionsSkeleton } from "./LargestTransactionsSkeleton";
+import { CategoryIcon } from "@/shared/ui/CategoryIcon";
 
 export type UIPropertyType = {
   rows: Transaction[];
@@ -26,7 +27,7 @@ export const UI = ({ rows, loading }: UIPropertyType) => {
             {rows.map((row) => (
               <div key={row.id} className={styles.categoryItem}>
                 <div className={styles.iconCircle} aria-hidden>
-                  <span className={styles.iconEmoji}>{row.category.icon}</span>
+                  <CategoryIcon icon={row.category.icon} size={18} />
                 </div>
                 <div className={styles.categoryMain}>
                   <div className={styles.categoryRowTop}>

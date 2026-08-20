@@ -71,14 +71,15 @@ export function TransactionsFilters({
       <div
         style={{
           display: "flex",
-          justifyContent: "flex-end",
+          justifyContent: "flex-start",
           gap: 5,
           marginBottom: 10,
+          flexWrap: "wrap",
         }}
       >
         <Input
           placeholder={t("search")}
-          style={{ width: 200 }}
+          style={{ flex: "1 1 140px", minWidth: "120px" }}
           prefix={<SearchOutlined />}
           value={filters?.search}
           onChange={(e) => onSearchChange?.(e.target.value)}
