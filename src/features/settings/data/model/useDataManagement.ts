@@ -10,13 +10,21 @@ import {
   GET_CATEGORIES,
   DELETE_CATEGORY,
 } from "@/entities/category/api/graphql";
+import { formatAmount, useCurrencyRatesStore } from "@/entities/currency";
+import type { CurrencyRates } from "@/entities/currency";
+import { useAppearanceStore } from "@/features/settings/appearance";
+import type { Currency } from "@/entities/settings";
 import type { Transaction } from "@/entities/transaction/model/types";
 import type { Category } from "@/entities/category/model/types";
 
 type GetTransactionsData = { transactions: Transaction[] };
 type GetCategoriesData = { categories: Category[] };
 
-function generateCsv(transactions: Transaction[]): string {
+function generateCsv(
+  transactions: Transaction[],
+  currency: Currency,
+  rates: CurrencyRates | null,
+): string {
   const BOM = "﻿";
   const headers = ["date", "type", "category", "amount", "description"];
   const escapeCsv = (val: string | null | undefined) => {
@@ -32,7 +40,7 @@ function generateCsv(transactions: Transaction[]): string {
       tx.date ? new Date(tx.date).toISOString().slice(0, 10) : "",
       tx.type,
       tx.category?.name ?? "",
-      tx.amount.toString(),
+      formatAmount(tx.amount, currency, rates),
       tx.description ?? "",
     ]
       .map(escapeCsv)
@@ -62,6 +70,8 @@ interface UseDataManagementResult {
 
 export function useDataManagement(): UseDataManagementResult {
   const { t } = useTranslation();
+  const currency = useAppearanceStore((s) => s.currency);
+  const rates = useCurrencyRatesStore((s) => s.rates);
   const [exporting, setExporting] = useState(false);
   const [clearing, setClearing] = useState(false);
 
@@ -85,7 +95,7 @@ export function useDataManagement(): UseDataManagementResult {
         message.info(t("reportsNoData"));
         return;
       }
-      const csv = generateCsv(transactions);
+      const csv = generateCsv(transactions, currency, rates);
       downloadCsv(
         csv,
         `transactions_${new Date().toISOString().slice(0, 10)}.csv`,
@@ -96,7 +106,7 @@ export function useDataManagement(): UseDataManagementResult {
     } finally {
       setExporting(false);
     }
-  }, [refetch, t]);
+  }, [refetch, t, currency, rates]);
 
   const clearAllData = useCallback(async () => {
     setClearing(true);
