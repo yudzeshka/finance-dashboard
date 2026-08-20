@@ -3,6 +3,8 @@ import type { TransactionFilters } from "../model/types";
 import { useFilters, useSetFilters, useResetFilters } from "../model/selectors";
 import { GET_CATEGORIES } from "../../../../entities/category";
 import type { Category } from "../../../../entities/category";
+import { displayToUsd, usdToDisplay, useCurrencyRatesStore } from "@/entities/currency";
+import { useAppearanceStore } from "@/features/settings/appearance";
 import { useQuery } from "@apollo/client/react";
 import type { Dayjs } from "dayjs";
 import { useAllTransactions } from "../../../../entities/transaction/model/selectors";
@@ -13,11 +15,20 @@ export const useContainer = () => {
   const setFilters = useSetFilters();
   const resetFilters = useResetFilters();
   const allTransactions = useAllTransactions();
-  const amountBounds = useMemo((): [number, number] => {
+  const currency = useAppearanceStore((s) => s.currency);
+  const rates = useCurrencyRatesStore((s) => s.rates);
+  const amountBoundsUsd = useMemo((): [number, number] => {
     if (allTransactions.length === 0) return [0, 100];
     const amounts = allTransactions.map((tx) => tx.amount);
     return [Math.min(...amounts), Math.max(...amounts)];
   }, [allTransactions]);
+  const amountBounds = useMemo(
+    (): [number, number] => [
+      usdToDisplay(amountBoundsUsd[0], currency, rates),
+      usdToDisplay(amountBoundsUsd[1], currency, rates),
+    ],
+    [amountBoundsUsd, currency, rates],
+  );
 
   const [isOpen, setIsOpen] = useState(false);
   const [amountRange, setAmountRange] = useState<number[]>(amountBounds);
@@ -36,8 +47,8 @@ export const useContainer = () => {
   const onOpen = () => {
     setFiltersValues(filters);
     setAmountRange([
-      filters.amountFrom ?? amountBounds[0],
-      filters.amountTo ?? amountBounds[1],
+      usdToDisplay(filters.amountFrom ?? amountBoundsUsd[0], currency, rates),
+      usdToDisplay(filters.amountTo ?? amountBoundsUsd[1], currency, rates),
     ]);
     setIsOpen(true);
   };
@@ -54,8 +65,8 @@ export const useContainer = () => {
     // Commit to filter state only when drag ends
     setFiltersValues((prev) => ({
       ...prev,
-      amountFrom: value[0],
-      amountTo: value[1],
+      amountFrom: displayToUsd(value[0], currency, rates),
+      amountTo: displayToUsd(value[1], currency, rates),
     }));
   };
   const onFiltersChange = <K extends keyof TransactionFilters>(
