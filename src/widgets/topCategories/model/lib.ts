@@ -26,17 +26,11 @@ export function getTopCategories(
     if (transaction.type !== "EXPENSE") continue;
 
     const category = transaction.category;
-    totalsByCategory.has(category.name)
-      ? totalsByCategory.set(category.name, {
-          ...totalsByCategory.get(category.name),
-          amount:
-            (totalsByCategory.get(category.name).amount ?? 0) +
-            transaction.amount,
-        })
-      : totalsByCategory.set(category.name, {
-          category,
-          amount: transaction.amount,
-        });
+    const existing = totalsByCategory.get(category.name);
+    totalsByCategory.set(category.name, {
+      category,
+      amount: (existing?.amount ?? 0) + transaction.amount,
+    });
   }
 
   const sortedCategories = Array.from(totalsByCategory.values()).sort(

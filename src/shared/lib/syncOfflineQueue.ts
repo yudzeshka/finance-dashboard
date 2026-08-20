@@ -15,7 +15,7 @@ type EditData = { update_transactions_by_pk: Transaction | null };
 type DeleteData = { delete_transactions_by_pk: Transaction | null };
 
 function optimisticRemove(
-  client: ApolloClient<unknown>,
+  client: ApolloClient,
   transactionId: string,
 ) {
   client.cache.updateQuery<GetTransactionsData>(
@@ -40,7 +40,7 @@ function optimisticRemove(
  * Call this when the browser fires the "online" event.
  */
 export async function syncOfflineQueue(
-  client: ApolloClient<unknown>,
+  client: ApolloClient,
 ): Promise<{ succeeded: number; failed: number }> {
   const queue = useOfflineQueue.getState().queue;
   if (queue.length === 0) return { succeeded: 0, failed: 0 };
@@ -99,7 +99,7 @@ export async function syncOfflineQueue(
  * while offline.
  */
 export function applyQueueToRestoredCache(
-  client: ApolloClient<unknown>,
+  client: ApolloClient,
 ): void {
   const queue = useOfflineQueue.getState().queue;
 

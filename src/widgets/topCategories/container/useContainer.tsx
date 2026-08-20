@@ -9,7 +9,7 @@ import { useCurrencyFormatter } from "@/shared/lib/useCurrencyFormatter";
 export const useContainer: ContainerComponentType<UIPropertyType> = () => {
   const formatCurrency = useCurrencyFormatter();
   const [targetDate, setTargetDate] = useState<Date>(new Date());
-  const { transactions, loading, error: _error } = useTransactionQueries();
+  const { transactions, loading } = useTransactionQueries();
 
   const setAllTransactions = useSetAllTransactions();
 

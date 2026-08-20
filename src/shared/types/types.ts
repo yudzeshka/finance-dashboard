@@ -1,1 +1,1 @@
-export type ContainerComponentType<T = {}> = () => T;
+export type ContainerComponentType<T = object> = () => T;

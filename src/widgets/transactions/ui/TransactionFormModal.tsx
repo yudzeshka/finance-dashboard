@@ -74,7 +74,7 @@ export function TransactionFormModal({
             )}
             labelRender={(props) => (
               <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                <CategoryIcon icon={props.data?.icon} size={16} />
+                <CategoryIcon icon={categoryOptions.find((o) => o.value === props.value)?.icon} size={16} />
                 {props.label}
               </span>
             )}

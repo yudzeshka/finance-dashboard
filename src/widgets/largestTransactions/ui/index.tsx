@@ -34,7 +34,7 @@ export const UI = ({ rows, loading }: UIPropertyType) => {
                     <div className={styles.transactionInfo}>
                       <span
                         className={styles.categoryName}
-                        title={row.description}
+                        title={row.description ?? undefined}
                       >
                         {row.description}
                       </span>

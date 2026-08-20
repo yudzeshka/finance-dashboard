@@ -9,7 +9,7 @@ import type { UIPropertyType } from "../ui";
 import type { Transaction } from "@/entities/transaction";
 
 export const useContainer: ContainerComponentType<UIPropertyType> = () => {
-  const { transactions, loading, error: _error } = useTransactionQueries();
+  const { transactions, loading } = useTransactionQueries();
 
   const setAllTransactions = useSetAllTransactions();
 
