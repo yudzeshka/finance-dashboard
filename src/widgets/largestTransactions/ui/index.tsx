@@ -1,6 +1,7 @@
 import type { Transaction } from "@/entities/transaction";
 import styles from "./styles.module.scss";
 import { useTranslation } from "react-i18next";
+import { useCurrencyFormatter } from "@/shared/lib/useCurrencyFormatter";
 import dayjs from "dayjs";
 import { LargestTransactionsSkeleton } from "./LargestTransactionsSkeleton";
 import { CategoryIcon } from "@/shared/ui/CategoryIcon";
@@ -12,6 +13,7 @@ export type UIPropertyType = {
 
 export const UI = ({ rows, loading }: UIPropertyType) => {
   const { t } = useTranslation();
+  const formatCurrency = useCurrencyFormatter();
   return (
     <>
       {loading ? (
@@ -49,7 +51,7 @@ export const UI = ({ rows, loading }: UIPropertyType) => {
                     <span
                       className={`${styles.categoryAmount} ${row.type === "EXPENSE" ? styles.amountExpense : styles.amountIncome}`}
                     >
-                      ${row.amount}
+                      {formatCurrency(row.amount)}
                     </span>
                   </div>
                 </div>
