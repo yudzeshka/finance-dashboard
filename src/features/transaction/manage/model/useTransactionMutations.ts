@@ -3,8 +3,10 @@ import { message } from "antd";
 
 import type { Category } from "@/entities/category";
 import { GET_CATEGORIES } from "@/entities/category";
+import { displayToUsd, useCurrencyRatesStore } from "@/entities/currency";
 import type { Transaction, TransactionFormValues } from "@/entities/transaction";
 import { GET_TRANSACTIONS } from "@/entities/transaction";
+import { useAppearanceStore } from "@/features/settings/appearance";
 import { useOfflineQueue } from "@/shared/lib/offlineQueue";
 
 import { useAddTransaction } from "../../create/model/useAddTransaction";
@@ -14,9 +16,12 @@ import { useEditTransaction } from "../../edit/model/useEditTransaction";
 type GetTransactionsData = { transactions: Transaction[] };
 type GetCategoriesData = { categories: Category[] };
 
-function toTransactionVariables(values: TransactionFormValues) {
+function toTransactionVariables(
+  values: TransactionFormValues,
+  amountUsd: number,
+) {
   return {
-    amount: Number(values.amount),
+    amount: amountUsd,
     description: values.description ?? null,
     categoryId: values.category,
     date: values.date ? values.date.toISOString() : new Date().toISOString(),
@@ -31,6 +36,7 @@ function toTransactionVariables(values: TransactionFormValues) {
 function buildTempTransaction(
   formValues: TransactionFormValues,
   existingCategories: Category[],
+  amountUsd: number,
 ): Transaction {
   const category = existingCategories.find(
     (c) => c.id === formValues.category,
@@ -44,7 +50,7 @@ function buildTempTransaction(
 
   return {
     id: `offline-${crypto.randomUUID()}`,
-    amount: Number(formValues.amount),
+    amount: amountUsd,
     type: formValues.type,
     category,
     date: formValues.date ? formValues.date.toISOString() : new Date().toISOString(),
@@ -54,6 +60,10 @@ function buildTempTransaction(
 
 export function useTransactionMutations() {
   const client = useApolloClient();
+
+  const currency = useAppearanceStore((s) => s.currency);
+  const rates = useCurrencyRatesStore((s) => s.rates);
+  const toUsd = (amount: number) => displayToUsd(Number(amount), currency, rates);
 
   const [addMutation, { loading: addTransactionLoading }] =
     useAddTransaction();
@@ -75,15 +85,17 @@ export function useTransactionMutations() {
   }
 
   const createTransaction = async (values: TransactionFormValues) => {
+    const amountUsd = toUsd(values.amount);
     try {
       await addMutation({
-        variables: toTransactionVariables(values),
+        variables: toTransactionVariables(values, amountUsd),
       });
     } catch (error) {
       if (!navigator.onLine) {
         const tempTransaction = buildTempTransaction(
           values,
           getCachedCategories(),
+          amountUsd,
         );
 
         // Optimistically insert into cache so the transaction appears immediately
@@ -98,7 +110,7 @@ export function useTransactionMutations() {
 
         useOfflineQueue.getState().push({
           type: "add",
-          variables: toTransactionVariables(values),
+          variables: toTransactionVariables(values, amountUsd),
         });
         message.info("Saved offline. Will sync when online.");
         return;
@@ -111,11 +123,12 @@ export function useTransactionMutations() {
     id: string,
     values: TransactionFormValues,
   ) => {
+    const amountUsd = toUsd(values.amount);
     try {
       await editMutation({
         variables: {
           id,
-          ...toTransactionVariables(values),
+          ...toTransactionVariables(values, amountUsd),
         },
       });
     } catch (error) {
@@ -123,6 +136,7 @@ export function useTransactionMutations() {
         const tempTransaction = buildTempTransaction(
           values,
           getCachedCategories(),
+          amountUsd,
         );
 
         // Optimistically update in cache so the edit is visible immediately
@@ -141,7 +155,7 @@ export function useTransactionMutations() {
 
         useOfflineQueue.getState().push({
           type: "edit",
-          variables: { id, ...toTransactionVariables(values) },
+          variables: { id, ...toTransactionVariables(values, amountUsd) },
         });
         message.info("Saved offline. Will sync when online.");
         return;
