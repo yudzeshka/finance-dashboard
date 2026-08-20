@@ -307,10 +307,6 @@
   color: #b91c1c;                       /* светлая тема: 5.55 PASS */
   background: rgba(239, 68, 68, 0.12);
   border: 1px solid rgba(239, 68, 68, 0.3);
-
-  @media (prefers-color-scheme: dark) {
-    color: #fca5a5;                     /* тёмная тема: 8.41 PASS */
-  }
 }
 
 .field {
