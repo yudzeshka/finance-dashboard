@@ -52,9 +52,8 @@
   width: 100%;
   margin: 0;
   text-align: left;
-  /* dvh fills the full screen in iOS standalone (svh returns a short value
-     there, leaving a gap at the bottom); vh is the fallback. */
-  height: 100vh;
+  /* dvh = visible area in Safari; standalone mode overrides to 100vh below
+     (svh/dvh return a short value in iOS standalone PWA). */
   height: 100dvh;
   display: flex;
   flex-direction: column;
@@ -70,7 +69,6 @@ body {
 .dashboard-shell {
   --dashboard-header-height: 72px;
   --dashboard-footer-height: 52px;
-  height: 100vh;
   height: 100dvh;
   background: var(--bg);
   text-align: left;
@@ -78,12 +76,21 @@ body {
 }
 
 .dashboard-shell > .ant-layout {
-  height: 100vh;
   height: 100dvh;
   min-height: 0;
   align-items: stretch;
   overflow: hidden;
   min-width: 0;
+}
+
+/* Installed PWA: svh/dvh are shorter than the screen in iOS standalone,
+   leaving a gap under the footer — use the full-screen vh instead. */
+@media (display-mode: standalone) {
+  #root,
+  .dashboard-shell,
+  .dashboard-shell > .ant-layout {
+    height: 100vh;
+  }
 }
 
 .dashboard-shell .ant-layout {
@@ -293,12 +300,10 @@ body {
   border-top: 1px solid var(--border);
   box-sizing: border-box;
   flex-shrink: 0;
-  /* Now that the shell fills the screen (dvh), the footer reaches the
-     bottom edge — keep the text above the home indicator via safe-area. */
-  min-height: calc(var(--dashboard-footer-height) + env(safe-area-inset-bottom, 0px));
+  min-height: var(--dashboard-footer-height);
   text-align: center;
-  height: calc(var(--dashboard-footer-height) + env(safe-area-inset-bottom, 0px)) !important;
-  padding: 0 20px env(safe-area-inset-bottom, 0px) !important;
+  height: var(--dashboard-footer-height) !important;
+  padding: 0 20px !important;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -517,7 +522,7 @@ code {
     flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
-    padding: 0 12px env(safe-area-inset-bottom, 0px) !important;
+    padding: 0 12px !important;
   }
 
   .lang-switcher-select {

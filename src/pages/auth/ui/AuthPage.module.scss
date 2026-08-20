@@ -8,6 +8,11 @@
   align-items: start;
   overflow-y: auto;
 
+  /* Installed PWA: svh/dvh are shorter than the screen in iOS standalone */
+  @media (display-mode: standalone) {
+    height: 100vh;
+  }
+
   @media (min-width: 960px) {
     grid-template-columns: 1.1fr 0.9fr;
     padding: 0;
