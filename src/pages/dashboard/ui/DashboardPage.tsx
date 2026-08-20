@@ -1,4 +1,5 @@
 import { Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { useTransactionsDashboard } from "../../../features/transaction/manage/model/useTransactionsDashboard";
 import { TransactionsFiltersWidget } from "../../../features/transaction/filters";
 import { TransactionsTable } from "../../../widgets/transactions-table/ui/TransactionsTable";
@@ -63,8 +64,15 @@ export function DashboardPage() {
       title={t("transactions")}
       subtitle={t("trackIncomeAndExpenses")}
       primaryAction={
-        <Button type="primary" onClick={dashboard.openCreate}>
-          {t("addTransaction")}
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          aria-label={t("addTransaction")}
+          onClick={dashboard.openCreate}
+        >
+          <span className="dashboard-header__btn-label">
+            {t("addTransaction")}
+          </span>
         </Button>
       }
     >

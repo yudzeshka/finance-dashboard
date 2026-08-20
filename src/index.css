@@ -255,6 +255,14 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
+}
+
+.dashboard-header__right {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 .dashboard-header__titles {
@@ -474,6 +482,65 @@ code {
     inset: 0;
     background: rgba(0, 0, 0, 0.45);
     z-index: 1050;
+  }
+}
+
+/* === Mobile header: primary action collapses to icon-only === */
+@media (max-width: 480px) {
+  .dashboard-header {
+    padding: 0 12px !important;
+    gap: 8px;
+  }
+
+  .dashboard-header__left {
+    gap: 8px;
+  }
+
+  /* Primary CTA becomes a 44px square icon button so long labels
+     («Добавить транзакцию» / «Добавить категорию») never clip. */
+  .dashboard-header__right .ant-btn {
+    width: 44px;
+    height: 44px;
+    padding-inline: 0;
+    justify-content: center;
+  }
+
+  .dashboard-header__right .ant-btn .anticon {
+    font-size: 18px;
+  }
+
+  .dashboard-header__right .ant-btn .ant-btn-icon {
+    margin-inline-end: 0;
+  }
+
+  .dashboard-header__btn-label {
+    display: none;
+  }
+
+  .dashboard-header__hamburger {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* === Mobile footer: allow wrap + tighter gutters === */
+@media (max-width: 568px) {
+  .dashboard-footer {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 12px !important;
+  }
+
+  .lang-switcher-select {
+    width: 104px;
+  }
+}
+
+/* === Settings tabs: smaller hit area on small screens === */
+@media (max-width: 480px) {
+  .settings-tabs .ant-tabs-tab {
+    padding: 10px 12px;
   }
 }
 
