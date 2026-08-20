@@ -55,8 +55,11 @@ out
 *.sln
 *.sw?
 
-testsprite_tests/tmp/config.json
+# TestSprite generated tests & artifacts
+testsprite_tests/
 
 # Superpowers brainstorm mockups
 .superpowers/
-testsprite_tests/tmp/
+
+# Vercel local project metadata (project.json, README.txt)
+.vercel/
