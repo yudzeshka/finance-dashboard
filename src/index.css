@@ -288,11 +288,10 @@ body {
   border-top: 1px solid var(--border);
   box-sizing: border-box;
   flex-shrink: 0;
-  /* iOS standalone: grow by the home-indicator inset so content clears it. */
-  min-height: calc(var(--dashboard-footer-height) + env(safe-area-inset-bottom, 0px));
+  min-height: var(--dashboard-footer-height);
   text-align: center;
-  height: calc(var(--dashboard-footer-height) + env(safe-area-inset-bottom, 0px)) !important;
-  padding: 0 20px env(safe-area-inset-bottom, 0px) !important;
+  height: var(--dashboard-footer-height) !important;
+  padding: 0 20px !important;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -511,7 +510,7 @@ code {
     flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
-    padding: 0 12px env(safe-area-inset-bottom, 0px) !important;
+    padding: 0 12px !important;
   }
 
   .lang-switcher-select {
