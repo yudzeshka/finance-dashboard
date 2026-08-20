@@ -1,4 +1,5 @@
 import { Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
 import { AppShell } from "@/widgets/app-shell/ui/AppShell";
@@ -70,8 +71,15 @@ export function CategoriesWidget() {
       title={title}
       subtitle={subtitle}
       primaryAction={
-        <Button type="primary" onClick={onAddClick}>
-          {t("addCategory")}
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          aria-label={t("addCategory")}
+          onClick={onAddClick}
+        >
+          <span className="dashboard-header__btn-label">
+            {t("addCategory")}
+          </span>
         </Button>
       }
     >

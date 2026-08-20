@@ -5,6 +5,14 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    // Привязка к IPv4 loopback: на Windows дефолтный `localhost` резолвится в
+    // IPv6 `::1`, и сервер не принимает подключения по `127.0.0.1`
+    // (ломает туннель TestSprite и доступ с LAN).
+    host: '127.0.0.1',
+    port: 5173,
+    strictPort: true,
+  },
   plugins: [react(),
     VitePWA({
       registerType: 'autoUpdate',   // авто-обновление SW при новом деплое

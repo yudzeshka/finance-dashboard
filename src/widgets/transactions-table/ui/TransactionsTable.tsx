@@ -88,12 +88,19 @@ export function TransactionsTable({
         dataIndex: "description",
         key: "description",
         filterDropdown: () => (
-          <div style={{ padding: 8, width: 240 }}>
+          <div
+            style={{
+              padding: 8,
+              width: 240,
+              maxWidth: "min(240px, calc(100vw - 32px))",
+            }}
+          >
             <Input
               placeholder={t("searchDescription")}
               value={descriptionFilter}
               onChange={(e) => setDescriptionFilter(e.target.value)}
               allowClear
+              style={{ width: "100%" }}
             />
           </div>
         ),

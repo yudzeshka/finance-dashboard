@@ -48,6 +48,7 @@
   font-variant-numeric: tabular-nums;
   display: flex;
   align-items: baseline;
+  flex-wrap: wrap;
   gap: 4px;
 
   @media (max-width: 768px) {
@@ -138,6 +139,10 @@
 }
 
 @media (max-width: 480px) {
+  .hero {
+    padding: 16px;
+  }
+
   .heroBalance {
     font-size: 30px;
   }
