@@ -242,8 +242,10 @@ body {
   background: transparent !important;
   border-bottom: 1px solid var(--border);
   box-sizing: border-box;
-  height: var(--dashboard-header-height) !important;
-  padding: 0 20px !important;
+  /* iOS standalone: grow the header by the notch inset and push content
+     below the transparent status bar (see viewport-fit=cover). */
+  height: calc(var(--dashboard-header-height) + env(safe-area-inset-top, 0px)) !important;
+  padding: env(safe-area-inset-top, 0px) 20px 0 !important;
   line-height: normal !important;
   display: flex;
   align-items: center;
@@ -312,10 +314,11 @@ body {
   border-top: 1px solid var(--border);
   box-sizing: border-box;
   flex-shrink: 0;
-  min-height: var(--dashboard-footer-height);
+  /* iOS standalone: grow by the home-indicator inset so content clears it. */
+  min-height: calc(var(--dashboard-footer-height) + env(safe-area-inset-bottom, 0px));
   text-align: center;
-  height: var(--dashboard-footer-height) !important;
-  padding: 0 20px !important;
+  height: calc(var(--dashboard-footer-height) + env(safe-area-inset-bottom, 0px)) !important;
+  padding: 0 20px env(safe-area-inset-bottom, 0px) !important;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -469,6 +472,11 @@ code {
     transition: transform 0.2s ease;
   }
 
+  .aurora-sider .ant-layout-sider-children {
+    /* iOS: clear the notch area inside the fixed drawer */
+    padding-top: calc(20px + env(safe-area-inset-top, 0px));
+  }
+
   .aurora-sider.ant-layout-sider-collapsed {
     transform: translateX(-100%);
     pointer-events: none;
@@ -488,7 +496,7 @@ code {
 /* === Mobile header: primary action collapses to icon-only === */
 @media (max-width: 480px) {
   .dashboard-header {
-    padding: 0 12px !important;
+    padding: env(safe-area-inset-top, 0px) 12px 0 !important;
     gap: 8px;
   }
 
@@ -529,7 +537,7 @@ code {
     flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
-    padding: 0 12px !important;
+    padding: 0 12px env(safe-area-inset-bottom, 0px) !important;
   }
 
   .lang-switcher-select {
