@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useTransactionsStore } from "@/entities/transaction/model/store";
 import { calculateDashboardStats } from "@/entities/transaction/model/calculateDashboardStats";
 import { aggregateByTypeByDay } from "@/entities/transaction/model/aggregateByDay";
+import { useCurrencyFormatter } from "@/shared/lib/useCurrencyFormatter";
 import type { DashboardStats } from "@/entities/transaction/model/calculateDashboardStats";
 
 export type InsightTileData = {
@@ -17,18 +18,10 @@ export type InsightTileData = {
   sparklineColor?: string;
 };
 
-function formatInsight(value: number): string {
-  const abs = Math.abs(value);
-  const formatted = new Intl.NumberFormat("ru-RU", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(abs);
-  return formatted.replace(",", ".").replace(/\s/g, " ") + " ₽";
-}
-
 export function useDashboardInsights() {
   const allTransactions = useTransactionsStore((s) => s.allTransactions);
   const { t } = useTranslation();
+  const formatCurrency = useCurrencyFormatter();
 
   const stats: DashboardStats = useMemo(
     () => calculateDashboardStats(allTransactions),
@@ -52,7 +45,7 @@ export function useDashboardInsights() {
         id: "income",
         label: t("income30Days"),
         value: stats.income30d,
-        formattedValue: "+" + formatInsight(stats.income30d),
+        formattedValue: "+" + formatCurrency(stats.income30d),
         color: "var(--aurora-success)",
         icon: "income",
         sublabel: t("last30Days"),
@@ -63,7 +56,7 @@ export function useDashboardInsights() {
         id: "expense",
         label: t("expense30Days"),
         value: stats.expense30d,
-        formattedValue: "−" + formatInsight(stats.expense30d),
+        formattedValue: "−" + formatCurrency(stats.expense30d),
         color: "var(--aurora-danger)",
         icon: "expense",
         sublabel: t("last30Days"),
@@ -76,14 +69,14 @@ export function useDashboardInsights() {
         value: stats.largestTransaction ? stats.largestTransaction.amount : 0,
         formattedValue: stats.largestTransaction
           ? (stats.largestTransaction.type === "INCOME" ? "+" : "−") +
-            formatInsight(stats.largestTransaction.amount)
+            formatCurrency(Math.abs(stats.largestTransaction.amount))
           : "—",
         color: "var(--aurora-accent)",
         icon: stats.largestTransaction?.category?.icon ?? "other",
         sublabel: stats.largestTransaction?.category?.name ?? "",
       },
     ];
-  }, [stats, allTransactions, t]);
+  }, [stats, allTransactions, t, formatCurrency]);
 
   return { tiles };
 }

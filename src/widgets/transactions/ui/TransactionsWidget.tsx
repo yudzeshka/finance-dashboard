@@ -18,6 +18,8 @@ import type {
 import { AppShell } from "../../app-shell/ui/AppShell";
 import { TransactionsTable } from "../../transactions-table/ui/TransactionsTable";
 import { useTranslation } from "react-i18next";
+import { currencySymbol } from "@/entities/currency";
+import { useAppearanceStore } from "@/features/settings/appearance";
 import { CategoryIcon } from "@/shared/ui/CategoryIcon";
 
 export type TransactionsWidgetProps = {
@@ -57,6 +59,7 @@ export function TransactionsWidget({
   filtersSlot,
 }: TransactionsWidgetProps) {
   const { t } = useTranslation();
+  const currency = useAppearanceStore((s) => s.currency);
   return (
     <>
       <AppShell
@@ -98,7 +101,7 @@ export function TransactionsWidget({
               style={{ width: "100%" }}
               type="number"
               placeholder="0.00"
-              prefix="$"
+              prefix={currencySymbol(currency)}
             />
           </Form.Item>
           <Form.Item label={t("description")} name="description">

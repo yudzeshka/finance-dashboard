@@ -10,6 +10,8 @@ import {
 import type { FormInstance } from "antd";
 import type { TransactionCategoryOption } from "@/entities/transaction";
 import { useTranslation } from "react-i18next";
+import { currencySymbol } from "@/entities/currency";
+import { useAppearanceStore } from "@/features/settings/appearance";
 import { CategoryIcon } from "@/shared/ui/CategoryIcon";
 
 export type TransactionFormModalProps = {
@@ -32,6 +34,7 @@ export function TransactionFormModal({
   categoryOptions,
 }: TransactionFormModalProps) {
   const { t } = useTranslation();
+  const currency = useAppearanceStore((s) => s.currency);
 
   return (
     <Modal
@@ -53,7 +56,7 @@ export function TransactionFormModal({
             style={{ width: "100%" }}
             type="number"
             placeholder="0.00"
-            prefix="$"
+            prefix={currencySymbol(currency)}
           />
         </Form.Item>
         <Form.Item label={t("description")} name="description">

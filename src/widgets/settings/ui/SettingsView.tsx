@@ -16,6 +16,7 @@ export interface SettingsContainerProps {
   clearing: boolean;
   onExportCsv: () => void;
   onClearAllData: () => void;
+  ratesHint?: string | null;
   t: (key: string) => string;
 }
 
@@ -44,6 +45,7 @@ export function SettingsView(props: SettingsContainerProps) {
     clearing,
     onExportCsv,
     onClearAllData,
+    ratesHint,
     t,
   } = props;
 
@@ -101,6 +103,13 @@ export function SettingsView(props: SettingsContainerProps) {
                   className="aurora-focus-ring"
                 />
               </div>
+              {ratesHint && (
+                <div style={{ marginTop: 4 }}>
+                  <Typography.Text type="secondary" className="settings-row__hint">
+                    {ratesHint}
+                  </Typography.Text>
+                </div>
+              )}
             </div>
           </div>
         </div>

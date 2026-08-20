@@ -7,6 +7,7 @@ import type { Transaction } from "../../../entities/transaction";
 import type { Category } from "../../../entities/category";
 import { useTranslation } from "react-i18next";
 import { useMotionConfig } from "@/shared/lib/motion";
+import { useCurrencyFormatter } from "@/shared/lib/useCurrencyFormatter";
 import { CategoryIcon } from "@/shared/ui/CategoryIcon";
 
 type TransactionRow = {
@@ -27,15 +28,6 @@ export type TransactionsTableProps = {
   deleteLoading?: boolean;
   onAddClick?: () => void;
 };
-
-function formatTableAmount(value: number): string {
-  const abs = Math.abs(value);
-  const formatted = new Intl.NumberFormat("ru-RU", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(abs);
-  return formatted.replace(",", ".").replace(/\s/g, " ");
-}
 
 // motion.tr wrapper — Ant Table components.body.row passes
 // React.HTMLAttributes<HTMLTableRowElement> which is incompatible
@@ -70,6 +62,7 @@ export function TransactionsTable({
   onAddClick,
 }: TransactionsTableProps) {
   const { t } = useTranslation();
+  const formatCurrency = useCurrencyFormatter();
   const [descriptionFilter, setDescriptionFilter] = useState("");
 
   // Track mount for row animation keys
@@ -126,10 +119,10 @@ export function TransactionsTable({
             <span
               className="aurora-tabular"
               style={{ color, fontWeight: 500 }}
-              aria-label={`${ariaType}: ${sign}${formatTableAmount(amount)} RUB`}
+              aria-label={`${ariaType}: ${sign}${formatCurrency(Math.abs(amount))}`}
             >
               {sign}
-              {formatTableAmount(amount)} ₽
+              {formatCurrency(Math.abs(amount))}
             </span>
           );
         },
@@ -189,7 +182,7 @@ export function TransactionsTable({
         ),
       },
     ] satisfies TableProps<TransactionRow>["columns"];
-  }, [deleteLoading, descriptionFilter, onDelete, onEdit, t]);
+  }, [deleteLoading, descriptionFilter, onDelete, onEdit, t, formatCurrency]);
 
   const dataSource: TransactionRow[] = useMemo(
     () =>
@@ -214,8 +207,8 @@ export function TransactionsTable({
 
   const totalFormatted = useMemo(() => {
     const sign = total >= 0 ? "+" : "−";
-    return `${sign}${formatTableAmount(total)} ₽`;
-  }, [total]);
+    return `${sign}${formatCurrency(Math.abs(total))}`;
+  }, [total, formatCurrency]);
 
   return (
     <Table

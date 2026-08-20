@@ -3,7 +3,9 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { usdToDisplay, useCurrencyRatesStore } from "@/entities/currency";
 import type { Transaction, TransactionFormValues } from "@/entities/transaction";
+import { useAppearanceStore } from "@/features/settings/appearance";
 
 type UseTransactionFormModalParams = {
   createTransaction: (values: TransactionFormValues) => Promise<unknown>;
@@ -22,6 +24,8 @@ export function useTransactionFormModal({
   editTransactionLoading,
 }: UseTransactionFormModalParams) {
   const { t } = useTranslation();
+  const currency = useAppearanceStore((s) => s.currency);
+  const rates = useCurrencyRatesStore((s) => s.rates);
   const [form] = Form.useForm<TransactionFormValues>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -38,7 +42,7 @@ export function useTransactionFormModal({
     setIsEdit(true);
     setEditingId(tx.id);
     form.setFieldsValue({
-      amount: Number(tx.amount),
+      amount: usdToDisplay(Number(tx.amount), currency, rates),
       description: tx.description ?? undefined,
       category: tx.category.id,
       date: dayjs(tx.date ?? new Date().toISOString()),
