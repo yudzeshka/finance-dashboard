@@ -52,7 +52,10 @@
   width: 100%;
   margin: 0;
   text-align: left;
-  height: 100svh;
+  /* dvh fills the full screen in iOS standalone (svh returns a short value
+     there, leaving a gap at the bottom); vh is the fallback. */
+  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -67,14 +70,16 @@ body {
 .dashboard-shell {
   --dashboard-header-height: 72px;
   --dashboard-footer-height: 52px;
-  height: 100svh;
+  height: 100vh;
+  height: 100dvh;
   background: var(--bg);
   text-align: left;
   overflow: hidden;
 }
 
 .dashboard-shell > .ant-layout {
-  height: 100svh;
+  height: 100vh;
+  height: 100dvh;
   min-height: 0;
   align-items: stretch;
   overflow: hidden;
@@ -288,10 +293,12 @@ body {
   border-top: 1px solid var(--border);
   box-sizing: border-box;
   flex-shrink: 0;
-  min-height: var(--dashboard-footer-height);
+  /* Now that the shell fills the screen (dvh), the footer reaches the
+     bottom edge — keep the text above the home indicator via safe-area. */
+  min-height: calc(var(--dashboard-footer-height) + env(safe-area-inset-bottom, 0px));
   text-align: center;
-  height: var(--dashboard-footer-height) !important;
-  padding: 0 20px !important;
+  height: calc(var(--dashboard-footer-height) + env(safe-area-inset-bottom, 0px)) !important;
+  padding: 0 20px env(safe-area-inset-bottom, 0px) !important;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -510,7 +517,7 @@ code {
     flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
-    padding: 0 12px !important;
+    padding: 0 12px env(safe-area-inset-bottom, 0px) !important;
   }
 
   .lang-switcher-select {

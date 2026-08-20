@@ -34,7 +34,7 @@ export function AppApolloProvider({ children }: AppApolloProviderProps) {
 
   if (!client) {
     return (
-      <Flex align="center" justify="center" style={{ minHeight: "100svh" }}>
+      <Flex align="center" justify="center" style={{ minHeight: "100dvh" }}>
         <Spin size="large" />
       </Flex>
     );
