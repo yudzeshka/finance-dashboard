@@ -1,17 +1,14 @@
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 16px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
 }
 
 .tile {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
 }
 
 .tileHeader {
@@ -46,6 +43,7 @@
   font-weight: 700;
   line-height: 1.2;
   font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 
   @media (max-width: 768px) {
     font-size: 24px;
