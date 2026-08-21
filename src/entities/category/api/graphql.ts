@@ -8,6 +8,7 @@ export const GET_CATEGORIES = gql`
       icon
       type
       user_id
+      key
     }
   }
 `;

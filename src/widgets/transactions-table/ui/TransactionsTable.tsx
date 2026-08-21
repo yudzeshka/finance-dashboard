@@ -5,6 +5,7 @@ import { useMemo, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import type { Transaction } from "../../../entities/transaction";
 import type { Category } from "../../../entities/category";
+import { getCategoryLabel } from "@/entities/category";
 import { useTranslation } from "react-i18next";
 import { useMotionConfig } from "@/shared/lib/motion";
 import { useCurrencyFormatter } from "@/shared/lib/useCurrencyFormatter";
@@ -132,13 +133,15 @@ export function TransactionsTable({
         dataIndex: "category",
         key: "category",
         sorter: (a: TransactionRow, b: TransactionRow) =>
-          a.category.name.localeCompare(b.category.name),
+          getCategoryLabel(a.category, t).localeCompare(
+            getCategoryLabel(b.category, t),
+          ),
         render: (category: Category) => (
           <div>
             <span style={{ marginRight: 8, display: "inline-flex", verticalAlign: "middle" }}>
               <CategoryIcon icon={category.icon} size={18} />
             </span>
-            <span>{category.name}</span>
+            <span>{getCategoryLabel(category, t)}</span>
           </div>
         ),
       },

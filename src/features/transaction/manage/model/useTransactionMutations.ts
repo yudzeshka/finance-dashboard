@@ -46,6 +46,7 @@ function buildTempTransaction(
     icon: "other",
     type: formValues.type,
     user_id: null,
+    key: null,
   };
 
   return {

@@ -22,6 +22,7 @@ export function mapCategoryToRow(
   return {
     id: category.id,
     name: category.name,
+    key: category.key,
     type: category.type,
     icon: category.icon,
     transactionsCount,

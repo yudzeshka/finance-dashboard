@@ -4,6 +4,7 @@ import { useTransactionsStore } from "@/entities/transaction/model/store";
 import { calculateDashboardStats } from "@/entities/transaction/model/calculateDashboardStats";
 import { aggregateByTypeByDay } from "@/entities/transaction/model/aggregateByDay";
 import { useCurrencyFormatter } from "@/shared/lib/useCurrencyFormatter";
+import { getCategoryLabel } from "@/entities/category";
 import type { DashboardStats } from "@/entities/transaction/model/calculateDashboardStats";
 
 export type InsightTileData = {
@@ -73,7 +74,9 @@ export function useDashboardInsights() {
           : "—",
         color: "var(--aurora-accent)",
         icon: stats.largestTransaction?.category?.icon ?? "other",
-        sublabel: stats.largestTransaction?.category?.name ?? "",
+        sublabel: stats.largestTransaction?.category
+          ? getCategoryLabel(stats.largestTransaction.category, t)
+          : "",
       },
     ];
   }, [stats, allTransactions, t, formatCurrency]);

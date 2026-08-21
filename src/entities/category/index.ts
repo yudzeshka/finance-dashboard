@@ -1,4 +1,5 @@
 export type { Category } from "./model/types";
+export { getCategoryLabel } from "./model/getCategoryLabel";
 export {
   DELETE_CATEGORY,
   GET_CATEGORIES,

@@ -36,7 +36,7 @@ export const useContainer = () => {
     useState<TransactionFilters>(initialTransactionFilters);
   const { data: categoriesData } = useQuery<{
     categories: Category[];
-  }>(GET_CATEGORIES);
+  }>(GET_CATEGORIES, { fetchPolicy: "cache-and-network" });
 
   const onResetFilters = () => {
     resetFilters();
