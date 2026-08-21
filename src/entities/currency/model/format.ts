@@ -16,3 +16,12 @@ export function formatAmount(
     maximumFractionDigits: currency === "RUB" ? 0 : 2,
   }).format(display);
 }
+
+/**
+ * Rounds a display-currency value to at most 2 decimal places and returns a
+ * plain string, dropping a trailing ".00" for whole numbers
+ * (e.g. 1234.567 -> "1234.57", 85 -> "85").
+ */
+export function formatAmountNumber(value: number): string {
+  return String(Number(value.toFixed(2)));
+}

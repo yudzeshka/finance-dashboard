@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { currencySymbol, displayToUsd, getRate, usdToDisplay } from "./convert";
-import { formatAmount } from "./format";
+import { formatAmount, formatAmountNumber } from "./format";
 
 const RATES = { USD: 1, RUB: 85, EUR: 0.85, BYN: 3.0 };
 
@@ -55,5 +55,17 @@ describe("formatAmount", () => {
   });
   it("formats converted RUB with ₽", () => {
     expect(formatAmount(1, "RUB", RATES)).toContain("₽");
+  });
+});
+
+describe("formatAmountNumber", () => {
+  it("rounds to 2 decimals", () => {
+    expect(formatAmountNumber(1234.567)).toBe("1234.57");
+  });
+  it("drops trailing .00 for whole numbers", () => {
+    expect(formatAmountNumber(85)).toBe("85");
+  });
+  it("keeps a single non-zero decimal", () => {
+    expect(formatAmountNumber(85.5)).toBe("85.5");
   });
 });

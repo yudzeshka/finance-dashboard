@@ -14,6 +14,7 @@ import {
 } from "@ant-design/icons";
 import type { TransactionFilters } from "../model/types";
 import type { Category } from "../../../../entities/category";
+import { formatAmountNumber } from "@/entities/currency";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
 import { useTranslation } from "react-i18next";
@@ -62,8 +63,11 @@ export function TransactionsFilters({
   const sliderMax = amountBounds?.[1] ?? 100;
   const sliderMarks =
     sliderMin === sliderMax
-      ? { [sliderMin]: String(sliderMin) }
-      : { [sliderMin]: String(sliderMin), [sliderMax]: String(sliderMax) };
+      ? { [sliderMin]: formatAmountNumber(sliderMin) }
+      : {
+          [sliderMin]: formatAmountNumber(sliderMin),
+          [sliderMax]: formatAmountNumber(sliderMax),
+        };
   const { t } = useTranslation();
 
   return (
@@ -144,6 +148,7 @@ export function TransactionsFilters({
             value={amountRange}
             onChange={onAmountRangeChange}
             onChangeComplete={onAmountRangeCommit}
+            tooltip={{ formatter: (value) => formatAmountNumber(value ?? 0) }}
           />
           <Typography.Text>{t("date")}</Typography.Text>
           <DatePicker.RangePicker
