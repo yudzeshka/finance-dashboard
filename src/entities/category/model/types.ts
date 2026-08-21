@@ -6,4 +6,5 @@ export type Category = {
   icon: string;
   type: TransactionType;
   user_id: string | null;
+  key: string | null;
 };

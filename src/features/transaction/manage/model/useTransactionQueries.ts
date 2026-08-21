@@ -1,8 +1,9 @@
 import { useQuery } from "@apollo/client/react";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 import type { Category } from "@/entities/category";
-import { GET_CATEGORIES } from "@/entities/category";
+import { GET_CATEGORIES, getCategoryLabel } from "@/entities/category";
 import type {
   Transaction,
   TransactionCategoryOption,
@@ -21,24 +22,28 @@ const emptyTransactions: Transaction[] = [];
 const emptyCategories: Category[] = [];
 
 export function useTransactionQueries() {
+  const { t } = useTranslation();
   const {
     data: transactionsData,
     loading,
     error,
     refetch,
   } = useQuery<GetTransactionsData>(GET_TRANSACTIONS);
-  const { data: categoriesData, refetch: refetchCategories } = useQuery<GetCategoriesData>(GET_CATEGORIES);
+  const { data: categoriesData, refetch: refetchCategories } = useQuery<GetCategoriesData>(
+    GET_CATEGORIES,
+    { fetchPolicy: "cache-and-network" },
+  );
 
   const transactions = transactionsData?.transactions ?? emptyTransactions;
   const categories = categoriesData?.categories ?? emptyCategories;
 
   const categoryOptions = useMemo<TransactionCategoryOption[]>(() => {
     return categories.map((category) => ({
-      label: category.name,
+      label: getCategoryLabel(category, t),
       value: category.id,
       icon: category.icon,
     }));
-  }, [categories]);
+  }, [categories, t]);
 
   return {
     transactions,

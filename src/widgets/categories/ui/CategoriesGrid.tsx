@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { CategoryIcon, resolveIconKey } from "@/shared/ui/CategoryIcon";
 import { useMotionConfig } from "@/shared/lib/motion";
+import { getCategoryLabel } from "@/entities/category";
 import type { CategoryRowViewModel } from "../model/types";
 import styles from "./CategoriesGrid.module.scss";
 
@@ -79,7 +80,7 @@ export function CategoriesGrid({ rows, onEdit, onDelete, deleteLoading }: Props)
             <CategoryIcon icon={resolveIconKey(row.icon)} size={22} />
           </div>
 
-          <div className={styles.name}>{row.name}</div>
+          <div className={styles.name}>{getCategoryLabel(row, t)}</div>
 
           <div className={styles.meta}>
             <span

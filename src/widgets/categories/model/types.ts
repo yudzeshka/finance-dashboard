@@ -3,6 +3,7 @@ import type { TransactionType } from "@/entities/transaction";
 export type CategoryRowViewModel = {
   id: string;
   name: string;
+  key: string | null;
   type: TransactionType;
   icon: string;
   transactionsCount: number;

@@ -10,6 +10,7 @@ const category = {
     icon: "🍎",
     type: "EXPENSE" as const,
     user_id: null,
+    key: null,
 };
 
 // Фабрика: создаёт транзакцию с дефолтами, а отдельные поля можно переопределить

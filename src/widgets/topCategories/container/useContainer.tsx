@@ -3,10 +3,13 @@ import type { UIPropertyType } from "../ui";
 import { useTransactionQueries } from "@/features/transaction/manage/model/useTransactionQueries";
 import { useSetAllTransactions } from "@/entities/transaction/model/selectors";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { getTopCategories } from "../model/lib";
 import { useCurrencyFormatter } from "@/shared/lib/useCurrencyFormatter";
+import { getCategoryLabel } from "@/entities/category";
 
 export const useContainer: ContainerComponentType<UIPropertyType> = () => {
+  const { t } = useTranslation();
   const formatCurrency = useCurrencyFormatter();
   const [targetDate, setTargetDate] = useState<Date>(new Date());
   const { transactions, loading } = useTransactionQueries();
@@ -23,13 +26,13 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
     return categories
       .map((item) => ({
         id: item.category.id,
-        name: item.category.name,
+        name: getCategoryLabel(item.category, t),
         icon: item.category.icon,
         amountLabel: formatCurrency(item.amount),
         percent: Math.round((item.amount / totalAmount) * 100),
       }))
       .slice(0, 3);
-  }, [transactions, targetDate, formatCurrency]);
+  }, [transactions, targetDate, formatCurrency, t]);
 
   const onTargetDateChange = (date: Date | null) => {
     if (date) setTargetDate(date);

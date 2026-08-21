@@ -9,6 +9,7 @@ import { useSetAllTransactions } from "@/entities/transaction/model/selectors";
 import { useDebounce } from "@/shared/hooks/UseDebounce";
 import { useMedia } from "@/shared/hooks/useMedia";
 import { useCurrencyFormatter } from "@/shared/lib/useCurrencyFormatter";
+import { getCategoryLabel } from "@/entities/category";
 import { calculateExpenceChart } from "../model/lib";
 import type { PieDataItemOption } from "echarts/types/src/chart/pie/PieSeries.js";
 
@@ -32,8 +33,11 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
   );
 
   const chartData = useMemo(
-    () => calculateExpenceChart(transactions, reportFilters),
-    [transactions, reportFilters],
+    () =>
+      calculateExpenceChart(transactions, reportFilters, (category) =>
+        getCategoryLabel(category, t),
+      ),
+    [transactions, reportFilters, t],
   );
 
   useEffect(() => {

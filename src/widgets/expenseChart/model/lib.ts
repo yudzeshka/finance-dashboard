@@ -1,6 +1,7 @@
 import type { TransactionFilters } from "@/features/transaction/filters/model/types";
 import { filterTransactions } from "@/entities/transaction/model/filterTransactions";
 import type { Transaction } from "@/entities/transaction/model/types";
+import type { Category } from "@/entities/category";
 
 export type ExpenseChartData = {
   total: number;
@@ -10,34 +11,31 @@ export type ExpenseChartData = {
 export function calculateExpenceChart(
   transactions: Transaction[],
   filters: TransactionFilters,
+  getLabel: (category: Category) => string,
 ): ExpenseChartData {
   const currentTransactions = filterTransactions(transactions, filters);
 
-  const expenseData = currentTransactions.reduce(
-    (acc, transaction) => {
-      if (transaction.type === "EXPENSE") {
-        acc.total += transaction.amount;
-        const categoryName = transaction.category.name ?? "";
-        if (acc.data[categoryName]) {
-          acc.data[categoryName] += transaction.amount;
-        } else {
-          acc.data[categoryName] = transaction.amount;
-        }
-        return acc;
-      }
-      return acc;
-    },
-    { total: 0, data: {} } as {
-      total: number;
-      data: Record<string, number>;
-    },
-  );
-  const resultArray = Object.keys(expenseData.data).map((key) => {
-    return { name: key, value: expenseData.data[key] };
-  });
+  const byCategory = new Map<string, { value: number; name: string }>();
+  let total = 0;
+
+  for (const transaction of currentTransactions) {
+    if (transaction.type !== "EXPENSE") continue;
+    total += transaction.amount;
+
+    const category = transaction.category;
+    const existing = byCategory.get(category.id);
+    if (existing) {
+      existing.value += transaction.amount;
+    } else {
+      byCategory.set(category.id, {
+        value: transaction.amount,
+        name: getLabel(category),
+      });
+    }
+  }
 
   return {
-    total: parseFloat(expenseData.total.toFixed(2)),
-    data: resultArray.sort((a, b) => b.value - a.value),
+    total: parseFloat(total.toFixed(2)),
+    data: Array.from(byCategory.values()).sort((a, b) => b.value - a.value),
   };
 }

@@ -26,8 +26,8 @@ export function getTopCategories(
     if (transaction.type !== "EXPENSE") continue;
 
     const category = transaction.category;
-    const existing = totalsByCategory.get(category.name);
-    totalsByCategory.set(category.name, {
+    const existing = totalsByCategory.get(category.id);
+    totalsByCategory.set(category.id, {
       category,
       amount: (existing?.amount ?? 0) + transaction.amount,
     });

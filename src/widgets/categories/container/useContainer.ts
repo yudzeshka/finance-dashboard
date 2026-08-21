@@ -63,7 +63,9 @@ export function useContainer() {
     loading: categoriesLoading,
     error: categoriesError,
     refetch: refetchCategories,
-  } = useQuery<GetCategoriesData>(GET_CATEGORIES);
+  } = useQuery<GetCategoriesData>(GET_CATEGORIES, {
+    fetchPolicy: "cache-and-network",
+  });
 
   const { data: transactionsData, loading: transactionsLoading } =
     useQuery<GetTransactionsData>(GET_TRANSACTIONS);
