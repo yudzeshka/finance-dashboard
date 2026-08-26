@@ -1,0 +1,16 @@
+# Поднимает приложение и моковый GraphQL-сервер одной командой:
+#   docker compose up
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+
+  graphql:
+    build:
+      context: .
+      dockerfile: mock-server/Dockerfile
+    ports:
+      - "4000:4000"

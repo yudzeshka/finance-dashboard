@@ -1,0 +1,37 @@
+# Deployment — «держи 1 реплику мок-сервера и перезапускай, если упадёт»
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mock-graphql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mock-graphql
+  template:
+    metadata:
+      labels:
+        app: mock-graphql
+    spec:
+      enableServiceLinks: false   # отключаем автоинъекцию сервисных env-переменных
+      containers:
+        - name: mock-graphql
+          image: finance-dashboard-graphql:latest
+          imagePullPolicy: IfNotPresent   # брать локальный образ, не тянуть из реестра
+          ports:
+            - containerPort: 4000
+
+---
+# Service — «дай группе подов стабильный адрес и пробрось порт наружу»
+apiVersion: v1
+kind: Service
+metadata:
+  name: mock-graphql
+spec:
+  selector:
+    app: mock-graphql          # направляет трафик на поды с этой меткой
+  type: NodePort               # открыть на узле порт, доступный с localhost
+  ports:
+    - port: 4000               # порт самого сервиса
+      targetPort: 4000         # порт внутри пода
+      nodePort: 30400          # порт на узле (для доступа снаружи)
