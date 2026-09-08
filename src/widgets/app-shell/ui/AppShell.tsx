@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
 import { purgeApolloCache } from "../../../app/providers/apollo";
+import { useApolloClient } from "@apollo/client/react";
 import { useOnlineStatus } from "../../../shared/lib/useOnlineStatus";
 import { useOfflineQueue } from "../../../shared/lib/offlineQueue";
 import { LogoutOutlined, MenuOutlined, WifiOutlined } from "@ant-design/icons";
@@ -68,6 +69,7 @@ export function AppShell({
   const [mobileOpen, setMobileOpen] = useState(false);
   const { session, nhost } = useAuth();
   const navigate = useNavigate();
+  const client = useApolloClient();
   const isOnline = useOnlineStatus();
   const pendingCount = useOfflineQueue((s) => s.queue.length);
 
@@ -81,6 +83,7 @@ export function AppShell({
           refreshToken: session.refreshToken,
         });
       }
+      await client.clearStore();
       await purgeApolloCache();
       navigate("/");
     } catch (err: unknown) {
@@ -212,11 +215,9 @@ export function AppShell({
             }}
           >
             <WifiOutlined />
-            <span>You're offline.</span>
+            <span>{t("offlineYouAreOffline")}</span>
             {pendingCount > 0 && (
-              <span>
-                · {pendingCount} change{pendingCount > 1 ? "s" : ""} pending
-              </span>
+              <span>· {t("pendingChanges", { count: pendingCount })}</span>
             )}
           </div>
         )}
@@ -237,9 +238,7 @@ export function AppShell({
             <Tag color="processing" style={{ margin: 0 }}>
               {pendingCount}
             </Tag>
-            <span>
-              change{pendingCount > 1 ? "s" : ""} pending sync
-            </span>
+            <span>{t("pendingSync", { count: pendingCount })}</span>
           </div>
         )}
 

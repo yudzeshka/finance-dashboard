@@ -1,5 +1,6 @@
 import { useApolloClient } from "@apollo/client/react";
 import { message } from "antd";
+import { useTranslation } from "react-i18next";
 
 import type { Category } from "@/entities/category";
 import { GET_CATEGORIES } from "@/entities/category";
@@ -61,6 +62,7 @@ function buildTempTransaction(
 
 export function useTransactionMutations() {
   const client = useApolloClient();
+  const { t } = useTranslation();
 
   const currency = useAppearanceStore((s) => s.currency);
   const rates = useCurrencyRatesStore((s) => s.rates);
@@ -113,7 +115,7 @@ export function useTransactionMutations() {
           type: "add",
           variables: toTransactionVariables(values, amountUsd),
         });
-        message.info("Saved offline. Will sync when online.");
+        message.info(t("savedOffline"));
         return;
       }
       throw error;
@@ -158,7 +160,7 @@ export function useTransactionMutations() {
           type: "edit",
           variables: { id, ...toTransactionVariables(values, amountUsd) },
         });
-        message.info("Saved offline. Will sync when online.");
+        message.info(t("savedOffline"));
         return;
       }
       throw error;
@@ -185,7 +187,7 @@ export function useTransactionMutations() {
           type: "delete",
           variables: { id },
         });
-        message.info("Saved offline. Will sync when online.");
+        message.info(t("savedOffline"));
         return;
       }
 

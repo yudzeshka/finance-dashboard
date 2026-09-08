@@ -1,4 +1,4 @@
-import { Form } from "antd";
+import { Form, message } from "antd";
 
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -174,6 +174,7 @@ export function useContainer() {
       await refetchCategories();
       resetModalState();
     } catch (error) {
+      message.error(t("categorySaveError"));
       setActionError(getErrorMessage(error));
     }
   }, [
@@ -184,6 +185,7 @@ export function useContainer() {
     refetchCategories,
     resetModalState,
     updateCategory,
+    t,
   ]);
 
   const remove = useCallback(
@@ -194,10 +196,11 @@ export function useContainer() {
         await deleteCategory({ variables: { id } });
         await refetchCategories();
       } catch (error) {
+        message.error(t("categoryDeleteError"));
         setActionError(getErrorMessage(error));
       }
     },
-    [deleteCategory, refetchCategories],
+    [deleteCategory, refetchCategories, t],
   );
 
   const modalTitle =
