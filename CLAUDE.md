@@ -12,11 +12,11 @@ Code, identifiers, API names, commit messages requested by the project, and code
 Do not translate code or technical terms when it would make them less clear.
 
 - `npm run dev` — Vite dev server on port 5173. Restart after changing `.env.development`.
-- `npm run build` — `tsc -b && vite build` (type-checks then builds). Expect type-check failures until known issues are fixed (see Known Issues).
+- `npm run build` — `tsc -b && vite build` (type-checks then builds).
 - `npm run lint` — `eslint .` (flat config, ESLint 9).
 - `npm run preview` — `vite preview`.
 - `npm run mock:graphql` — `tsx mock-server/server.ts`, mock GraphQL server on port 4000. Only needed for the legacy fallback path; Nhost is the primary backend.
-- **No test framework is configured.** No vitest, jest, test scripts, or `*.test.*` files. Do not run or write tests without first setting one up.
+- `npm run test` — `vitest run`. `npm run test:watch` — watch mode. Unit tests for pure logic live in `*.test.ts` files (currency conversion, transaction filtering).
 
 ## Stack
 
@@ -55,9 +55,9 @@ Layers under `src/`: `pages/`, `widgets/`, `features/`, `entities/`, `shared/`, 
 ## Providers & Routing
 
 Provider nesting order (from main.tsx, outer to inner):
-`AppAntdProvider → AuthProvider → AppApolloProvider → BrowserRouter`
+`AppAntdProvider → CurrencyRatesProvider → AuthProvider → AppApolloProvider → BrowserRouter`
 
-- Protected routes (redirect to `/auth/login` when unauthenticated): `/` (DashboardPage), `/reports` (ReportsPage), `/categories` (CategoriesPage).
+- Protected routes (redirect to `/auth/login` when unauthenticated): `/` (DashboardPage), `/reports` (ReportsPage), `/categories` (CategoriesPage), `/settings` (SettingsPage).
 - Public auth routes under `<AuthLayout />`: `/auth`, `/auth/login`, `/auth/register`, `/auth/verify`.
 - Legacy route `/verify` → VerifyPage (compatibility with old verification emails).
 
@@ -76,8 +76,16 @@ Zustand stores:
 - `useTransactionsStore` (`entities/transaction/model/store.ts`) — `transactions` + `allTransactions`.
 - `useTransactionFiltersStore` (`features/transaction/filters/model/store.ts`) — filter object with `setFilters`/`resetFilters`.
 - `useOfflineQueue` (`shared/lib/offlineQueue.ts`) — persisted to localStorage key `offline-mutation-queue`.
+- `useAppearanceStore` (`features/settings/appearance/model/store.ts`) — language + currency selection (persisted).
 - Pure filtering logic is in `entities/transaction/model/filterTransactions.ts`.
 - Apollo cache is the primary data store for GraphQL; mutations do optimistic updates.
+
+## Currency
+
+- Multi-currency: USD/RUB/EUR/BYN. Amounts are stored in USD and converted on display.
+- `useCurrencyRatesStore` (`entities/currency/model/ratesStore.ts`) fetches live rates from `open.er-api.com/v6/latest/USD`, cached 12h and persisted to localStorage (`currency-rates`); refreshed on mount and on the browser `online` event via `CurrencyRatesProvider`.
+- Formatting helpers: `formatAmount`, `usdToDisplay`, `displayToUsd` (`entities/currency`); `useCurrencyFormatter` for the selected currency.
+- When rates are unavailable (offline/blocked), Settings shows a hint (`ratesUnavailableHint`) instead of silently showing 1:1 amounts.
 
 ## Offline-first
 
@@ -98,9 +106,8 @@ ECharts 6 via echarts-for-react. Five chart widgets following the `.Widget` obje
 
 ## Known Issues
 
-- Two known unfixed TS errors that will cause `npm run build` to fail type-check: `src/widgets/largestTransactions/ui/index.tsx` (`null` vs `string`) and `src/widgets/topCategories/model/lib.ts` (`Category | undefined`).
 - tsconfig.app.json is strict: `noUnusedLocals`, `noUnusedParameters`, `verbatimModuleSyntax` (use `import type` for type-only imports), `erasableSyntaxOnly`. Build compiles `src` but excludes `mock-server` and `src/mock-server`.
-- Deleting a category with remaining transactions may fail due to FK `ON DELETE RESTRICT`.
+- Deleting a category with remaining transactions is blocked by FK `ON DELETE RESTRICT`; the app surfaces a localized error toast (`categoryDeleteError`).
 - Strict CSP in index.html whitelists specific Nhost domains, localhost:4000, and WebSocket.
 - `useDebounce` lives in `shared/hooks/UseDebounce.ts` (capitalized filename) but exports lowercase `useDebounce`; returns `{ debouncedValue }`.
 - `HANDOFF.md` (Russian) contains deeper backend/schema context: DB schema, Hasura permissions, system vs user categories, and a task list. Consult it for backend details.
