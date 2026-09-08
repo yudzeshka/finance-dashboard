@@ -63,3 +63,16 @@ testsprite_tests/
 
 # Vercel local project metadata (project.json, README.txt)
 .vercel/
+
+# --- Skills: keep only the SKILL.md definitions, ignore support files & outputs ---
+.claude/skills/*
+!.claude/skills/*/
+.claude/skills/*/*
+!.claude/skills/*/SKILL.md
+
+# Python bytecode cache from skill scripts (e.g. ui-ux-pro-max/search.py)
+__pycache__/
+*.py[cod]
+
+# ui-ux-pro-max persisted design system (skill output via --persist)
+design-system/
