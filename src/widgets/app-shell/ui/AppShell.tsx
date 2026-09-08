@@ -30,6 +30,13 @@ const IconCategories = () => (
     <circle cx="7" cy="7" r="1.2" />
   </svg>
 );
+const IconBudgets = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="8" />
+    <circle cx="12" cy="12" r="3.2" />
+    <circle cx="12" cy="12" r="0.6" fill="currentColor" />
+  </svg>
+);
 const IconSettings = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <circle cx="12" cy="12" r="3" />
@@ -137,6 +144,16 @@ export function AppShell({
           >
             <span className="aurora-navItem__icon"><IconCategories /></span>
             {(!isMobile || mobileOpen) ? <span className="aurora-navItem__label">{t("categories")}</span> : null}
+          </NavLink>
+          <NavLink
+            to="/budgets"
+            className={({ isActive }) =>
+              `aurora-navItem${isActive ? " aurora-navItem--active" : ""}`
+            }
+            onClick={() => isMobile && setMobileOpen(false)}
+          >
+            <span className="aurora-navItem__icon"><IconBudgets /></span>
+            {(!isMobile || mobileOpen) ? <span className="aurora-navItem__label">{t("budgets")}</span> : null}
           </NavLink>
           <NavLink
             to="/settings"

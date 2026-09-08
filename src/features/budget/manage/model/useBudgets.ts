@@ -9,11 +9,14 @@ import {
   calculateBudgetProgress,
 } from "@/entities/budget";
 import type { Budget, BudgetProgress } from "@/entities/budget";
+import { GET_CATEGORIES } from "@/entities/category";
+import type { Category } from "@/entities/category";
 import { GET_TRANSACTIONS } from "@/entities/transaction";
 import type { Transaction } from "@/entities/transaction";
 
 type GetBudgetsData = { budgets: Budget[] };
 type GetTransactionsData = { transactions: Transaction[] };
+type GetCategoriesData = { categories: Category[] };
 
 type InsertBudgetData = { insert_budgets_one: Budget | null };
 type InsertBudgetVars = { categoryId: string; limitUsd: number };
@@ -26,6 +29,7 @@ type DeleteBudgetVars = { id: string };
 
 const emptyBudgets: Budget[] = [];
 const emptyTransactions: Transaction[] = [];
+const emptyCategories: Category[] = [];
 
 export function useBudgets() {
   const {
@@ -39,6 +43,10 @@ export function useBudgets() {
 
   const { data: transactionsData } =
     useQuery<GetTransactionsData>(GET_TRANSACTIONS);
+
+  const { data: categoriesData } = useQuery<GetCategoriesData>(GET_CATEGORIES, {
+    fetchPolicy: "cache-and-network",
+  });
 
   const [insertBudget, { loading: createLoading }] = useMutation<
     InsertBudgetData,
@@ -92,11 +100,21 @@ export function useBudgets() {
 
   const budgets = budgetsData?.budgets ?? emptyBudgets;
   const transactions = transactionsData?.transactions ?? emptyTransactions;
+  const categories = categoriesData?.categories ?? emptyCategories;
 
   const progress = useMemo<BudgetProgress[]>(
     () => calculateBudgetProgress(budgets, transactions),
     [budgets, transactions],
   );
+
+  // EXPENSE-категории, у которых ещё нет лимита — для Select в модалке create.
+  const availableCategories = useMemo<Category[]>(() => {
+    const budgetCategoryIds = new Set(budgets.map((b) => b.category_id));
+    return categories.filter(
+      (category) =>
+        category.type === "EXPENSE" && !budgetCategoryIds.has(category.id),
+    );
+  }, [categories, budgets]);
 
   const createBudget = async (categoryId: string, limitUsd: number) => {
     await insertBudget({ variables: { categoryId, limitUsd } });
@@ -113,6 +131,7 @@ export function useBudgets() {
   return {
     budgets,
     progress,
+    availableCategories,
     loading,
     error,
     refetch,

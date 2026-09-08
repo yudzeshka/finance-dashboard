@@ -11,6 +11,7 @@ export const GET_BUDGETS = gql`
         name
         icon
         type
+        key
       }
     }
   }
@@ -29,6 +30,7 @@ export const INSERT_BUDGET_ONE = gql`
         name
         icon
         type
+        key
       }
     }
   }
@@ -48,6 +50,7 @@ export const UPDATE_BUDGET_BY_PK = gql`
         name
         icon
         type
+        key
       }
     }
   }
