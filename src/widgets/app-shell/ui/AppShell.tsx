@@ -212,11 +212,9 @@ export function AppShell({
             }}
           >
             <WifiOutlined />
-            <span>You're offline.</span>
+            <span>{t("offlineYouAreOffline")}</span>
             {pendingCount > 0 && (
-              <span>
-                · {pendingCount} change{pendingCount > 1 ? "s" : ""} pending
-              </span>
+              <span>· {t("pendingChanges", { count: pendingCount })}</span>
             )}
           </div>
         )}
@@ -237,9 +235,7 @@ export function AppShell({
             <Tag color="processing" style={{ margin: 0 }}>
               {pendingCount}
             </Tag>
-            <span>
-              change{pendingCount > 1 ? "s" : ""} pending sync
-            </span>
+            <span>{t("pendingSync", { count: pendingCount })}</span>
           </div>
         )}
 
