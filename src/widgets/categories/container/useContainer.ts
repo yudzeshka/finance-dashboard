@@ -174,6 +174,7 @@ export function useContainer() {
       await refetchCategories();
       resetModalState();
     } catch (error) {
+      message.error(t("categorySaveError"));
       setActionError(getErrorMessage(error));
     }
   }, [
@@ -184,6 +185,7 @@ export function useContainer() {
     refetchCategories,
     resetModalState,
     updateCategory,
+    t,
   ]);
 
   const remove = useCallback(

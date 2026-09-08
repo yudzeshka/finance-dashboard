@@ -99,6 +99,7 @@ i18n
           categoryTransactionsCount: "Transactions",
           deleteCategoryConfirm: "Delete this category?",
           categoryDeleteError: "Couldn't delete the category. It may have linked transactions.",
+          categorySaveError: "Couldn't save the category.",
           deleteTransactionConfirm: "Delete this transaction?",
           delete: "Delete",
           categoryNames: {
@@ -340,6 +341,7 @@ i18n
           categoryTransactionsCount: "Транзакций",
           deleteCategoryConfirm: "Удалить эту категорию?",
           categoryDeleteError: "Не удалось удалить категорию. Возможно, к ней привязаны транзакции.",
+          categorySaveError: "Не удалось сохранить категорию.",
           deleteTransactionConfirm: "Удалить эту транзакцию?",
           delete: "Удалить",
           categoryNames: {
