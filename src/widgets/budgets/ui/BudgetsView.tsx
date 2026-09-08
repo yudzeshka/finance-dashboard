@@ -34,16 +34,43 @@ export function BudgetsView({
   onEdit,
   onDelete,
 }: BudgetsViewProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const totalSpent = progress.reduce((sum, p) => sum + p.spent, 0);
+  const totalLimit = progress.reduce((sum, p) => sum + p.limit, 0);
+  const totalPercent =
+    totalLimit > 0 ? Math.min(Math.round((totalSpent / totalLimit) * 100), 100) : 0;
+  const monthLabel = new Intl.DateTimeFormat(
+    i18n.language?.toLowerCase().startsWith("ru") ? "ru-RU" : "en-US",
+    { month: "long", year: "numeric" },
+  ).format(new Date());
 
   return (
     <div className={styles.list}>
+      <div className={styles.summary}>
+        <div className={styles.summaryMonth}>{monthLabel}</div>
+        <div className={`${styles.bar} ${styles.summaryBar}`}>
+          <div
+            className={`${styles.barFill} ${styles.barFillOk}`}
+            style={{ width: `${totalPercent}%` }}
+          />
+        </div>
+        <div className={styles.summaryAmount}>
+          <div className={styles.summaryAmountValue}>{format(totalSpent)}</div>
+          <span className={styles.summaryAmountSub}>
+            {t("budgetSpent")} {format(totalLimit)} · {totalPercent}%
+          </span>
+        </div>
+      </div>
+
       {progress.map(({ budget, spent, limit, ratio, remaining, status }) => {
         const percent = Math.min(Math.round(ratio * 100), 100);
         const pillLabel =
           status === "danger"
             ? t("budgetOverBy", { amount: format(Math.abs(remaining)) })
-            : t("budgetRemaining", { amount: format(remaining) });
+            : status === "warning"
+              ? t("budgetAlmostOver")
+              : t("budgetRemaining", { amount: format(remaining) });
 
         return (
           <div key={budget.id} className={`${styles.row} aurora-row-hover`}>
