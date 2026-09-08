@@ -20,7 +20,7 @@ VITE_GRAPHQL_URL=http://localhost:4000/graphql  # fallback, если нет Nhos
 
 ## Провайдеры и auth (src/main.tsx)
 Порядок провайдеров:
-`AppAntdProvider → AuthProvider → AppApolloProvider → BrowserRouter`
+`AppAntdProvider → CurrencyRatesProvider → AuthProvider → AppApolloProvider → BrowserRouter`
 
 ### AuthProvider
 - `createClient`, `session`, `nhost`, `useAuth()`
@@ -31,7 +31,7 @@ VITE_GRAPHQL_URL=http://localhost:4000/graphql  # fallback, если нет Nhos
 - Перед запросом: `nhost.refreshSession(60)`
 
 ### ProtectedRoute / маршруты
-- Защищены: `/`, `/reports`
+- Защищены: `/`, `/reports`, `/categories`, `/settings`
 - Публичные: `/auth/*`, `/verify`
 
 Auth-flow:
@@ -94,7 +94,7 @@ Relationships на `transactions`: `category`, `user`.
 - UI: таблица (name, type, emoji, count транзакций, actions), модалка с `emoji-picker-react`
 - Логика: `useContainer.ts` — `GET_CATEGORIES`, `INSERT/UPDATE/DELETE` через Apollo, `isSystem = user_id === null`
 - GraphQL: `src/entities/category/api/graphql.ts`
-- Удаление категории с привязанными транзакциями может падать из‑за FK `ON DELETE RESTRICT`.
+- Удаление категории с привязанными транзакциями блокируется FK `ON DELETE RESTRICT`; приложение показывает локализованный тост об ошибке.
 
 ## Skeleton / loading
 - Ant Design Skeleton, не текст `Loading...`
@@ -106,14 +106,10 @@ Relationships на `transactions`: `category`, `user`.
 - `dashboard-header/footer`: `box-sizing: border-box` для border
 - Reports: `ReportsPage.module.scss` — фиксированная высота grid
 
-## Известные TS-ошибки (не трогали)
-- `src/widgets/largestTransactions/ui/index.tsx` — `null` vs `string`
-- `src/widgets/topCategories/model/lib.ts` — `Category | undefined`
-
 ## Что логично делать дальше
 - **E2E**: регистрация → verify → login → dashboard → categories CRUD
 - **System categories**: обновить Salary и др.: `UPDATE ... SET type = 'INCOME' WHERE user_id IS NULL AND name = 'Salary'`
-- **UX/i18n**: i18n для ошибок категорий; обработка delete при FK constraint (понятное сообщение)
+- **UX/i18n**: локализовать ошибки категорий при insert/update (delete при FK уже показывает локализованный тост)
 - **Logout**: полный flow в `AppShell`
 - **Транзакции**: фильтры/формы — убедиться, что `GET_CATEGORIES` с `type/user_id` не ломает типы
 - **Dev**: seed/mock server не использовать для dev с Nhost
