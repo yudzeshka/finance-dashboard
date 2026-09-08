@@ -107,11 +107,8 @@ Relationships на `transactions`: `category`, `user`.
 - Reports: `ReportsPage.module.scss` — фиксированная высота grid
 
 ## Что логично делать дальше
-- **E2E**: регистрация → verify → login → dashboard → categories CRUD
-- **System categories**: обновить Salary и др.: `UPDATE ... SET type = 'INCOME' WHERE user_id IS NULL AND name = 'Salary'`
-- **UX/i18n**: локализовать ошибки категорий при insert/update (delete при FK уже показывает локализованный тост)
-- **Logout**: полный flow в `AppShell`
-- **Транзакции**: фильтры/формы — убедиться, что `GET_CATEGORIES` с `type/user_id` не ломает типы
+- **E2E**: регистрация → verify → login → dashboard → categories CRUD — нужен `playwright.config` + тестовый пользователь (настроек сейчас нет)
+- **System categories**: обновить Salary и др.: `UPDATE ... SET type = 'INCOME' WHERE user_id IS NULL AND name = 'Salary'` — выполняется в консоли Nhost (доступ к БД)
 - **Dev**: seed/mock server не использовать для dev с Nhost
 
 ## Dev
