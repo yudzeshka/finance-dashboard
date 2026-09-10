@@ -10,6 +10,18 @@ export function BudgetsPageSkeleton() {
   return (
     <AppShell title={t("budgets")} subtitle={t("budgetsSubtitle")}>
       <div className={styles.list}>
+        <div className={styles.summary}>
+          <div className={styles.summaryLeft}>
+            <div className={styles.shimmerLine} style={{ width: 120, height: 12 }} />
+            <div className={styles.shimmerLine} style={{ width: 180, height: 28 }} />
+            <div className={styles.shimmerLine} style={{ width: 100, height: 12 }} />
+          </div>
+          <div className={styles.summaryBody}>
+            <div className={styles.shimmerLine} style={{ width: "100%", height: 8, borderRadius: 999 }} />
+            <div className={styles.shimmerLine} style={{ width: 160, height: 24, borderRadius: 8 }} />
+          </div>
+        </div>
+
         {Array.from({ length: 5 }).map((_, i) => (
           <div key={i} className={styles.row}>
             <div

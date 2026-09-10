@@ -263,9 +263,35 @@ body {
 
 .dashboard-header__titles {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 12px;
   min-width: 0;
+}
+
+.dashboard-header__title {
+  margin: 0;
+  font-family: 'Sora', system-ui, "Segoe UI", Roboto, sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--aurora-text);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dashboard-header__subtitle {
+  font-family: 'Inter', system-ui, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--aurora-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  padding-left: 12px;
+  border-left: 1px solid var(--aurora-border);
 }
 
 .dashboard-content {
@@ -443,10 +469,8 @@ code {
     overflow: hidden;
   }
 
-  .dashboard-header__titles .ant-typography {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .dashboard-header__title {
+    font-size: 16px;
   }
 
   .aurora-sider {
@@ -485,6 +509,12 @@ code {
   .dashboard-header {
     padding: env(safe-area-inset-top, 0px) 12px 0 !important;
     gap: 8px;
+  }
+
+  /* On very small screens the subtitle would crowd the one-line header,
+     so hide it and keep only the title + action button. */
+  .dashboard-header__subtitle {
+    display: none;
   }
 
   .dashboard-header__left {
@@ -716,6 +746,9 @@ code {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  background: var(--aurora-surface);
+  padding: 16px;
+  border-radius: 16px;
 }
 
 .settings-card__section {

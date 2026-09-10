@@ -2,56 +2,112 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  background: var(--aurora-surface);
 }
 
+/* === Summary hero === */
 .summary {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 18px 20px;
+  gap: 24px;
+  padding: 22px 24px;
   border-radius: 16px;
   background: var(--aurora-surface-card);
   border: 1px solid var(--aurora-border);
   box-shadow: var(--aurora-shadow-sm);
 }
 
+.summaryLeft {
+  min-width: 200px;
+  flex-shrink: 0;
+}
+
 .summaryMonth {
+  font-size: 12px;
   font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--aurora-text-secondary);
-  min-width: 150px;
-  white-space: nowrap;
 }
 
-.summaryBar {
-  flex: 1;
-  min-width: 0;
-}
-
-.summaryAmount {
-  white-space: nowrap;
-  text-align: right;
-}
-
-.summaryAmountValue {
+.summaryValue {
   font-family: var(--mono);
   font-variant-numeric: tabular-nums;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 30px;
+  line-height: 1.15;
   color: var(--aurora-text);
+  margin: 4px 0 2px;
 }
 
-.summaryAmountSub {
-  display: block;
+.summaryValueSpent {
+  white-space: nowrap;
+}
+
+.summaryValueLimit {
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--aurora-text-secondary);
+}
+
+.summarySub {
   font-size: 13px;
   color: var(--aurora-text-secondary);
   font-variant-numeric: tabular-nums;
 }
 
-.row {
-  display: grid;
-  grid-template-columns: 220px 1fr auto;
-  gap: 24px;
+.summaryBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summaryBar {
+  width: 100%;
+}
+
+.summaryChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
   align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--aurora-surface);
+  color: var(--aurora-text-secondary);
+  white-space: nowrap;
+}
+
+.chipWarn {
+  color: var(--aurora-warning);
+  background: var(--aurora-warning-soft);
+}
+
+.chipDanger {
+  color: var(--aurora-danger);
+  background: var(--aurora-danger-soft);
+}
+
+/* === Budget rows ===
+   Single unified layout at every width:
+     [icon + name] ............ [actions]
+     [============== bar ==============]
+     [spent  из  limit · %] ......... [pill]
+*/
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   padding: 18px 20px;
   border-radius: 16px;
   background: var(--aurora-surface-card);
@@ -64,11 +120,19 @@
   }
 }
 
+.rowHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
 .rowLeft {
   display: flex;
   align-items: center;
   gap: 14px;
   min-width: 0;
+  flex: 1 1 auto;
 }
 
 .catIcon {
@@ -102,7 +166,7 @@
 }
 
 .rowBar {
-  min-width: 0;
+  width: 100%;
 }
 
 .bar {
@@ -130,15 +194,21 @@
   background: var(--aurora-danger);
 }
 
-.rowRight {
+.rowBottom {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  white-space: nowrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .nums {
-  text-align: right;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .numsValue {
@@ -150,7 +220,6 @@
 }
 
 .numsSub {
-  display: block;
   font-size: 13px;
   color: var(--aurora-text-secondary);
   font-variant-numeric: tabular-nums;
@@ -164,6 +233,17 @@
   font-weight: 600;
   padding: 4px 10px;
   border-radius: 999px;
+  white-space: nowrap;
+  /* Cap the width so a long amount ("осталось 1 234 567 ₽") never
+     pushes the card wider than its container. */
+  max-width: 220px;
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.pillText {
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -193,6 +273,7 @@
 .actions {
   display: flex;
   gap: 4px;
+  flex-shrink: 0;
 }
 
 .actionButton {
@@ -226,29 +307,24 @@
   }
 }
 
-@media (max-width: 800px) {
-  .row {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .rowRight {
-    justify-content: space-between;
+/* === Responsive === */
+@media (max-width: 640px) {
+  .rowHead {
     flex-wrap: wrap;
   }
 
   .summary {
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 14px;
+    padding: 18px 20px;
   }
 
-  .summaryMonth {
-    flex-basis: 100%;
-    min-width: 0;
+  .summaryLeft {
+    min-width: 100%;
   }
 
-  .summaryAmount {
-    text-align: left;
+  .summaryValue {
+    font-size: 26px;
   }
 }
 
