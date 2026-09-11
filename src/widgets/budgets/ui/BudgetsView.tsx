@@ -40,6 +40,8 @@ export function BudgetsView({
   const totalLimit = progress.reduce((sum, p) => sum + p.limit, 0);
   const totalPercent =
     totalLimit > 0 ? Math.min(Math.round((totalSpent / totalLimit) * 100), 100) : 0;
+  const warningCount = progress.filter((p) => p.status === "warning").length;
+  const dangerCount = progress.filter((p) => p.status === "danger").length;
   const monthLabel = new Intl.DateTimeFormat(
     i18n.language?.toLowerCase().startsWith("ru") ? "ru-RU" : "en-US",
     { month: "long", year: "numeric" },
@@ -48,18 +50,39 @@ export function BudgetsView({
   return (
     <div className={styles.list}>
       <div className={styles.summary}>
-        <div className={styles.summaryMonth}>{monthLabel}</div>
-        <div className={`${styles.bar} ${styles.summaryBar}`}>
-          <div
-            className={`${styles.barFill} ${styles.barFillOk}`}
-            style={{ width: `${totalPercent}%` }}
-          />
+        <div className={styles.summaryLeft}>
+          <div className={styles.summaryMonth}>{monthLabel}</div>
+          <div className={styles.summaryValue}>
+            <span className={styles.summaryValueSpent}>{format(totalSpent)}</span>
+            <span className={styles.summaryValueLimit}> / {format(totalLimit)}</span>
+          </div>
+          <div className={styles.summarySub}>
+            {t("budgetSpentLabel")} · {totalPercent}%
+          </div>
         </div>
-        <div className={styles.summaryAmount}>
-          <div className={styles.summaryAmountValue}>{format(totalSpent)}</div>
-          <span className={styles.summaryAmountSub}>
-            {t("budgetSpent")} {format(totalLimit)} · {totalPercent}%
-          </span>
+
+        <div className={styles.summaryBody}>
+          <div className={`${styles.bar} ${styles.summaryBar}`}>
+            <div
+              className={`${styles.barFill} ${styles.barFillOk}`}
+              style={{ width: `${totalPercent}%` }}
+            />
+          </div>
+          <div className={styles.summaryChips}>
+            <span className={styles.chip}>
+              {t("budgetCount", { count: progress.length })}
+            </span>
+            {warningCount > 0 && (
+              <span className={`${styles.chip} ${styles.chipWarn}`}>
+                {warningCount} · {t("budgetAlmostOver")}
+              </span>
+            )}
+            {dangerCount > 0 && (
+              <span className={`${styles.chip} ${styles.chipDanger}`}>
+                {dangerCount} · {t("budgetOverLimit")}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
@@ -74,38 +97,19 @@ export function BudgetsView({
 
         return (
           <div key={budget.id} className={`${styles.row} aurora-row-hover`}>
-            <div className={styles.rowLeft}>
-              <div className={styles.catIcon}>
-                <CategoryIcon icon={budget.category.icon} size={22} />
-              </div>
-              <div className={styles.catMeta}>
-                <div className={styles.catName}>
-                  {getCategoryLabel(budget.category, t)}
+            <div className={styles.rowHead}>
+              <div className={styles.rowLeft}>
+                <div className={styles.catIcon}>
+                  <CategoryIcon icon={budget.category.icon} size={22} />
                 </div>
-                <div className={styles.catType}>{t("expense")}</div>
+                <div className={styles.catMeta}>
+                  <div className={styles.catName}>
+                    {getCategoryLabel(budget.category, t)}
+                  </div>
+                  <div className={styles.catType}>{t("expense")}</div>
+                </div>
               </div>
-            </div>
 
-            <div className={styles.rowBar}>
-              <div className={styles.bar}>
-                <div
-                  className={`${styles.barFill} ${barClass(status)}`}
-                  style={{ width: `${percent}%` }}
-                />
-              </div>
-            </div>
-
-            <div className={styles.rowRight}>
-              <div className={styles.nums}>
-                <div className={styles.numsValue}>{format(spent)}</div>
-                <span className={styles.numsSub}>
-                  {t("budgetSpent")} {format(limit)} · {percent}%
-                </span>
-              </div>
-              <span className={`${styles.pill} ${pillClass(status)}`}>
-                <span className={styles.dot} />
-                {pillLabel}
-              </span>
               <div className={styles.actions}>
                 <button
                   type="button"
@@ -131,6 +135,28 @@ export function BudgetsView({
                   </button>
                 </Popconfirm>
               </div>
+            </div>
+
+            <div className={styles.rowBar}>
+              <div className={styles.bar}>
+                <div
+                  className={`${styles.barFill} ${barClass(status)}`}
+                  style={{ width: `${percent}%` }}
+                />
+              </div>
+            </div>
+
+            <div className={styles.rowBottom}>
+              <div className={styles.nums}>
+                <span className={styles.numsValue}>{format(spent)}</span>
+                <span className={styles.numsSub}>
+                  {t("budgetSpent")} {format(limit)} · {percent}%
+                </span>
+              </div>
+              <span className={`${styles.pill} ${pillClass(status)}`}>
+                <span className={styles.dot} />
+                <span className={styles.pillText}>{pillLabel}</span>
+              </span>
             </div>
           </div>
         );

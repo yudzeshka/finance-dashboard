@@ -1,0 +1,696 @@
+<title>Четыре макета бюджетов</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+
+<style>
+  /* === Aurora tokens (light = default; dark = proposal, via toggle) === */
+  :root {
+    --surface: #F7F5FB;
+    --card: #FFFFFF;
+    --text: #1E1B2E;
+    --text-2: #6B6680;
+    --border: #E8E4F0;
+    --accent: #7C3AED;
+    --accent-soft: #EDE9FE;
+    --success: #0E9F6E;
+    --success-soft: #D1FAE5;
+    --danger: #E0457B;
+    --danger-soft: #FCE7F3;
+    --warning: #D97706;
+    --warning-soft: #FEF3C7;
+    --track: #E8E4F0;
+    --shadow-sm: 0 1px 2px rgba(76, 29, 149, 0.08);
+    --shadow-md: 0 4px 12px rgba(76, 29, 149, 0.08);
+    --shadow-lg: 0 12px 32px rgba(76, 29, 149, 0.10);
+    --page-bg: #FFFFFF;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --surface: #14111E;
+      --card: #1D1A2A;
+      --text: #EDEBF7;
+      --text-2: #9E98B5;
+      --border: #2C2740;
+      --accent: #A78BFA;
+      --accent-soft: #2A2140;
+      --success: #34D399;
+      --success-soft: #0C2A21;
+      --danger: #F472B6;
+      --danger-soft: #331622;
+      --warning: #FBBF24;
+      --warning-soft: #33270E;
+      --track: #2C2740;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.30);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.35);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.45);
+      --page-bg: #0E0C16;
+    }
+  }
+  :root[data-theme="dark"] {
+    --surface: #14111E;
+    --card: #1D1A2A;
+    --text: #EDEBF7;
+    --text-2: #9E98B5;
+    --border: #2C2740;
+    --accent: #A78BFA;
+    --accent-soft: #2A2140;
+    --success: #34D399;
+    --success-soft: #0C2A21;
+    --danger: #F472B6;
+    --danger-soft: #331622;
+    --warning: #FBBF24;
+    --warning-soft: #33270E;
+    --track: #2C2740;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.30);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.35);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,0.45);
+    --page-bg: #0E0C16;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page-bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: ui-monospace, 'SF Mono', Consolas, 'Cascadia Mono', monospace; font-variant-numeric: tabular-nums; }
+  .sora { font-family: 'Sora', system-ui, sans-serif; }
+
+  /* === Presentation chrome === */
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 40px 24px 72px; }
+  .kicker {
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-2); font-weight: 600; margin: 0 0 6px;
+  }
+  h1.title { font-family: 'Sora', sans-serif; font-size: 28px; font-weight: 700; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .lede { color: var(--text-2); max-width: 680px; margin: 0 0 10px; }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 16px; margin: 6px 0 4px; color: var(--text-2); font-size: 12.5px;
+  }
+  .legend b { color: var(--text); font-weight: 600; }
+  .legend i { display: inline-block; width: 8px; height: 8px; border-radius: 999px; margin-right: 5px; vertical-align: 1px; }
+  .legend .l-ok i { background: var(--accent); }
+  .legend .l-warn i { background: var(--warning); }
+  .legend .l-danger i { background: var(--danger); }
+
+  .section-label {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-2); font-weight: 600; margin: 40px 0 14px;
+  }
+  .section-label b { color: var(--text); font-family: 'Sora', sans-serif; font-size: 15px; letter-spacing: -0.01em; text-transform: none; }
+  .section-label::after { content: ""; height: 1px; background: var(--border); flex: 1; }
+
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 50;
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border); background: var(--card);
+    color: var(--text-2); border-radius: 999px; padding: 8px 14px;
+    font: 600 13px 'Inter', sans-serif; cursor: pointer;
+    box-shadow: var(--shadow-sm);
+  }
+  .theme-toggle:hover { color: var(--text); border-color: var(--accent); }
+
+  /* === App frame === */
+  .frame {
+    display: flex; height: 600px; overflow: hidden;
+    border: 1px solid var(--border); border-radius: 18px;
+    background: var(--surface); box-shadow: var(--shadow-lg);
+  }
+
+  /* Sidebar (shared) */
+  .sidebar {
+    width: 232px; flex-shrink: 0; background: var(--card);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; padding: 18px 14px; gap: 14px;
+  }
+  .logo { display: flex; align-items: center; gap: 11px; padding: 4px 4px 10px; }
+  .logo-mark {
+    width: 34px; height: 34px; border-radius: 10px; background: var(--accent);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font: 700 14px 'Sora', sans-serif; flex-shrink: 0;
+  }
+  .logo-text { font: 600 14px 'Sora', sans-serif; color: var(--text); }
+  .nav { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+  .nav a {
+    display: flex; align-items: center; gap: 11px; padding: 10px 11px; border-radius: 11px;
+    color: var(--text-2); font-weight: 500; font-size: 13.5px; text-decoration: none; min-height: 42px;
+  }
+  .nav a:hover { background: var(--surface); color: var(--text); }
+  .nav a svg { flex-shrink: 0; }
+  .nav a.active {
+    background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+    color: var(--accent); font-weight: 600; position: relative;
+  }
+  .nav a.active::before {
+    content: ""; position: absolute; left: -1px; top: 50%; transform: translateY(-50%);
+    width: 3px; height: 18px; border-radius: 999px; background: var(--accent);
+  }
+  .user-card {
+    display: flex; align-items: center; gap: 11px; padding: 9px 11px; border-radius: 11px;
+    background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+  }
+  .avatar {
+    width: 30px; height: 30px; border-radius: 999px; background: var(--accent-soft);
+    color: var(--accent); font-weight: 600; font-size: 12.5px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .user-name { font-weight: 500; font-size: 13px; color: var(--text); flex: 1; }
+
+  /* Main column */
+  .main { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--surface); }
+  .header {
+    height: 66px; flex-shrink: 0; border-bottom: 1px solid var(--border); background: var(--page-bg);
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 24px;
+  }
+  .header-titles h2 { margin: 0; font: 700 19px 'Sora', sans-serif; color: var(--text); }
+  .header-titles p { margin: 2px 0 0; color: var(--text-2); font-size: 13px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer;
+    border-radius: 10px; font: 600 13.5px 'Inter', sans-serif; padding: 9px 15px;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { filter: brightness(1.06); }
+
+  .content { flex: 1; overflow: auto; padding: 18px 24px 22px; }
+  .content-inner { max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+
+  /* === Shared primitives === */
+  .bar { height: 8px; border-radius: 999px; background: var(--surface); overflow: hidden; }
+  .bar > i { display: block; height: 100%; border-radius: 999px; }
+  .bar--accent > i { background: var(--accent); }
+  .bar--warning > i { background: var(--warning); }
+  .bar--danger > i { background: var(--danger); }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 999px; white-space: nowrap;
+  }
+  .pill--ok { color: var(--success); background: var(--success-soft); }
+  .pill--warning { color: var(--warning); background: var(--warning-soft); }
+  .pill--danger { color: var(--danger); background: var(--danger-soft); }
+  .pill .dot { width: 6px; height: 6px; border-radius: 999px; background: currentColor; }
+
+  .cat-icon {
+    width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+    background: var(--accent-soft);
+  }
+  .cat-icon--sm { width: 34px; height: 34px; border-radius: 10px; font-size: 17px; }
+
+  .num { font-family: ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text); }
+  .sub { color: var(--text-2); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+
+  /* === Variant A: summary hero + list === */
+  .va-summary {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    box-shadow: var(--shadow-sm); padding: 20px 22px;
+    display: flex; align-items: center; gap: 24px;
+  }
+  .va-summary__left { min-width: 180px; }
+  .va-summary__month { font-size: 12px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.1em; }
+  .va-summary__big { font-family: ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; font-size: 30px; font-weight: 600; color: var(--text); line-height: 1.1; margin: 4px 0 2px; }
+  .va-summary__big small { font-size: 15px; color: var(--text-2); font-weight: 500; }
+  .va-summary__sub { color: var(--text-2); font-size: 13px; font-variant-numeric: tabular-nums; }
+  .va-summary__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .va-summary__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
+    padding: 4px 10px; border-radius: 8px; background: var(--surface); color: var(--text-2);
+  }
+  .chip--warn { color: var(--warning); background: var(--warning-soft); }
+  .chip--danger { color: var(--danger); background: var(--danger-soft); }
+
+  .va-row {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    box-shadow: var(--shadow-sm); padding: 15px 20px;
+    display: grid; grid-template-columns: 220px 1fr auto; gap: 22px; align-items: center;
+    transition: box-shadow 0.2s ease;
+  }
+  .va-row:hover { box-shadow: var(--shadow-md); }
+  .va-row__left { display: flex; align-items: center; gap: 13px; min-width: 0; }
+  .va-row__meta { min-width: 0; }
+  .va-row__name { font-weight: 600; color: var(--text); font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .va-row__type { font-size: 12px; color: var(--text-2); }
+  .va-row__bar { min-width: 0; }
+  .va-row__right { display: flex; align-items: center; gap: 15px; white-space: nowrap; }
+  .va-row__nums { text-align: right; }
+  .va-row__nums .num { font-size: 14.5px; }
+  .va-row__nums .sub { display: block; }
+  .row-actions { display: flex; gap: 4px; }
+  .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; cursor: pointer; color: var(--text-2);
+  }
+  .icon-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .icon-btn--danger:hover { color: var(--danger); border-color: var(--danger); }
+
+  /* === Variant B: bento grid === */
+  .vb-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .vb-overview {
+    grid-column: span 2; background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; box-shadow: var(--shadow-sm); padding: 20px 22px;
+    display: flex; flex-direction: column; gap: 12px; justify-content: space-between;
+  }
+  .vb-overview__top { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+  .vb-overview__month { font-size: 12px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.1em; }
+  .vb-overview__big { font-family: ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; font-size: 28px; font-weight: 600; color: var(--text); }
+  .vb-overview__sub { color: var(--text-2); font-size: 13px; font-variant-numeric: tabular-nums; text-align: right; }
+  .vb-overview__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .vb-side {
+    grid-column: span 1; background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; box-shadow: var(--shadow-sm); padding: 18px;
+    display: flex; flex-direction: column; gap: 12px; justify-content: space-between;
+  }
+  .vb-side__label { font-size: 11px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.1em; }
+  .vb-side__big { font-family: ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; font-size: 22px; font-weight: 600; color: var(--success); }
+  .vb-side__sub { color: var(--text-2); font-size: 12.5px; }
+  .vb-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    box-shadow: var(--shadow-sm); padding: 16px; display: flex; flex-direction: column; gap: 11px;
+    transition: box-shadow 0.2s ease; position: relative;
+  }
+  .vb-card:hover { box-shadow: var(--shadow-md); }
+  .vb-card--danger { border-color: var(--danger); background: var(--danger-soft); }
+  .vb-card__top { display: flex; align-items: center; gap: 11px; }
+  .vb-card__name { font-weight: 600; color: var(--text); font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .vb-card__type { font-size: 11.5px; color: var(--text-2); }
+  .vb-card__nums { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .vb-card__nums .num { font-size: 15px; }
+  .vb-card__nums .sub { font-size: 12px; }
+  .vb-card__actions { position: absolute; top: 12px; right: 12px; display: flex; gap: 4px; }
+
+  /* === Variant C: ring + compact rows === */
+  .vc-top {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    box-shadow: var(--shadow-sm); padding: 24px;
+    display: flex; align-items: center; justify-content: center; gap: 32px;
+  }
+  .vc-ring { position: relative; width: 128px; height: 128px; flex-shrink: 0; }
+  .vc-ring svg { display: block; }
+  .vc-ring__center {
+    position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .vc-ring__pct { font-family: ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; font-size: 24px; font-weight: 600; color: var(--text); }
+  .vc-ring__cap { font-size: 11px; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.08em; }
+  .vc-top__stats { display: flex; flex-direction: column; gap: 12px; }
+  .vc-stat { display: flex; align-items: baseline; gap: 10px; }
+  .vc-stat .num { font-size: 18px; }
+  .vc-stat .sub { font-size: 13px; }
+  .vc-stat__dot { width: 8px; height: 8px; border-radius: 999px; flex-shrink: 0; align-self: center; }
+
+  .vc-list {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    box-shadow: var(--shadow-sm); padding: 6px 18px;
+  }
+  .vc-row {
+    display: grid; grid-template-columns: 200px 1fr auto; gap: 18px; align-items: center;
+    padding: 12px 2px; border-bottom: 1px solid var(--border);
+  }
+  .vc-row:last-child { border-bottom: none; }
+  .vc-row__left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .vc-row__name { font-weight: 600; color: var(--text); font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .vc-row__bar { min-width: 0; }
+  .vc-row__right { display: flex; align-items: center; gap: 12px; white-space: nowrap; }
+  .vc-row__nums { text-align: right; }
+  .vc-row__nums .num { font-size: 13.5px; }
+  .vc-row__nums .sub { display: block; font-size: 11.5px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 999px; flex-shrink: 0; }
+  .status-dot--ok { background: var(--accent); }
+  .status-dot--warning { background: var(--warning); }
+  .status-dot--danger { background: var(--danger); }
+
+  /* === Variant D: list + summary rail === */
+  .vd-grid { display: grid; grid-template-columns: 1fr 300px; gap: 14px; align-items: start; }
+  .vd-list { display: flex; flex-direction: column; gap: 12px; }
+  .vd-rail {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    box-shadow: var(--shadow-sm); padding: 18px; display: flex; flex-direction: column; gap: 14px;
+    position: sticky; top: 0;
+  }
+  .vd-rail__title { font: 700 14px 'Sora', sans-serif; color: var(--text); }
+  .vd-rail__big { font-family: ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; font-size: 24px; font-weight: 600; color: var(--text); }
+  .vd-rail__sub { color: var(--text-2); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+  .vd-rail__bar { margin-top: 2px; }
+  .vd-breakdown { display: flex; flex-direction: column; gap: 8px; }
+  .vd-break { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--text-2); }
+  .vd-break b { color: var(--text); font-weight: 600; margin-left: auto; font-variant-numeric: tabular-nums; }
+  .vd-break .status-dot { width: 8px; height: 8px; }
+  .vd-divider { height: 1px; background: var(--border); }
+  .vd-near { display: flex; flex-direction: column; gap: 6px; }
+  .vd-near__label { font-size: 11px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.08em; }
+  .vd-near__item { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text); }
+  .vd-near__item .sub { margin-left: auto; }
+
+  /* === Concept notes === */
+  .note {
+    margin-top: 14px; border: 1px solid var(--border); background: var(--card);
+    border-radius: 12px; padding: 14px 16px; font-size: 13px; color: var(--text-2); line-height: 1.55;
+    display: grid; grid-template-columns: auto 1fr; gap: 6px 12px;
+  }
+  .note b { color: var(--text); font-weight: 600; }
+  .note .tag {
+    display: inline-flex; align-items: center; justify-content: center;
+    font: 700 11px 'Sora', sans-serif; color: var(--accent); background: var(--accent-soft);
+    border-radius: 6px; width: 26px; height: 22px; grid-row: span 2; align-self: start; margin-top: 1px;
+  }
+
+  @media (max-width: 860px) {
+    .sidebar { display: none; }
+    .va-row { grid-template-columns: 1fr; gap: 12px; }
+    .va-row__right { justify-content: space-between; flex-wrap: wrap; }
+    .va-summary { flex-wrap: wrap; gap: 14px; }
+    .va-summary__left { min-width: 100%; }
+    .vb-grid { grid-template-columns: 1fr; }
+    .vb-overview, .vb-side { grid-column: span 1; }
+    .vc-top { flex-wrap: wrap; }
+    .vc-row { grid-template-columns: 1fr; gap: 10px; }
+    .vc-row__right { justify-content: space-between; }
+    .vd-grid { grid-template-columns: 1fr; }
+    .vd-rail { position: static; }
+  }
+</style>
+
+<div class="wrap">
+  <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">Тема</button>
+
+  <p class="kicker">Финансовый дашборд · редизайн страницы</p>
+  <h1 class="title">Бюджеты — четыре макета</h1>
+  <p class="lede">Четыре варианта компоновки страницы «Бюджеты» в дизайн-системе Aurora. Один и тот же набор данных (6 бюджетов, сентябрь 2026) подан четырьмя разными способами. Выберите направление — остальное докрутим.</p>
+  <div class="legend">
+    <span class="l-ok"><i></i><b>в норме</b> &lt; 80%</span>
+    <span class="l-warn"><i></i><b>внимание</b> 80–100%</span>
+    <span class="l-danger"><i></i><b>перерасход</b> ≥ 100%</span>
+  </div>
+
+  <!-- ============ VARIANT A ============ -->
+  <div class="section-label"><b>Вариант A</b> · Обзор + список</div>
+  <div class="frame">
+    <aside class="sidebar">
+      <div class="logo"><span class="logo-mark">FD</span><span class="logo-text">Finance Dashboard</span></div>
+      <nav class="nav">
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Главная</a>
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>Отчёты</a>
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.2"/></svg>Категории</a>
+        <a href="#" class="active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg>Бюджеты</a>
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Настройки</a>
+      </nav>
+      <div class="user-card"><span class="avatar">МЮ</span><span class="user-name">Максим Ю.</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-2)"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></div>
+    </aside>
+    <div class="main">
+      <div class="header">
+        <div class="header-titles"><h2>Бюджеты</h2><p>Планируйте месячные траты по категориям</p></div>
+        <button class="btn btn-primary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Добавить бюджет</button>
+      </div>
+      <div class="content">
+        <div class="content-inner">
+          <div class="va-summary">
+            <div class="va-summary__left">
+              <div class="va-summary__month">Сентябрь 2026</div>
+              <div class="va-summary__big">102 800 ₽ <small>/ 150 000 ₽</small></div>
+              <div class="va-summary__sub">потрачено · 68%</div>
+            </div>
+            <div class="va-summary__body">
+              <div class="bar bar--accent"><i style="width:68%"></i></div>
+              <div class="va-summary__chips">
+                <span class="chip">6 бюджетов</span>
+                <span class="chip chip--warn">1 почти у лимита</span>
+                <span class="chip chip--danger">1 превышен</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="va-row">
+            <div class="va-row__left"><div class="cat-icon">🛒</div><div class="va-row__meta"><div class="va-row__name">Продукты</div><div class="va-row__type">Расходы</div></div></div>
+            <div class="va-row__bar"><div class="bar bar--accent"><i style="width:64%"></i></div></div>
+            <div class="va-row__right"><div class="va-row__nums"><div class="num">32 000 ₽</div><span class="sub">из 50 000 ₽ · 64%</span></div><span class="pill pill--ok"><span class="dot"></span>осталось 18 000</span><div class="row-actions"><button class="icon-btn" aria-label="Изменить"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></button><button class="icon-btn icon-btn--danger" aria-label="Удалить"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button></div></div>
+          </div>
+
+          <div class="va-row">
+            <div class="va-row__left"><div class="cat-icon">🏠</div><div class="va-row__meta"><div class="va-row__name">Жильё</div><div class="va-row__type">Расходы</div></div></div>
+            <div class="va-row__bar"><div class="bar bar--accent"><i style="width:67%"></i></div></div>
+            <div class="va-row__right"><div class="va-row__nums"><div class="num">40 000 ₽</div><span class="sub">из 60 000 ₽ · 67%</span></div><span class="pill pill--ok"><span class="dot"></span>осталось 20 000</span><div class="row-actions"><button class="icon-btn" aria-label="Изменить"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></button><button class="icon-btn icon-btn--danger" aria-label="Удалить"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button></div></div>
+          </div>
+
+          <div class="va-row">
+            <div class="va-row__left"><div class="cat-icon">🚗</div><div class="va-row__meta"><div class="va-row__name">Транспорт</div><div class="va-row__type">Расходы</div></div></div>
+            <div class="va-row__bar"><div class="bar bar--warning"><i style="width:85%"></i></div></div>
+            <div class="va-row__right"><div class="va-row__nums"><div class="num">8 500 ₽</div><span class="sub">из 10 000 ₽ · 85%</span></div><span class="pill pill--warning"><span class="dot"></span>почти у лимита</span><div class="row-actions"><button class="icon-btn" aria-label="Изменить"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></button><button class="icon-btn icon-btn--danger" aria-label="Удалить"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button></div></div>
+          </div>
+
+          <div class="va-row">
+            <div class="va-row__left"><div class="cat-icon">🎬</div><div class="va-row__meta"><div class="va-row__name">Развлечения</div><div class="va-row__type">Расходы</div></div></div>
+            <div class="va-row__bar"><div class="bar bar--danger"><i style="width:100%"></i></div></div>
+            <div class="va-row__right"><div class="va-row__nums"><div class="num">13 000 ₽</div><span class="sub">из 10 000 ₽ · 130%</span></div><span class="pill pill--danger"><span class="dot"></span>превышен на 3 000</span><div class="row-actions"><button class="icon-btn" aria-label="Изменить"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></button><button class="icon-btn icon-btn--danger" aria-label="Удалить"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="note"><span class="tag">A</span><b>Эволюция текущей страницы.</b> Сверху крупная карта-сводка (итог + статусы), ниже — отточенный список строк.<span><b>Плюс:</b> минимальный риск, привычная механика списка, появляется фокус на итог. <b>Минус:</b> меньше всего «вау», при росте числа бюджетов список становится длинным.</span></div>
+
+  <!-- ============ VARIANT B ============ -->
+  <div class="section-label"><b>Вариант B</b> · Bento-сетка</div>
+  <div class="frame">
+    <aside class="sidebar">
+      <div class="logo"><span class="logo-mark">FD</span><span class="logo-text">Finance Dashboard</span></div>
+      <nav class="nav">
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Главная</a>
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>Отчёты</a>
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.2"/></svg>Категории</a>
+        <a href="#" class="active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg>Бюджеты</a>
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Настройки</a>
+      </nav>
+      <div class="user-card"><span class="avatar">МЮ</span><span class="user-name">Максим Ю.</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-2)"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></div>
+    </aside>
+    <div class="main">
+      <div class="header">
+        <div class="header-titles"><h2>Бюджеты</h2><p>Планируйте месячные траты по категориям</p></div>
+        <button class="btn btn-primary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Добавить бюджет</button>
+      </div>
+      <div class="content">
+        <div class="content-inner">
+          <div class="vb-grid">
+            <div class="vb-overview">
+              <div class="vb-overview__top">
+                <div><div class="vb-overview__month">Сентябрь 2026</div><div class="vb-overview__big">102 800 ₽</div></div>
+                <div class="vb-overview__sub">из 150 000 ₽ · 68%</div>
+              </div>
+              <div class="bar bar--accent"><i style="width:68%"></i></div>
+              <div class="vb-overview__chips">
+                <span class="chip">6 бюджетов</span>
+                <span class="chip chip--warn">1 почти у лимита</span>
+                <span class="chip chip--danger">1 превышен</span>
+              </div>
+            </div>
+            <div class="vb-side">
+              <div class="vb-side__label">Осталось на месяц</div>
+              <div class="vb-side__big">47 200 ₽</div>
+              <div class="vb-side__sub">свободно из 150 000 ₽ лимитов</div>
+              <div class="bar bar--accent"><i style="width:32%"></i></div>
+            </div>
+
+            <div class="vb-card">
+              <div class="vb-card__actions"><button class="icon-btn" aria-label="Изменить"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></button><button class="icon-btn icon-btn--danger" aria-label="Удалить"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button></div>
+              <div class="vb-card__top"><div class="cat-icon">🛒</div><div><div class="vb-card__name">Продукты</div><div class="vb-card__type">Расходы</div></div></div>
+              <div class="bar bar--accent"><i style="width:64%"></i></div>
+              <div class="vb-card__nums"><div><div class="num">32 000 ₽</div><span class="sub">из 50 000 ₽ · 64%</span></div><span class="pill pill--ok"><span class="dot"></span>18 000</span></div>
+            </div>
+
+            <div class="vb-card">
+              <div class="vb-card__top"><div class="cat-icon">🏠</div><div><div class="vb-card__name">Жильё</div><div class="vb-card__type">Расходы</div></div></div>
+              <div class="bar bar--accent"><i style="width:67%"></i></div>
+              <div class="vb-card__nums"><div><div class="num">40 000 ₽</div><span class="sub">из 60 000 ₽ · 67%</span></div><span class="pill pill--ok"><span class="dot"></span>20 000</span></div>
+            </div>
+
+            <div class="vb-card">
+              <div class="vb-card__top"><div class="cat-icon">🚗</div><div><div class="vb-card__name">Транспорт</div><div class="vb-card__type">Расходы</div></div></div>
+              <div class="bar bar--warning"><i style="width:85%"></i></div>
+              <div class="vb-card__nums"><div><div class="num">8 500 ₽</div><span class="sub">из 10 000 ₽ · 85%</span></div><span class="pill pill--warning"><span class="dot"></span>почти</span></div>
+            </div>
+
+            <div class="vb-card vb-card--danger">
+              <div class="vb-card__top"><div class="cat-icon">🎬</div><div><div class="vb-card__name">Развлечения</div><div class="vb-card__type">Расходы</div></div></div>
+              <div class="bar bar--danger"><i style="width:100%"></i></div>
+              <div class="vb-card__nums"><div><div class="num">13 000 ₽</div><span class="sub">из 10 000 ₽ · 130%</span></div><span class="pill pill--danger"><span class="dot"></span>+3 000</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="note"><span class="tag">B</span><b>Модульная сетка карточек.</b> Крупная карта-итог + карточки категорий разного размера, как на странице «Категории», но информативнее.<span><b>Плюс:</b> консистентно с «Категориями», современно, иерархия по важности (перерасход выделен). <b>Минус:</b> при 10+ бюджетах сетка растягивается.</span></div>
+
+  <!-- ============ VARIANT C ============ -->
+  <div class="section-label"><b>Вариант C</b> · Кольцо + компактные ряды</div>
+  <div class="frame">
+    <aside class="sidebar">
+      <div class="logo"><span class="logo-mark">FD</span><span class="logo-text">Finance Dashboard</span></div>
+      <nav class="nav">
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Главная</a>
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>Отчёты</a>
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.2"/></svg>Категории</a>
+        <a href="#" class="active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg>Бюджеты</a>
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Настройки</a>
+      </nav>
+      <div class="user-card"><span class="avatar">МЮ</span><span class="user-name">Максим Ю.</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-2)"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></div>
+    </aside>
+    <div class="main">
+      <div class="header">
+        <div class="header-titles"><h2>Бюджеты</h2><p>Планируйте месячные траты по категориям</p></div>
+        <button class="btn btn-primary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Добавить бюджет</button>
+      </div>
+      <div class="content">
+        <div class="content-inner">
+          <div class="vc-top">
+            <div class="vc-ring">
+              <svg width="128" height="128" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="var(--track)" stroke-width="12"/>
+                <circle cx="60" cy="60" r="50" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="100.53" transform="rotate(-90 60 60)"/>
+              </svg>
+              <div class="vc-ring__center"><div class="vc-ring__pct">68%</div><div class="vc-ring__cap">потрачено</div></div>
+            </div>
+            <div class="vc-top__stats">
+              <div class="vc-stat"><span class="vc-stat__dot" style="background:var(--accent)"></span><div><div class="num">102 800 ₽</div><div class="sub">потрачено в сентябре</div></div></div>
+              <div class="vc-stat"><span class="vc-stat__dot" style="background:var(--track)"></span><div><div class="num">47 200 ₽</div><div class="sub">осталось до лимита</div></div></div>
+              <div class="vc-stat"><span class="vc-stat__dot" style="background:var(--danger)"></span><div><div class="num">1</div><div class="sub">бюджет превышен</div></div></div>
+            </div>
+          </div>
+
+          <div class="vc-list">
+            <div class="vc-row">
+              <div class="vc-row__left"><div class="cat-icon cat-icon--sm">🛒</div><div class="vc-row__name">Продукты</div></div>
+              <div class="vc-row__bar"><div class="bar bar--accent"><i style="width:64%"></i></div></div>
+              <div class="vc-row__right"><div class="vc-row__nums"><div class="num">32 000 ₽</div><span class="sub">из 50 000 ₽ · 64%</span></div><span class="status-dot status-dot--ok" aria-label="в норме"></span></div>
+            </div>
+            <div class="vc-row">
+              <div class="vc-row__left"><div class="cat-icon cat-icon--sm">🏠</div><div class="vc-row__name">Жильё</div></div>
+              <div class="vc-row__bar"><div class="bar bar--accent"><i style="width:67%"></i></div></div>
+              <div class="vc-row__right"><div class="vc-row__nums"><div class="num">40 000 ₽</div><span class="sub">из 60 000 ₽ · 67%</span></div><span class="status-dot status-dot--ok" aria-label="в норме"></span></div>
+            </div>
+            <div class="vc-row">
+              <div class="vc-row__left"><div class="cat-icon cat-icon--sm">☕</div><div class="vc-row__name">Кафе и рестораны</div></div>
+              <div class="vc-row__bar"><div class="bar bar--accent"><i style="width:52%"></i></div></div>
+              <div class="vc-row__right"><div class="vc-row__nums"><div class="num">6 200 ₽</div><span class="sub">из 12 000 ₽ · 52%</span></div><span class="status-dot status-dot--ok" aria-label="в норме"></span></div>
+            </div>
+            <div class="vc-row">
+              <div class="vc-row__left"><div class="cat-icon cat-icon--sm">🚗</div><div class="vc-row__name">Транспорт</div></div>
+              <div class="vc-row__bar"><div class="bar bar--warning"><i style="width:85%"></i></div></div>
+              <div class="vc-row__right"><div class="vc-row__nums"><div class="num">8 500 ₽</div><span class="sub">из 10 000 ₽ · 85%</span></div><span class="status-dot status-dot--warning" aria-label="внимание"></span></div>
+            </div>
+            <div class="vc-row">
+              <div class="vc-row__left"><div class="cat-icon cat-icon--sm">🎬</div><div class="vc-row__name">Развлечения</div></div>
+              <div class="vc-row__bar"><div class="bar bar--danger"><i style="width:100%"></i></div></div>
+              <div class="vc-row__right"><div class="vc-row__nums"><div class="num">13 000 ₽</div><span class="sub">из 10 000 ₽ · 130%</span></div><span class="status-dot status-dot--danger" aria-label="перерасход"></span></div>
+            </div>
+            <div class="vc-row">
+              <div class="vc-row__left"><div class="cat-icon cat-icon--sm">⚕️</div><div class="vc-row__name">Здоровье</div></div>
+              <div class="vc-row__bar"><div class="bar bar--accent"><i style="width:39%"></i></div></div>
+              <div class="vc-row__right"><div class="vc-row__nums"><div class="num">3 100 ₽</div><span class="sub">из 8 000 ₽ · 39%</span></div><span class="status-dot status-dot--ok" aria-label="в норме"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="note"><span class="tag">C</span><b>Акцент на данных.</b> Центральное кольцо прогресса (итог) + минималистичный список без тяжёлых карточек.<span><b>Плюс:</b> минимум хрома, сильный data-viz фокус, компактно. <b>Минус:</b> кольцо занимает место, деталей «на карточке» меньше (действия — по ховеру).</span></div>
+
+  <!-- ============ VARIANT D ============ -->
+  <div class="section-label"><b>Вариант D</b> · Список + сводка</div>
+  <div class="frame">
+    <aside class="sidebar">
+      <div class="logo"><span class="logo-mark">FD</span><span class="logo-text">Finance Dashboard</span></div>
+      <nav class="nav">
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Главная</a>
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>Отчёты</a>
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.2"/></svg>Категории</a>
+        <a href="#" class="active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg>Бюджеты</a>
+        <a href="#"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Настройки</a>
+      </nav>
+      <div class="user-card"><span class="avatar">МЮ</span><span class="user-name">Максим Ю.</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-2)"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></div>
+    </aside>
+    <div class="main">
+      <div class="header">
+        <div class="header-titles"><h2>Бюджеты</h2><p>Планируйте месячные траты по категориям</p></div>
+        <button class="btn btn-primary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Добавить бюджет</button>
+      </div>
+      <div class="content">
+        <div class="content-inner">
+          <div class="vd-grid">
+            <div class="vd-list">
+              <div class="va-row">
+                <div class="va-row__left"><div class="cat-icon">🛒</div><div class="va-row__meta"><div class="va-row__name">Продукты</div><div class="va-row__type">Расходы</div></div></div>
+                <div class="va-row__bar"><div class="bar bar--accent"><i style="width:64%"></i></div></div>
+                <div class="va-row__right"><div class="va-row__nums"><div class="num">32 000 ₽</div><span class="sub">из 50 000 ₽ · 64%</span></div><span class="pill pill--ok"><span class="dot"></span>осталось 18 000</span></div>
+              </div>
+              <div class="va-row">
+                <div class="va-row__left"><div class="cat-icon">🏠</div><div class="va-row__meta"><div class="va-row__name">Жильё</div><div class="va-row__type">Расходы</div></div></div>
+                <div class="va-row__bar"><div class="bar bar--accent"><i style="width:67%"></i></div></div>
+                <div class="va-row__right"><div class="va-row__nums"><div class="num">40 000 ₽</div><span class="sub">из 60 000 ₽ · 67%</span></div><span class="pill pill--ok"><span class="dot"></span>осталось 20 000</span></div>
+              </div>
+              <div class="va-row">
+                <div class="va-row__left"><div class="cat-icon">🚗</div><div class="va-row__meta"><div class="va-row__name">Транспорт</div><div class="va-row__type">Расходы</div></div></div>
+                <div class="va-row__bar"><div class="bar bar--warning"><i style="width:85%"></i></div></div>
+                <div class="va-row__right"><div class="va-row__nums"><div class="num">8 500 ₽</div><span class="sub">из 10 000 ₽ · 85%</span></div><span class="pill pill--warning"><span class="dot"></span>почти у лимита</span></div>
+              </div>
+              <div class="va-row">
+                <div class="va-row__left"><div class="cat-icon">🎬</div><div class="va-row__meta"><div class="va-row__name">Развлечения</div><div class="va-row__type">Расходы</div></div></div>
+                <div class="va-row__bar"><div class="bar bar--danger"><i style="width:100%"></i></div></div>
+                <div class="va-row__right"><div class="va-row__nums"><div class="num">13 000 ₽</div><span class="sub">из 10 000 ₽ · 130%</span></div><span class="pill pill--danger"><span class="dot"></span>превышен на 3 000</span></div>
+              </div>
+              <div class="va-row">
+                <div class="va-row__left"><div class="cat-icon">☕</div><div class="va-row__meta"><div class="va-row__name">Кафе и рестораны</div><div class="va-row__type">Расходы</div></div></div>
+                <div class="va-row__bar"><div class="bar bar--accent"><i style="width:52%"></i></div></div>
+                <div class="va-row__right"><div class="va-row__nums"><div class="num">6 200 ₽</div><span class="sub">из 12 000 ₽ · 52%</span></div><span class="pill pill--ok"><span class="dot"></span>осталось 5 800</span></div>
+              </div>
+              <div class="va-row">
+                <div class="va-row__left"><div class="cat-icon">⚕️</div><div class="va-row__meta"><div class="va-row__name">Здоровье</div><div class="va-row__type">Расходы</div></div></div>
+                <div class="va-row__bar"><div class="bar bar--accent"><i style="width:39%"></i></div></div>
+                <div class="va-row__right"><div class="va-row__nums"><div class="num">3 100 ₽</div><span class="sub">из 8 000 ₽ · 39%</span></div><span class="pill pill--ok"><span class="dot"></span>осталось 4 900</span></div>
+              </div>
+            </div>
+
+            <div class="vd-rail">
+              <div class="vd-rail__title">Сводка месяца</div>
+              <div><div class="vd-rail__big">102 800 ₽</div><div class="vd-rail__sub">потрачено из 150 000 ₽</div></div>
+              <div class="bar bar--accent vd-rail__bar"><i style="width:68%"></i></div>
+              <div class="vd-divider"></div>
+              <div class="vd-breakdown">
+                <div class="vd-break"><span class="status-dot status-dot--ok"></span>В норме<b>4</b></div>
+                <div class="vd-break"><span class="status-dot status-dot--warning"></span>Почти у лимита<b>1</b></div>
+                <div class="vd-break"><span class="status-dot status-dot--danger"></span>Превышено<b>1</b></div>
+              </div>
+              <div class="vd-divider"></div>
+              <div class="vd-near">
+                <div class="vd-near__label">Ближе всего к лимиту</div>
+                <div class="vd-near__item"><span class="status-dot status-dot--danger"></span>Развлечения<span class="sub">130%</span></div>
+                <div class="vd-near__item"><span class="status-dot status-dot--warning"></span>Транспорт<span class="sub">85%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="note"><span class="tag">D</span><b>Двухколоночный дашборд.</b> Слева список бюджетов, справа закреплённая сводка месяца (остаток, разбивка по статусам).<span><b>Плюс:</b> информационно-плотный, сводка всегда на виду, SaaS-стиль. <b>Минус:</b> на мобильном сводка уезжает вниз, компоновка плотнее.</span></div>
+</div>
+
+<script>
+  const root = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  btn.addEventListener('click', () => {
+    if (root.getAttribute('data-theme') === 'dark') {
+      root.removeAttribute('data-theme');
+    } else {
+      root.setAttribute('data-theme', 'dark');
+    }
+  });
+</script>

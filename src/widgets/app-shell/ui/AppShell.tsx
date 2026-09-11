@@ -206,11 +206,9 @@ export function AppShell({
               />
             ) : null}
             <div className="dashboard-header__titles">
-              <Typography.Title level={3} style={{ margin: 0 }}>
-                {title}
-              </Typography.Title>
+              <h3 className="dashboard-header__title">{title}</h3>
               {subtitle ? (
-                <Typography.Text type="secondary">{subtitle}</Typography.Text>
+                <span className="dashboard-header__subtitle">{subtitle}</span>
               ) : null}
             </div>
           </div>
