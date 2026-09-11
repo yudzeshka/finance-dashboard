@@ -1,9 +1,36 @@
+.scroll {
+  width: 480px;
+  max-width: 88vw;
+  max-height: 340px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.group {
+  margin-bottom: 14px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.groupTitle {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 6px 2px;
+  background: var(--aurora-surface-card);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--aurora-text-secondary);
+}
+
 .iconGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
-  gap: 8px;
-  max-width: 320px;
-  padding: 4px;
+  gap: 6px;
 }
 
 .iconGridButton {
@@ -18,6 +45,7 @@
   cursor: pointer;
   color: var(--aurora-text-secondary);
   transition: all 0.15s ease;
+  padding: 0;
 
   &:hover {
     border-color: var(--aurora-accent);
