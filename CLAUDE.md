@@ -96,6 +96,10 @@ Config in `src/i18n.js` (plain JS). `en` and `ru` translations are **inline** in
 
 ECharts 6 via echarts-for-react. Five chart widgets following the `.Widget` object-export pattern: ExpenseChart, IncomeVsExpenceChart, MountlyExpenseChart, TopCategories, LargestTransactions. ECharts does not use Ant Design charts.
 
+## GIT
+Before starting new task in new session - create new branch, if branch for this task has already created - continue working with it.
+Do not add "Contributed with claude" to commit messange.
+
 ## Known Issues
 
 - Two known unfixed TS errors that will cause `npm run build` to fail type-check: `src/widgets/largestTransactions/ui/index.tsx` (`null` vs `string`) and `src/widgets/topCategories/model/lib.ts` (`Category | undefined`).
