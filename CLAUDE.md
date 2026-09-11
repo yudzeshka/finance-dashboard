@@ -104,6 +104,10 @@ Config in `src/i18n.js` (plain JS). `en` and `ru` translations are **inline** in
 
 ECharts 6 via echarts-for-react. Five chart widgets following the `.Widget` object-export pattern: ExpenseChart, IncomeVsExpenceChart, MountlyExpenseChart, TopCategories, LargestTransactions. ECharts does not use Ant Design charts.
 
+## GIT
+Before starting new task in new session - create new branch, if branch for this task has already created - continue working with it.
+Do not add "Contributed with claude" to commit messange.
+
 ## Known Issues
 
 - tsconfig.app.json is strict: `noUnusedLocals`, `noUnusedParameters`, `verbatimModuleSyntax` (use `import type` for type-only imports), `erasableSyntaxOnly`. Build compiles `src` but excludes `mock-server` and `src/mock-server`.
