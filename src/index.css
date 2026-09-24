@@ -840,3 +840,20 @@ code {
     gap: 8px;
   }
 }
+
+/* === DatePicker / RangePicker dropdown fits mobile viewport === */
+/* The two-month range calendar is wider than a phone screen; constrain the
+   dropdown to the viewport and let the panels scroll horizontally instead of
+   overflowing off-screen (body/#root use overflow:hidden, so overflow would
+   otherwise be clipped with no way to reach the second month). */
+@media (max-width: 768px) {
+  .ant-picker-dropdown {
+    max-width: calc(100vw - 24px);
+  }
+
+  .ant-picker-dropdown .ant-picker-panel-container {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
