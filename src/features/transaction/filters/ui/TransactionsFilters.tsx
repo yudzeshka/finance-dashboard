@@ -152,6 +152,7 @@ export function TransactionsFilters({
           />
           <Typography.Text>{t("date")}</Typography.Text>
           <DatePicker.RangePicker
+            style={{ width: "100%" }}
             placeholder={[t("startDate"), t("tillNow")]}
             allowEmpty={[false, true]}
             value={
