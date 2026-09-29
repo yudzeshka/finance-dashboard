@@ -63,3 +63,8 @@ testsprite_tests/
 
 # Vercel local project metadata (project.json, README.txt)
 .vercel/
+
+# Claude Code skills: only hand-authored project skills are tracked.
+# Plugin-installed skills and their support files are local tooling.
+.claude/skills/*
+!.claude/skills/frontend-design/
