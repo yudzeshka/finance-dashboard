@@ -3,7 +3,7 @@ import { categoryIcons } from "./icons";
 import { resolveIconKey } from "./emojiMapping";
 
 export type CategoryIconProps = {
-  /** Строковый ключ иконки или эмодзи (старые данные). Если null/undefined — fallback на "other". */
+  /** Имя иконки Phosphor, старый ключ или эмодзи (легаси). null/undefined → fallback. */
   icon: string | undefined | null;
   size?: number;
   className?: string;
@@ -16,12 +16,13 @@ export function CategoryIcon({
   className,
   title,
 }: CategoryIconProps): ReactElement {
-  const key = resolveIconKey(icon);
-  const Svg = categoryIcons[key] ?? categoryIcons.other;
+  const name = resolveIconKey(icon);
+  const Icon = categoryIcons[name] ?? categoryIcons["dots-three-circle"];
   return (
-    <Svg
-      width={size}
-      height={size}
+    <Icon
+      size={size}
+      weight="duotone"
+      color="currentColor"
       className={className}
       role={title ? "img" : undefined}
       aria-label={title}

@@ -14,9 +14,11 @@ export function useSettingsContainer(): SettingsContainerProps {
   const rates = useCurrencyRatesStore((s) => s.rates);
   const ratesFetchedAt = useCurrencyRatesStore((s) => s.fetchedAt);
   const ratesHint =
-    currency !== "USD" && rates && ratesFetchedAt
-      ? t("ratesUpdatedOn", { date: dayjs(ratesFetchedAt).format("DD.MM.YYYY") })
-      : null;
+    currency !== "USD" && !rates
+      ? t("ratesUnavailableHint")
+      : currency !== "USD" && rates && ratesFetchedAt
+        ? t("ratesUpdatedOn", { date: dayjs(ratesFetchedAt).format("DD.MM.YYYY") })
+        : null;
 
   return {
     language,

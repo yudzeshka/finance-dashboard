@@ -1,0 +1,339 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--aurora-surface);
+}
+
+/* === Summary hero === */
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 22px 24px;
+  border-radius: 16px;
+  background: var(--aurora-surface-card);
+  border: 1px solid var(--aurora-border);
+  box-shadow: var(--aurora-shadow-sm);
+}
+
+.summaryLeft {
+  min-width: 200px;
+  flex-shrink: 0;
+}
+
+.summaryMonth {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--aurora-text-secondary);
+}
+
+.summaryValue {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.15;
+  color: var(--aurora-text);
+  margin: 4px 0 2px;
+}
+
+.summaryValueSpent {
+  white-space: nowrap;
+}
+
+.summaryValueLimit {
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--aurora-text-secondary);
+}
+
+.summarySub {
+  font-size: 13px;
+  color: var(--aurora-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.summaryBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summaryBar {
+  width: 100%;
+}
+
+.summaryChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--aurora-surface);
+  color: var(--aurora-text-secondary);
+  white-space: nowrap;
+}
+
+.chipWarn {
+  color: var(--aurora-warning);
+  background: var(--aurora-warning-soft);
+}
+
+.chipDanger {
+  color: var(--aurora-danger);
+  background: var(--aurora-danger-soft);
+}
+
+/* === Budget rows ===
+   Single unified layout at every width:
+     [icon + name] ............ [actions]
+     [============== bar ==============]
+     [spent  из  limit · %] ......... [pill]
+*/
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: var(--aurora-surface-card);
+  border: 1px solid var(--aurora-border);
+  box-shadow: var(--aurora-shadow-sm);
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--aurora-shadow-md);
+  }
+}
+
+.rowHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.rowLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.catIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--aurora-accent-soft);
+  color: var(--aurora-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.catMeta {
+  min-width: 0;
+}
+
+.catName {
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--aurora-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.catType {
+  font-size: 12px;
+  color: var(--aurora-text-secondary);
+}
+
+.rowBar {
+  width: 100%;
+}
+
+.bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--aurora-surface);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
+.barFillOk {
+  background: var(--aurora-accent);
+}
+
+.barFillWarning {
+  background: var(--aurora-warning);
+}
+
+.barFillDanger {
+  background: var(--aurora-danger);
+}
+
+.rowBottom {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.nums {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.numsValue {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--aurora-text);
+}
+
+.numsSub {
+  font-size: 13px;
+  color: var(--aurora-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  /* Cap the width so a long amount ("осталось 1 234 567 ₽") never
+     pushes the card wider than its container. */
+  max-width: 220px;
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.pillText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pillOk {
+  color: var(--aurora-success);
+  background: var(--aurora-success-soft);
+}
+
+.pillWarning {
+  color: var(--aurora-warning);
+  background: var(--aurora-warning-soft);
+}
+
+.pillDanger {
+  color: var(--aurora-danger);
+  background: var(--aurora-danger-soft);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--aurora-surface-card);
+  border: 1px solid var(--aurora-border);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--aurora-text-secondary);
+  transition: all 0.15s ease;
+
+  &:hover {
+    color: var(--aurora-accent);
+    border-color: var(--aurora-accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--aurora-accent);
+    outline-offset: 2px;
+  }
+}
+
+.deleteButton {
+  &:hover {
+    color: var(--aurora-danger);
+    border-color: var(--aurora-danger);
+  }
+}
+
+/* === Responsive === */
+@media (max-width: 640px) {
+  .rowHead {
+    flex-wrap: wrap;
+  }
+
+  .summary {
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 18px 20px;
+  }
+
+  .summaryLeft {
+    min-width: 100%;
+  }
+
+  .summaryValue {
+    font-size: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barFill {
+    transition: none;
+  }
+
+  .row {
+    transition: none;
+  }
+}

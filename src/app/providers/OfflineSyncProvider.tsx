@@ -1,6 +1,7 @@
 import { useApolloClient } from "@apollo/client/react";
 import { message } from "antd";
 import { useEffect, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useOnlineStatus } from "@/shared/lib/useOnlineStatus";
 import { syncOfflineQueue } from "@/shared/lib/syncOfflineQueue";
@@ -18,6 +19,7 @@ export function OfflineSyncProvider({ children }: OfflineSyncProviderProps) {
   const client = useApolloClient();
   const isOnline = useOnlineStatus();
   const pendingCount = useOfflineQueue((s) => s.queue.length);
+  const { t } = useTranslation();
 
   // Sync offline queue when the browser comes back online
   useEffect(() => {
@@ -26,22 +28,22 @@ export function OfflineSyncProvider({ children }: OfflineSyncProviderProps) {
     const key = "offline-sync";
 
     void message.loading({
-      content: `Syncing ${pendingCount} offline change${pendingCount > 1 ? "s" : ""}...`,
+      content: t("syncingOffline", { count: pendingCount }),
       key,
       duration: 0,
     });
 
     void syncOfflineQueue(client).then(({ succeeded, failed }) => {
       if (failed === 0) {
-        message.success({ content: "All changes synced", key });
+        message.success({ content: t("offlineSyncSuccess"), key });
       } else {
         message.warning({
-          content: `${succeeded} synced, ${failed} failed — will retry later`,
+          content: t("offlineSyncPartial", { succeeded, failed }),
           key,
         });
       }
     });
-  }, [isOnline, pendingCount, client]);
+  }, [isOnline, pendingCount, client, t]);
 
   return <>{children}</>;
 }

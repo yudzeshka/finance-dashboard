@@ -1,37 +1,40 @@
 import { CategoryIcon } from "./CategoryIcon";
+import { iconCatalog } from "./iconCatalog";
+import { resolveIconKey } from "./emojiMapping";
 import styles from "./CategoryIconPicker.module.scss";
 
 export type CategoryIconPickerProps = {
   value: string;
-  onChange: (key: string) => void;
+  onChange: (name: string) => void;
 };
 
-const PICKER_KEYS = [
-  "food", "salary", "transport", "entertainment", "health", "education",
-  "utilities", "rent", "mortgage", "credit_card", "taxes", "shopping",
-  "gifts", "travel", "sports", "pets", "subscriptions", "coffee",
-  "electronics", "home", "kids", "business", "other", "income", "expense",
-];
-
 export function CategoryIconPicker({ value, onChange }: CategoryIconPickerProps) {
+  const selectedName = resolveIconKey(value);
   return (
-    <div className={styles.iconGrid} role="listbox" aria-label="Choose category icon">
-      {PICKER_KEYS.map((key) => {
-        const selected = value === key;
-        return (
-          <button
-            key={key}
-            type="button"
-            role="option"
-            aria-selected={selected}
-            aria-pressed={selected}
-            className={`${styles.iconGridButton} ${selected ? styles.iconGridButtonSelected : ""}`}
-            onClick={() => onChange(key)}
-          >
-            <CategoryIcon icon={key} size={22} />
-          </button>
-        );
-      })}
+    <div className={styles.scroll} role="listbox" aria-label="Choose category icon">
+      {iconCatalog.map((group) => (
+        <div key={group.group} className={styles.group} role="group" aria-label={group.group}>
+          <div className={styles.groupTitle}>{group.group}</div>
+          <div className={styles.iconGrid}>
+            {group.icons.map((option) => {
+              const selected = selectedName === option.name;
+              return (
+                <button
+                  key={option.name}
+                  type="button"
+                  role="option"
+                  aria-selected={selected}
+                  title={option.label}
+                  className={`${styles.iconGridButton} ${selected ? styles.iconGridButtonSelected : ""}`}
+                  onClick={() => onChange(option.name)}
+                >
+                  <CategoryIcon icon={option.name} size={22} />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

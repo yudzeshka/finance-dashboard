@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
 import { purgeApolloCache } from "../../../app/providers/apollo";
+import { useApolloClient } from "@apollo/client/react";
 import { useOnlineStatus } from "../../../shared/lib/useOnlineStatus";
 import { useOfflineQueue } from "../../../shared/lib/offlineQueue";
 import { LogoutOutlined, MenuOutlined, WifiOutlined } from "@ant-design/icons";
@@ -28,6 +29,13 @@ const IconCategories = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
     <circle cx="7" cy="7" r="1.2" />
+  </svg>
+);
+const IconBudgets = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="8" />
+    <circle cx="12" cy="12" r="3.2" />
+    <circle cx="12" cy="12" r="0.6" fill="currentColor" />
   </svg>
 );
 const IconSettings = () => (
@@ -68,6 +76,7 @@ export function AppShell({
   const [mobileOpen, setMobileOpen] = useState(false);
   const { session, nhost } = useAuth();
   const navigate = useNavigate();
+  const client = useApolloClient();
   const isOnline = useOnlineStatus();
   const pendingCount = useOfflineQueue((s) => s.queue.length);
 
@@ -81,6 +90,7 @@ export function AppShell({
           refreshToken: session.refreshToken,
         });
       }
+      await client.clearStore();
       await purgeApolloCache();
       navigate("/");
     } catch (err: unknown) {
@@ -139,6 +149,16 @@ export function AppShell({
             {(!isMobile || mobileOpen) ? <span className="aurora-navItem__label">{t("categories")}</span> : null}
           </NavLink>
           <NavLink
+            to="/budgets"
+            className={({ isActive }) =>
+              `aurora-navItem${isActive ? " aurora-navItem--active" : ""}`
+            }
+            onClick={() => isMobile && setMobileOpen(false)}
+          >
+            <span className="aurora-navItem__icon"><IconBudgets /></span>
+            {(!isMobile || mobileOpen) ? <span className="aurora-navItem__label">{t("budgets")}</span> : null}
+          </NavLink>
+          <NavLink
             to="/settings"
             className={({ isActive }) =>
               `aurora-navItem${isActive ? " aurora-navItem--active" : ""}`
@@ -186,11 +206,9 @@ export function AppShell({
               />
             ) : null}
             <div className="dashboard-header__titles">
-              <Typography.Title level={3} style={{ margin: 0 }}>
-                {title}
-              </Typography.Title>
+              <h3 className="dashboard-header__title">{title}</h3>
               {subtitle ? (
-                <Typography.Text type="secondary">{subtitle}</Typography.Text>
+                <span className="dashboard-header__subtitle">{subtitle}</span>
               ) : null}
             </div>
           </div>
@@ -212,11 +230,9 @@ export function AppShell({
             }}
           >
             <WifiOutlined />
-            <span>You're offline.</span>
+            <span>{t("offlineYouAreOffline")}</span>
             {pendingCount > 0 && (
-              <span>
-                · {pendingCount} change{pendingCount > 1 ? "s" : ""} pending
-              </span>
+              <span>· {t("pendingChanges", { count: pendingCount })}</span>
             )}
           </div>
         )}
@@ -237,9 +253,7 @@ export function AppShell({
             <Tag color="processing" style={{ margin: 0 }}>
               {pendingCount}
             </Tag>
-            <span>
-              change{pendingCount > 1 ? "s" : ""} pending sync
-            </span>
+            <span>{t("pendingSync", { count: pendingCount })}</span>
           </div>
         )}
 
