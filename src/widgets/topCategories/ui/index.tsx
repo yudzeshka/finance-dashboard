@@ -1,6 +1,7 @@
 import styles from "./styles.module.scss";
 import dayjs from "dayjs";
 import { DatePicker, Slider } from "antd";
+import { InboxOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import type { Dayjs } from "dayjs";
 import { TopCategoriesSkeleton } from "./TopCategoriesSkeleton";
@@ -48,33 +49,43 @@ export const UI = ({
             />
           </div>
           <div className={styles.categoriesContainer}>
-            {rows.map((row) => (
-              <div key={row.id} className={styles.categoryItem}>
-                <div className={styles.iconCircle} aria-hidden>
-                  <CategoryIcon icon={row.icon} size={22} />
-                </div>
-                <div className={styles.categoryMain}>
-                  <div className={styles.categoryRowTop}>
-                    <span className={styles.categoryName} title={row.name}>
-                      {row.name}
-                    </span>
-                    <span className={styles.categoryAmount}>
-                      {row.amountLabel}
-                    </span>
-                  </div>
-                  <div className={styles.categoryRowBar}>
-                    <Slider
-                      className={styles.percentSlider}
-                      min={0}
-                      max={100}
-                      value={row.percent}
-                      disabled
-                      tooltip={{ formatter: (v) => (v != null ? `${v}%` : "") }}
-                    />
-                  </div>
-                </div>
+            {rows.length === 0 ? (
+              <div className="aurora-empty-state" style={{ flex: "1 1 auto" }}>
+                <InboxOutlined className="aurora-empty-state__icon" />
+                <div className="aurora-empty-state__title">{t("reportsNoData")}</div>
+                <p className="aurora-text-secondary" style={{ fontSize: 14 }}>
+                  {t("reportsNoDataHint")}
+                </p>
               </div>
-            ))}
+            ) : (
+              rows.map((row) => (
+                <div key={row.id} className={styles.categoryItem}>
+                  <div className={styles.iconCircle} aria-hidden>
+                    <CategoryIcon icon={row.icon} size={22} />
+                  </div>
+                  <div className={styles.categoryMain}>
+                    <div className={styles.categoryRowTop}>
+                      <span className={styles.categoryName} title={row.name}>
+                        {row.name}
+                      </span>
+                      <span className={styles.categoryAmount}>
+                        {row.amountLabel}
+                      </span>
+                    </div>
+                    <div className={styles.categoryRowBar}>
+                      <Slider
+                        className={styles.percentSlider}
+                        min={0}
+                        max={100}
+                        value={row.percent}
+                        disabled
+                        tooltip={{ formatter: (v) => (v != null ? `${v}%` : "") }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       )}

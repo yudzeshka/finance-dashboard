@@ -63,15 +63,22 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
         },
       },
       title: {
-        text: `${t("total")}: ${formatCurrency(chartData.total)}`,
+        text: formatCurrency(chartData.total),
+        subtext: t("total"),
         left: "center",
         top: "center",
         textStyle: {
-          fontSize: isMobile ? 14 : 20,
+          fontSize: isMobile ? 14 : 18,
           fontWeight: 700,
           fontFamily: "'Sora', 'Inter', sans-serif",
           color: "#1E1B2E",
         },
+        subtextStyle: {
+          fontSize: 12,
+          color: "#6B6680",
+          fontFamily: "'Inter', sans-serif",
+        },
+        itemGap: 4,
       },
       series: [
         {

@@ -1,6 +1,6 @@
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
-import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, ArrowRightOutlined, InboxOutlined } from "@ant-design/icons";
 import { Button, DatePicker } from "antd";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
@@ -11,9 +11,10 @@ export type UIPropertyType = {
   option: EChartsOption;
   targetDate: Date;
   onTargetDateChange: (date: Date | null) => void;
+  hasData: boolean;
 };
 
-export const UI = ({ option, targetDate, onTargetDateChange }: UIPropertyType) => {
+export const UI = ({ option, targetDate, onTargetDateChange, hasData }: UIPropertyType) => {
   const { t } = useTranslation();
   return (
     <div className="aurora-card" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -44,7 +45,17 @@ export const UI = ({ option, targetDate, onTargetDateChange }: UIPropertyType) =
             />
           </div>
         </div>
-        <ReactECharts option={option} className={styles.chart} />
+        {hasData ? (
+          <ReactECharts option={option} className={styles.chart} />
+        ) : (
+          <div className="aurora-empty-state" style={{ flex: "1 1 auto" }}>
+            <InboxOutlined className="aurora-empty-state__icon" />
+            <div className="aurora-empty-state__title">{t("reportsNoData")}</div>
+            <p className="aurora-text-secondary" style={{ fontSize: 14 }}>
+              {t("reportsNoDataHint")}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
