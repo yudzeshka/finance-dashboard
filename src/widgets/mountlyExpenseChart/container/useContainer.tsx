@@ -5,6 +5,7 @@ import type { UIPropertyType } from "../ui";
 import { useTransactionQueries } from "@/features/transaction/manage/model/useTransactionQueries";
 import { useSetAllTransactions } from "@/entities/transaction/model/selectors";
 import { useMedia } from "@/shared/hooks/useMedia";
+import { useCurrencyFormatter } from "@/shared/lib/useCurrencyFormatter";
 import { getTransactionsByMonth } from "../model/lib";
 
 const LINE_COLOR = "#7C3AED";
@@ -14,6 +15,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
   const { transactions } = useTransactionQueries();
   const setAllTransactions = useSetAllTransactions();
   const { isMobile } = useMedia();
+  const formatCurrency = useCurrencyFormatter();
 
   const chartData = useMemo(
     () => getTransactionsByMonth(transactions, targetDate),
@@ -36,6 +38,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
       borderColor: "#E8E4F0",
       textStyle: { color: "#1E1B2E", fontSize: 13 },
       extraCssText: "box-shadow: 0 4px 12px rgba(76,29,149,0.10); border-radius: 12px; padding: 10px 14px;",
+      valueFormatter: (value) => formatCurrency(Number(value)),
     },
     grid: {
       left: 16,
@@ -55,7 +58,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
       axisTick: { show: false },
     },
     yAxis: {
-      axisLabel: { color: "#6B6680", fontSize: 12 },
+      axisLabel: { color: "#6B6680", fontSize: 12, formatter: (value: number) => formatCurrency(value) },
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: { lineStyle: { color: "#E8E4F0", type: "dashed" } },
@@ -76,7 +79,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
         animationEasing: "cubicOut" as const,
       },
     ],
-  }), [chartData, isMobile]);
+  }), [chartData, isMobile, formatCurrency]);
 
   return { option, targetDate, onTargetDateChange };
 };
