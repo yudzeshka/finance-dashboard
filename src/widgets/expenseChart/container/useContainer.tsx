@@ -66,8 +66,6 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
           fontFamily: "'Sora', 'Inter', sans-serif",
           color: "#1E1B2E",
         },
-        subtext: t("total"),
-        subtextStyle: { fontSize: isMobile ? 11 : 12, color: "#6B6680" },
       },
       series: [
         {
