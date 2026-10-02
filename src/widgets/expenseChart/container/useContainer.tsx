@@ -67,13 +67,11 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
         left: "center",
         top: "center",
         textStyle: {
-          fontSize: 20,
+          fontSize: isMobile ? 14 : 20,
           fontWeight: 700,
           fontFamily: "'Sora', 'Inter', sans-serif",
           color: "#1E1B2E",
         },
-        subtext: t("total"),
-        subtextStyle: { fontSize: 12, color: "#6B6680" },
       },
       series: [
         {
@@ -83,7 +81,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
           center,
           color: COLORS,
           label: {
-            show: true,
+            show: !isMobile,
             position: "outside",
             formatter: "{b}\n{d}%",
             color: "#6B6680",
