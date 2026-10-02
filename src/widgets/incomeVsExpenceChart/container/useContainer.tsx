@@ -8,6 +8,7 @@ import { useTransactionQueries } from "@/features/transaction/manage/model/useTr
 import { useSetAllTransactions } from "@/entities/transaction/model/selectors";
 import { useDebounce } from "@/shared/hooks/UseDebounce";
 import { useMedia } from "@/shared/hooks/useMedia";
+import { useCurrencyFormatter } from "@/shared/lib/useCurrencyFormatter";
 import { calculateIncomeVsExpenceChart } from "../model/lib";
 
 const INCOME_COLOR = "#0E9F6E";
@@ -20,6 +21,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
   const { debouncedValue: debouncedSearch } = useDebounce(filters.search ?? "", 250);
   const { isMobile } = useMedia();
   const { t } = useTranslation();
+  const formatCurrency = useCurrencyFormatter();
 
   const reportFilters = useMemo(
     () => ({ ...filters, search: debouncedSearch }),
@@ -44,6 +46,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
       borderColor: "#E8E4F0",
       textStyle: { color: "#1E1B2E", fontSize: 13 },
       extraCssText: "box-shadow: 0 4px 12px rgba(76,29,149,0.10); border-radius: 12px; padding: 10px 14px;",
+      valueFormatter: (value) => formatCurrency(Number(value)),
     },
     grid: {
       left: 16,
@@ -63,7 +66,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
       axisTick: { show: false },
     },
     yAxis: {
-      axisLabel: { color: "#6B6680", fontSize: 12 },
+      axisLabel: { color: "#6B6680", fontSize: 12, formatter: (value: number) => formatCurrency(value) },
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: { lineStyle: { color: "#E8E4F0", type: "dashed" } },
@@ -107,7 +110,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
           itemHeight: 10,
           icon: "roundRect" as const,
         },
-  }), [chartData, isMobile, t]);
+  }), [chartData, isMobile, t, formatCurrency]);
 
   return { option };
 };

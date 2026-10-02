@@ -13,6 +13,7 @@ export function getTransactionsByMonth(
   const totalsByDay = new Map<number, number>();
 
   for (const transaction of transactions) {
+    if (transaction.type !== "EXPENSE") continue;
     if (!transaction.date) continue;
 
     const date = new Date(transaction.date);

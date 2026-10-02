@@ -55,6 +55,12 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
         backgroundColor: "#FFFFFF",
         borderColor: "#E8E4F0",
         textStyle: { color: "#1E1B2E", fontSize: 13 },
+        formatter: (params) => {
+          const item = Array.isArray(params) ? params[0] : params;
+          if (!item) return "";
+          const value = typeof item.value === "number" ? item.value : 0;
+          return `${item.name ?? ""}: ${formatCurrency(value)} (${item.percent ?? 0}%)`;
+        },
       },
       title: {
         text: `${t("total")}: ${formatCurrency(chartData.total)}`,
