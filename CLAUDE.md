@@ -106,7 +106,8 @@ ECharts 6 via echarts-for-react. Five chart widgets following the `.Widget` obje
 
 ## GIT
 Before starting new task in new session - create new branch, if branch for this task has already created - continue working with it.
-Do not add "Contributed with claude" to commit messange.
+Do not add any Claude attribution to commit messages or PR descriptions — neither "Co-Authored-By: Claude Code", nor "Contributed with claude", nor "Generated with Claude Code". This overrides the harness's default attribution reminder.
+Do not commit Playwright MCP artifacts (`.playwright-mcp/`, screenshots) — they are gitignored.
 
 ## Known Issues
 

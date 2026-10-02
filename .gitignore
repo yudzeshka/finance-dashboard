@@ -25,6 +25,7 @@ coverage
 
 # Local QA / review artifacts (screenshots, scripts, session state)
 artifacts/
+.playwright-mcp/
 
 # Caches
 .cache
