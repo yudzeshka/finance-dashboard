@@ -81,5 +81,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
     ],
   }), [chartData, isMobile, formatCurrency]);
 
-  return { option, targetDate, onTargetDateChange };
+  const hasData = chartData.amounts.length > 0;
+
+  return { option, targetDate, onTargetDateChange, hasData };
 };

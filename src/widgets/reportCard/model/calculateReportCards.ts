@@ -145,7 +145,7 @@ export function calculateReportCards(
     ? `vs ${formatDate(comparisonPeriod!.startDate)} - ${formatDate(
         comparisonPeriod!.endDate,
       )}`
-    : "All time";
+    : t("allTime");
 
   return reportCardsConfig.map((config) => {
     const value = config.getValue(currentTransactions, periodDays);
@@ -163,7 +163,7 @@ export function calculateReportCards(
       description: showPercentage
         ? comparisonDescription
         : hasSelectedPeriod
-          ? `Based on ${periodDays} days`
+          ? t("basedOnDays", { count: periodDays })
           : comparisonDescription,
       Icon: config.Icon,
       tone: config.tone,

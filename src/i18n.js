@@ -1,6 +1,9 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import dayjs from "dayjs";
+import "dayjs/locale/ru";
+import "dayjs/locale/en";
 
 i18n
   // detect user language
@@ -80,6 +83,9 @@ i18n
           topCategories: "Top categories",
           reportsOnYourTransactions: "Reports on your transactions",
           savingsRate: "Savings Rate",
+          allTime: "All time",
+          basedOnDays_one: "Based on {{count}} day",
+          basedOnDays_other: "Based on {{count}} days",
           tabsCategories: "Categories",
           tabsTransactions: "Transactions",
           reportsNoData: "No data for this period",
@@ -335,7 +341,7 @@ i18n
           actions: "Действия",
           largestTransactions: "Самые крупные транзакции",
           expensesByCategory: "Расходы по категориям",
-          expensesByMonth: "Расходы за ",
+          expensesByMonth: "Расходы за",
           incomeVsExpense: "Доходы vs Расходы",
           totalIncome: "Итого доход",
           totalExpense: "Итого расход",
@@ -344,6 +350,11 @@ i18n
           topCategories: "Топ категорий",
           reportsOnYourTransactions: "Отчеты по вашим транзакциям",
           savingsRate: "Норма сбережений",
+          allTime: "За всё время",
+          basedOnDays_one: "За {{count}} день",
+          basedOnDays_few: "За {{count}} дня",
+          basedOnDays_many: "За {{count}} дней",
+          basedOnDays_other: "За {{count}} дней",
           tabsCategories: "Категории",
           tabsTransactions: "Транзакции",
           reportsNoData: "Нет данных за период",
@@ -543,5 +554,14 @@ i18n
       },
     },
   });
+
+// Keep dayjs locale in sync with the i18n language so date formats
+// (e.g. month names in charts) follow the selected UI language.
+const syncDayjsLocale = (lng) => {
+  const base = (lng || "en").split("-")[0];
+  dayjs.locale(base === "ru" ? "ru" : "en");
+};
+syncDayjsLocale(i18n.language);
+i18n.on("languageChanged", syncDayjsLocale);
 
 export default i18n;
