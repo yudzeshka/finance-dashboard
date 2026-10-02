@@ -45,8 +45,8 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
   }, [transactions, setAllTransactions]);
 
   const option: EChartsOption = useMemo(() => {
-    const radius: [string, string] = isMobile ? ["50%", "70%"] : ["55%", "75%"];
-    const center: [string, string] = isMobile ? ["50%", "45%"] : ["50%", "50%"];
+    const radius: [string, string] = isMobile ? ["45%", "58%"] : ["55%", "75%"];
+    const center: [string, string] = isMobile ? ["50%", "38%"] : ["50%", "50%"];
 
     return {
       textStyle: { fontFamily: "'Inter', sans-serif" },
@@ -66,7 +66,7 @@ export const useContainer: ContainerComponentType<UIPropertyType> = () => {
         text: formatCurrency(chartData.total),
         subtext: t("total"),
         left: "center",
-        top: "center",
+        top: isMobile ? "38%" : "center",
         textStyle: {
           fontSize: isMobile ? 14 : 18,
           fontWeight: 700,
